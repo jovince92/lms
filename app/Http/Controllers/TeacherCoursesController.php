@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class TeacherCoursesController extends Controller
@@ -35,7 +37,12 @@ class TeacherCoursesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $new_course=Course::create([
+            'user_id'=>Auth::id(),
+            'title'=>$request->title
+        ]);
+
+        return redirect()->route('teacher.courses.show',['id'=>$new_course->id]);
     }
 
     /**
@@ -46,7 +53,11 @@ class TeacherCoursesController extends Controller
      */
     public function show($id)
     {
-        //
+        $course=Course::findOrFail($id);
+        if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
+        return Inertia::render('TeacherCoursesShow',[
+            'course'=>$course
+        ]);
     }
 
     /**

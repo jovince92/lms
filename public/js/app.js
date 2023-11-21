@@ -2431,12 +2431,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var _Logo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Logo */ "./resources/js/Components/DashboardComponents/Logo.tsx");
 /* harmony import */ var _SideBarRoutes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SideBarRoutes */ "./resources/js/Components/DashboardComponents/SideBarRoutes.tsx");
-/* harmony import */ var _ModeToggle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ModeToggle */ "./resources/js/Components/ModeToggle.tsx");
+/* harmony import */ var _Providers_ThemeProvider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Providers/ThemeProvider */ "./resources/js/Providers/ThemeProvider.tsx");
 
 
 
 
 var Sidebar = function Sidebar() {
+  var _useTheme = (0,_Providers_ThemeProvider__WEBPACK_IMPORTED_MODULE_3__.useTheme)(),
+    theme = _useTheme.theme;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: 'h-full border-r flex flex-col overflow-y-auto bg-background shadow-sm',
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -2445,9 +2447,6 @@ var Sidebar = function Sidebar() {
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       className: 'flex flex-col w-full',
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_SideBarRoutes__WEBPACK_IMPORTED_MODULE_2__["default"], {})
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: 'mt-auto',
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ModeToggle__WEBPACK_IMPORTED_MODULE_3__.ModeToggle, {})
     })]
   });
 };
@@ -2486,22 +2485,23 @@ var SidebarItem = function SidebarItem(_ref) {
     label = item.label,
     Icon = item.icon;
   var isActive = (0,react__WEBPACK_IMPORTED_MODULE_1__.useMemo)(function () {
-    return full_url === href || base_url.startsWith("".concat(href, "/ "));
+    return full_url === href || base_url.startsWith(href);
   }, [href, base_url, full_url]);
   var onClick = function onClick() {
     _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_2__.Inertia.get(href);
   };
+  console.log([href, base_url]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
     onClick: onClick,
     type: 'button',
-    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_4__.cn)(' flex items-center  gap-x-1.5 text-primary/80 text-sm font-[500] pl-5 transition-all hover:text-primary h-fit', isActive && 'text-sky-900 dark:text-sky-100 bg-sky-100 dark:bg-sky-900'),
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_4__.cn)(' flex items-center  gap-x-1.5 text-idcsi/80 text-sm font-[500] pl-5 transition-all hover:text-idcsi h-fit', isActive && 'bg-secondary'),
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: 'flex items-center gap-x-2 py-3.5',
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(Icon, {
         size: 22
       }), label]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_4__.cn)('ml-auto opacity-0 border-2 border-sky-500 dark:border-sky-400 h-full transition-all', isActive && 'opacity-100')
+      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_4__.cn)('ml-auto opacity-0 border-2 border-idcsi h-full transition-all', isActive && 'opacity-100')
     })]
   });
 };
@@ -2536,10 +2536,12 @@ function ModeToggle() {
     setTheme = _useTheme.setTheme;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_dropdown_menu__WEBPACK_IMPORTED_MODULE_2__.DropdownMenu, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_dropdown_menu__WEBPACK_IMPORTED_MODULE_2__.DropdownMenuTrigger, {
+      className: "text-idcsi",
       asChild: true,
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_button__WEBPACK_IMPORTED_MODULE_1__.Button, {
         variant: "outline",
-        size: "icon",
+        size: "sm",
+        className: "",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
           className: "h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -2589,7 +2591,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
 /* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
 /* harmony import */ var _ui_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ui/button */ "./resources/js/Components/ui/button.tsx");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/log-out.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/log-out.js");
+/* harmony import */ var _ModeToggle__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ModeToggle */ "./resources/js/Components/ModeToggle.tsx");
+
 
 
 
@@ -2605,22 +2609,24 @@ var NavBarRoutes = function NavBarRoutes() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: 'flex gap-x-2 ml-auto items-center',
     children: [isTeacherPage || isPlayerPage ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_ui_button__WEBPACK_IMPORTED_MODULE_4__.Button, {
+      className: 'text-idcsi',
       size: 'sm',
       variant: 'outline',
       onClick: function onClick() {
         return _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia.get(route('dashboard.index'));
       },
-      children: [" ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      children: [" ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
         className: 'h-4 w-4 mr-2'
       }), "Exit "]
     }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_2__.Link, {
+      className: 'text-idcsi',
       href: route('teacher.courses.index'),
       children: [" ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_4__.Button, {
         size: 'sm',
         variant: 'outline',
         children: "Teacher Mode"
       }), " "]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserButton__WEBPACK_IMPORTED_MODULE_1__["default"], {})]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ModeToggle__WEBPACK_IMPORTED_MODULE_5__.ModeToggle, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_UserButton__WEBPACK_IMPORTED_MODULE_1__["default"], {})]
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NavBarRoutes);
@@ -3592,6 +3598,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Layouts/DashboardLayout */ "./resources/js/Layouts/DashboardLayout.tsx");
 /* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
 /* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+/* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
+
 
 
 
@@ -3610,6 +3618,14 @@ var TeacherCoursesCreate = function TeacherCoursesCreate() {
     post = _useForm.post;
   var onSubmit = function onSubmit(e) {
     e.preventDefault();
+    post(route('teacher.courses.store'), {
+      onSuccess: function onSuccess() {
+        return sonner__WEBPACK_IMPORTED_MODULE_7__.toast.success('Course Created!');
+      },
+      onError: function onError() {
+        return sonner__WEBPACK_IMPORTED_MODULE_7__.toast.error('Something went wrong. Please Try Again.');
+      }
+    });
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_4__["default"], {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
@@ -3667,6 +3683,31 @@ var TeacherCoursesCreate = function TeacherCoursesCreate() {
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TeacherCoursesCreate);
+
+/***/ }),
+
+/***/ "./resources/js/Pages/TeacherCoursesShow.tsx":
+/*!***************************************************!*\
+  !*** ./resources/js/Pages/TeacherCoursesShow.tsx ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Layouts/DashboardLayout */ "./resources/js/Layouts/DashboardLayout.tsx");
+
+
+var TeacherCoursesShow = function TeacherCoursesShow(_ref) {
+  var course = _ref.course;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    children: course.title
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TeacherCoursesShow);
 
 /***/ }),
 
@@ -62268,7 +62309,9 @@ var map = {
 	"./TeacherCourses": "./resources/js/Pages/TeacherCourses.tsx",
 	"./TeacherCourses.tsx": "./resources/js/Pages/TeacherCourses.tsx",
 	"./TeacherCoursesCreate": "./resources/js/Pages/TeacherCoursesCreate.tsx",
-	"./TeacherCoursesCreate.tsx": "./resources/js/Pages/TeacherCoursesCreate.tsx"
+	"./TeacherCoursesCreate.tsx": "./resources/js/Pages/TeacherCoursesCreate.tsx",
+	"./TeacherCoursesShow": "./resources/js/Pages/TeacherCoursesShow.tsx",
+	"./TeacherCoursesShow.tsx": "./resources/js/Pages/TeacherCoursesShow.tsx"
 };
 
 

@@ -5,12 +5,17 @@ import DashboardLayout from '@/Layouts/DashboardLayout'
 import { Inertia } from '@inertiajs/inertia';
 import { Link, useForm } from '@inertiajs/inertia-react';
 import React, { FormEventHandler } from 'react'
+import { toast } from 'sonner';
 
 const TeacherCoursesCreate = () => {
 
     const {data,setData,processing,errors,post} = useForm({title:""});
     const onSubmit:FormEventHandler<HTMLFormElement> = (e) =>{
         e.preventDefault();
+        post(route('teacher.courses.store'),{
+            onSuccess:()=>toast.success('Course Created!'),
+            onError:()=>toast.error('Something went wrong. Please Try Again.')
+        })
     }
 
     return (
