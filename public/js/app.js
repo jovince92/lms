@@ -3586,14 +3586,83 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Layouts/DashboardLayout */ "./resources/js/Layouts/DashboardLayout.tsx");
+/* harmony import */ var _Components_ui_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/ui/button */ "./resources/js/Components/ui/button.tsx");
+/* harmony import */ var _Components_ui_input__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/ui/input */ "./resources/js/Components/ui/input.tsx");
+/* harmony import */ var _Components_ui_label__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/ui/label */ "./resources/js/Components/ui/label.tsx");
+/* harmony import */ var _Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Layouts/DashboardLayout */ "./resources/js/Layouts/DashboardLayout.tsx");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+
+
+
+
+
 
 
 var TeacherCoursesCreate = function TeacherCoursesCreate() {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  var _useForm = (0,_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_6__.useForm)({
+      title: ""
+    }),
+    data = _useForm.data,
+    setData = _useForm.setData,
+    processing = _useForm.processing,
+    errors = _useForm.errors,
+    post = _useForm.post;
+  var onSubmit = function onSubmit(e) {
+    e.preventDefault();
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_4__["default"], {
     children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: '',
-      children: "create courses"
+      className: 'max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-5',
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
+          className: 'text-2xl',
+          children: "Name Your Course!"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+          className: 'text-sm text-muted-foreground',
+          children: "What would you like to name your course? Don't worry, you can change this later..."
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("form", {
+          onSubmit: onSubmit,
+          className: 'flex flex-col space-y-7 mt-7',
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: 'flex flex-col space-y-1',
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_label__WEBPACK_IMPORTED_MODULE_3__.Label, {
+              htmlFor: 'title',
+              children: "Course Title"
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_input__WEBPACK_IMPORTED_MODULE_2__.Input, {
+              placeholder: "e.g. 'Web Design From Zero to Hero'",
+              value: data.title,
+              onChange: function onChange(_ref) {
+                var target = _ref.target;
+                return setData('title', target.value);
+              },
+              required: true,
+              disabled: processing,
+              autoComplete: 'off',
+              autoFocus: true,
+              id: 'title'
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+              className: 'text-muted-foreground text-xs',
+              children: "What will you teach in this course?"
+            })]
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: 'flex items-center gap-x-2',
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_button__WEBPACK_IMPORTED_MODULE_1__.Button, {
+              onClick: function onClick() {
+                return _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__.Inertia.get(route('teacher.courses.index'));
+              },
+              disabled: processing,
+              type: 'button',
+              variant: 'secondary',
+              children: "Cancel"
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_button__WEBPACK_IMPORTED_MODULE_1__.Button, {
+              disabled: processing,
+              type: 'submit',
+              children: "Submit"
+            })]
+          })]
+        })]
+      })
     })
   });
 };
@@ -3720,6 +3789,7 @@ var appName = ((_a = window.document.getElementsByTagName('title')[0]) === null 
       props = _ref.props;
     var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_2__.createRoot)(el);
     root.render((0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Providers_ThemeProvider__WEBPACK_IMPORTED_MODULE_6__.ThemeProvider, {
+      defaultTheme: 'dark',
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(sonner__WEBPACK_IMPORTED_MODULE_5__.Toaster, {
         richColors: true,
         theme: 'dark',
