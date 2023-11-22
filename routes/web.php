@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/create', [TeacherCoursesController::class, 'create'])->name('create');
             Route::get('/show/{id}', [TeacherCoursesController::class, 'show'])->name('show');
             Route::post('/store', [TeacherCoursesController::class, 'store'])->name('store');
+            Route::post('/{id}/update', [TeacherCoursesController::class, 'update'])->name('update');
         });
 
         Route::get('/analytics', function () {

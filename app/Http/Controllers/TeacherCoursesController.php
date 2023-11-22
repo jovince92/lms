@@ -80,7 +80,11 @@ class TeacherCoursesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->except(['image']);
+        $course=Course::findOrFail($id);
+        if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
+        $course->update($input);
+        return redirect()->back();
     }
 
     /**
