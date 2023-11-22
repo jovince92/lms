@@ -10,7 +10,13 @@ class Attachment extends Model
     use HasFactory;
     
     protected $guarded=[];
-    public function category(){
-        return $this->belongsTo(Category::class);
+    public function course(){
+        return $this->belongsTo(Course::class);
+    }
+
+    public function getAttachmentAttribute($value){
+        if($value && str_contains( strtolower($value),'http')){return $value;}
+        if(!$value){return null;}
+        return url('/').'/public/'. $value;
     }
 }

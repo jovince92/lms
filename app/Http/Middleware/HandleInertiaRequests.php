@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Inertia\Middleware;
@@ -44,7 +45,8 @@ class HandleInertiaRequests extends Middleware
             },
             
             'full_url'=>URL::full(),
-            'base_url'=>URL::current()
+            'base_url'=>URL::current(),
+            'categories'=>Category::orderBy('category','asc')->get()
         ]);
     }
 }

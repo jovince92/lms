@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
+
 
 class TeacherCoursesController extends Controller
 {
@@ -56,7 +59,7 @@ class TeacherCoursesController extends Controller
         $course=Course::findOrFail($id);
         if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
         return Inertia::render('TeacherCoursesShow',[
-            'course'=>$course
+            'course'=>$course->load(['category','attachments','chapters'])
         ]);
     }
 
@@ -80,9 +83,32 @@ class TeacherCoursesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $input = $request->except(['image']);
+
+        $request->validate([
+            'image' => 'mimes:jpeg,png,jpg,webp,pdf'
+        ]);
+
         $course=Course::findOrFail($id);
         if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
+        $image = $request->file('image') ;
+        if($image){
+            if($course->image){
+                @unlink(public_path($course->getAttributes()['image']));
+            }
+            $image_name=strval($id).'_'.Str::slug($image->getClientOriginalName());
+            $location='uploads/courses/course_'.strval($id).'/';
+            $path=public_path($location);
+            if (!file_exists($path)) {
+                File::makeDirectory($path,0777,true);
+            }
+            $new_image = $location.$image_name;
+            $request->file('image')->move($path, $new_image);
+            $course->update([
+                'image'=>$new_image
+            ]);
+        }
+
+        $input = $request->except(['image']);
         $course->update($input);
         return redirect()->back();
     }

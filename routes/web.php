@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\HRMSController;
 use App\Http\Controllers\TeacherCoursesController;
 use Illuminate\Foundation\Application;
@@ -50,12 +52,24 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/show/{id}', [TeacherCoursesController::class, 'show'])->name('show');
             Route::post('/store', [TeacherCoursesController::class, 'store'])->name('store');
             Route::post('/{id}/update', [TeacherCoursesController::class, 'update'])->name('update');
+
+
+            Route::prefix('attachments')->name('attachments.')->group(function(){        
+                Route::post('/{course_id}/store', [AttachmentController::class, 'store'])->name('store');
+                Route::post('/{course_id}/destroy/{id}', [AttachmentController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('chapters')->name('chapters.')->group(function(){        
+                Route::post('/{course_id}/store', [ChapterController::class, 'store'])->name('store');
+            });
         });
 
         Route::get('/analytics', function () {
             return Inertia::render('TeacherAnalytics');
         })->name('analytics');
     });
+
+    
     
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

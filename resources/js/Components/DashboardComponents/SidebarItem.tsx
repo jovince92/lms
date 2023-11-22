@@ -18,8 +18,7 @@ const SidebarItem:FC<Props> = ({item}) => {
     const onClick = () =>{
         Inertia.get(href);
     }
-
-    console.log([href,base_url]);
+    
 
 
     return (

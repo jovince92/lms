@@ -1,6 +1,7688 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@hello-pangea/dnd/dist/dnd.esm.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DragDropContext: () => (/* binding */ DragDropContext),
+/* harmony export */   Draggable: () => (/* binding */ PublicDraggable),
+/* harmony export */   Droppable: () => (/* binding */ ConnectedDroppable$1),
+/* harmony export */   resetServerContext: () => (/* binding */ resetServerContext),
+/* harmony export */   useKeyboardSensor: () => (/* binding */ useKeyboardSensor),
+/* harmony export */   useMouseSensor: () => (/* binding */ useMouseSensor),
+/* harmony export */   useTouchSensor: () => (/* binding */ useTouchSensor)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var use_memo_one__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! use-memo-one */ "./node_modules/use-memo-one/dist/use-memo-one.esm.js");
+/* harmony import */ var css_box_model__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! css-box-model */ "./node_modules/css-box-model/dist/css-box-model.esm.js");
+/* harmony import */ var memoize_one__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! memoize-one */ "./node_modules/memoize-one/dist/memoize-one.esm.js");
+/* harmony import */ var raf_schd__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! raf-schd */ "./node_modules/raf-schd/dist/raf-schd.esm.js");
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+
+
+
+
+
+
+
+
+
+
+const isProduction$1 = "development" === 'production';
+const spacesAndTabs = /[ \t]{2,}/g;
+const lineStartWithSpaces = /^[ \t]*/gm;
+const clean$2 = value => value.replace(spacesAndTabs, ' ').replace(lineStartWithSpaces, '').trim();
+const getDevMessage = message => clean$2(`
+  %c@hello-pangea/dnd
+
+  %c${clean$2(message)}
+
+  %c👷‍ This is a development only message. It will be removed in production builds.
+`);
+const getFormattedMessage = message => [getDevMessage(message), 'color: #00C584; font-size: 1.2em; font-weight: bold;', 'line-height: 1.5', 'color: #723874;'];
+const isDisabledFlag = '__@hello-pangea/dnd-disable-dev-warnings';
+function log(type, message) {
+  if (isProduction$1) {
+    return;
+  }
+  if (typeof window !== 'undefined' && window[isDisabledFlag]) {
+    return;
+  }
+  console[type](...getFormattedMessage(message));
+}
+const warning = log.bind(null, 'warn');
+const error = log.bind(null, 'error');
+
+function noop$2() {}
+
+function getOptions(shared, fromBinding) {
+  return {
+    ...shared,
+    ...fromBinding
+  };
+}
+function bindEvents(el, bindings, sharedOptions) {
+  const unbindings = bindings.map(binding => {
+    const options = getOptions(sharedOptions, binding.options);
+    el.addEventListener(binding.eventName, binding.fn, options);
+    return function unbind() {
+      el.removeEventListener(binding.eventName, binding.fn, options);
+    };
+  });
+  return function unbindAll() {
+    unbindings.forEach(unbind => {
+      unbind();
+    });
+  };
+}
+
+const isProduction = "development" === 'production';
+const prefix$1 = 'Invariant failed';
+class RbdInvariant extends Error {}
+RbdInvariant.prototype.toString = function toString() {
+  return this.message;
+};
+function invariant(condition, message) {
+  if (condition) {
+    return;
+  }
+  if (isProduction) {
+    throw new RbdInvariant(prefix$1);
+  } else {
+    throw new RbdInvariant(`${prefix$1}: ${message || ''}`);
+  }
+}
+
+class ErrorBoundary extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+  constructor() {
+    super(...arguments);
+    this.callbacks = null;
+    this.unbind = noop$2;
+    this.onWindowError = event => {
+      const callbacks = this.getCallbacks();
+      if (callbacks.isDragging()) {
+        callbacks.tryAbort();
+         true ? warning(`
+        An error was caught by our window 'error' event listener while a drag was occurring.
+        The active drag has been aborted.
+      `) : 0;
+      }
+      const err = event.error;
+      if (err instanceof RbdInvariant) {
+        event.preventDefault();
+        if (true) {
+          error(err.message);
+        }
+      }
+    };
+    this.getCallbacks = () => {
+      if (!this.callbacks) {
+        throw new Error('Unable to find AppCallbacks in <ErrorBoundary/>');
+      }
+      return this.callbacks;
+    };
+    this.setCallbacks = callbacks => {
+      this.callbacks = callbacks;
+    };
+  }
+  componentDidMount() {
+    this.unbind = bindEvents(window, [{
+      eventName: 'error',
+      fn: this.onWindowError
+    }]);
+  }
+  componentDidCatch(err) {
+    if (err instanceof RbdInvariant) {
+      if (true) {
+        error(err.message);
+      }
+      this.setState({});
+      return;
+    }
+    throw err;
+  }
+  componentWillUnmount() {
+    this.unbind();
+  }
+  render() {
+    return this.props.children(this.setCallbacks);
+  }
+}
+
+const dragHandleUsageInstructions = `
+  Press space bar to start a drag.
+  When dragging you can use the arrow keys to move the item around and escape to cancel.
+  Some screen readers may require you to be in focus mode or to use your pass through key
+`;
+const position = index => index + 1;
+const onDragStart = start => `
+  You have lifted an item in position ${position(start.source.index)}
+`;
+const withLocation = (source, destination) => {
+  const isInHomeList = source.droppableId === destination.droppableId;
+  const startPosition = position(source.index);
+  const endPosition = position(destination.index);
+  if (isInHomeList) {
+    return `
+      You have moved the item from position ${startPosition}
+      to position ${endPosition}
+    `;
+  }
+  return `
+    You have moved the item from position ${startPosition}
+    in list ${source.droppableId}
+    to list ${destination.droppableId}
+    in position ${endPosition}
+  `;
+};
+const withCombine = (id, source, combine) => {
+  const inHomeList = source.droppableId === combine.droppableId;
+  if (inHomeList) {
+    return `
+      The item ${id}
+      has been combined with ${combine.draggableId}`;
+  }
+  return `
+      The item ${id}
+      in list ${source.droppableId}
+      has been combined with ${combine.draggableId}
+      in list ${combine.droppableId}
+    `;
+};
+const onDragUpdate = update => {
+  const location = update.destination;
+  if (location) {
+    return withLocation(update.source, location);
+  }
+  const combine = update.combine;
+  if (combine) {
+    return withCombine(update.draggableId, update.source, combine);
+  }
+  return 'You are over an area that cannot be dropped on';
+};
+const returnedToStart = source => `
+  The item has returned to its starting position
+  of ${position(source.index)}
+`;
+const onDragEnd = result => {
+  if (result.reason === 'CANCEL') {
+    return `
+      Movement cancelled.
+      ${returnedToStart(result.source)}
+    `;
+  }
+  const location = result.destination;
+  const combine = result.combine;
+  if (location) {
+    return `
+      You have dropped the item.
+      ${withLocation(result.source, location)}
+    `;
+  }
+  if (combine) {
+    return `
+      You have dropped the item.
+      ${withCombine(result.draggableId, result.source, combine)}
+    `;
+  }
+  return `
+    The item has been dropped while not over a drop area.
+    ${returnedToStart(result.source)}
+  `;
+};
+const preset = {
+  dragHandleUsageInstructions,
+  onDragStart,
+  onDragUpdate,
+  onDragEnd
+};
+var preset$1 = preset;
+
+const origin = {
+  x: 0,
+  y: 0
+};
+const add = (point1, point2) => ({
+  x: point1.x + point2.x,
+  y: point1.y + point2.y
+});
+const subtract = (point1, point2) => ({
+  x: point1.x - point2.x,
+  y: point1.y - point2.y
+});
+const isEqual$1 = (point1, point2) => point1.x === point2.x && point1.y === point2.y;
+const negate = point => ({
+  x: point.x !== 0 ? -point.x : 0,
+  y: point.y !== 0 ? -point.y : 0
+});
+const patch = function (line, value, otherValue) {
+  if (otherValue === void 0) {
+    otherValue = 0;
+  }
+  if (line === 'x') {
+    return {
+      x: value,
+      y: otherValue
+    };
+  }
+  return {
+    x: otherValue,
+    y: value
+  };
+};
+const distance = (point1, point2) => Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2);
+const closest$1 = (target, points) => Math.min(...points.map(point => distance(target, point)));
+const apply = fn => point => ({
+  x: fn(point.x),
+  y: fn(point.y)
+});
+
+var executeClip = ((frame, subject) => {
+  const result = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)({
+    top: Math.max(subject.top, frame.top),
+    right: Math.min(subject.right, frame.right),
+    bottom: Math.min(subject.bottom, frame.bottom),
+    left: Math.max(subject.left, frame.left)
+  });
+  if (result.width <= 0 || result.height <= 0) {
+    return null;
+  }
+  return result;
+});
+
+const offsetByPosition = (spacing, point) => ({
+  top: spacing.top + point.y,
+  left: spacing.left + point.x,
+  bottom: spacing.bottom + point.y,
+  right: spacing.right + point.x
+});
+const getCorners = spacing => [{
+  x: spacing.left,
+  y: spacing.top
+}, {
+  x: spacing.right,
+  y: spacing.top
+}, {
+  x: spacing.left,
+  y: spacing.bottom
+}, {
+  x: spacing.right,
+  y: spacing.bottom
+}];
+const noSpacing = {
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0
+};
+
+const scroll$1 = (target, frame) => {
+  if (!frame) {
+    return target;
+  }
+  return offsetByPosition(target, frame.scroll.diff.displacement);
+};
+const increase = (target, axis, withPlaceholder) => {
+  if (withPlaceholder && withPlaceholder.increasedBy) {
+    return {
+      ...target,
+      [axis.end]: target[axis.end] + withPlaceholder.increasedBy[axis.line]
+    };
+  }
+  return target;
+};
+const clip = (target, frame) => {
+  if (frame && frame.shouldClipSubject) {
+    return executeClip(frame.pageMarginBox, target);
+  }
+  return (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)(target);
+};
+var getSubject = (_ref => {
+  let {
+    page,
+    withPlaceholder,
+    axis,
+    frame
+  } = _ref;
+  const scrolled = scroll$1(page.marginBox, frame);
+  const increased = increase(scrolled, axis, withPlaceholder);
+  const clipped = clip(increased, frame);
+  return {
+    page,
+    withPlaceholder,
+    active: clipped
+  };
+});
+
+var scrollDroppable = ((droppable, newScroll) => {
+  !droppable.frame ?  true ? invariant(false) : 0 : void 0;
+  const scrollable = droppable.frame;
+  const scrollDiff = subtract(newScroll, scrollable.scroll.initial);
+  const scrollDisplacement = negate(scrollDiff);
+  const frame = {
+    ...scrollable,
+    scroll: {
+      initial: scrollable.scroll.initial,
+      current: newScroll,
+      diff: {
+        value: scrollDiff,
+        displacement: scrollDisplacement
+      },
+      max: scrollable.scroll.max
+    }
+  };
+  const subject = getSubject({
+    page: droppable.subject.page,
+    withPlaceholder: droppable.subject.withPlaceholder,
+    axis: droppable.axis,
+    frame
+  });
+  const result = {
+    ...droppable,
+    frame,
+    subject
+  };
+  return result;
+});
+
+const toDroppableMap = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(droppables => droppables.reduce((previous, current) => {
+  previous[current.descriptor.id] = current;
+  return previous;
+}, {}));
+const toDraggableMap = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(draggables => draggables.reduce((previous, current) => {
+  previous[current.descriptor.id] = current;
+  return previous;
+}, {}));
+const toDroppableList = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(droppables => Object.values(droppables));
+const toDraggableList = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(draggables => Object.values(draggables));
+
+var getDraggablesInsideDroppable = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((droppableId, draggables) => {
+  const result = toDraggableList(draggables).filter(draggable => droppableId === draggable.descriptor.droppableId).sort((a, b) => a.descriptor.index - b.descriptor.index);
+  return result;
+});
+
+function tryGetDestination(impact) {
+  if (impact.at && impact.at.type === 'REORDER') {
+    return impact.at.destination;
+  }
+  return null;
+}
+function tryGetCombine(impact) {
+  if (impact.at && impact.at.type === 'COMBINE') {
+    return impact.at.combine;
+  }
+  return null;
+}
+
+var removeDraggableFromList = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((remove, list) => list.filter(item => item.descriptor.id !== remove.descriptor.id));
+
+var moveToNextCombine = (_ref => {
+  let {
+    isMovingForward,
+    draggable,
+    destination,
+    insideDestination,
+    previousImpact
+  } = _ref;
+  if (!destination.isCombineEnabled) {
+    return null;
+  }
+  const location = tryGetDestination(previousImpact);
+  if (!location) {
+    return null;
+  }
+  function getImpact(target) {
+    const at = {
+      type: 'COMBINE',
+      combine: {
+        draggableId: target,
+        droppableId: destination.descriptor.id
+      }
+    };
+    return {
+      ...previousImpact,
+      at
+    };
+  }
+  const all = previousImpact.displaced.all;
+  const closestId = all.length ? all[0] : null;
+  if (isMovingForward) {
+    return closestId ? getImpact(closestId) : null;
+  }
+  const withoutDraggable = removeDraggableFromList(draggable, insideDestination);
+  if (!closestId) {
+    if (!withoutDraggable.length) {
+      return null;
+    }
+    const last = withoutDraggable[withoutDraggable.length - 1];
+    return getImpact(last.descriptor.id);
+  }
+  const indexOfClosest = withoutDraggable.findIndex(d => d.descriptor.id === closestId);
+  !(indexOfClosest !== -1) ?  true ? invariant(false, 'Could not find displaced item in set') : 0 : void 0;
+  const proposedIndex = indexOfClosest - 1;
+  if (proposedIndex < 0) {
+    return null;
+  }
+  const before = withoutDraggable[proposedIndex];
+  return getImpact(before.descriptor.id);
+});
+
+var isHomeOf = ((draggable, destination) => draggable.descriptor.droppableId === destination.descriptor.id);
+
+const noDisplacedBy = {
+  point: origin,
+  value: 0
+};
+const emptyGroups = {
+  invisible: {},
+  visible: {},
+  all: []
+};
+const noImpact = {
+  displaced: emptyGroups,
+  displacedBy: noDisplacedBy,
+  at: null
+};
+var noImpact$1 = noImpact;
+
+var isWithin = ((lowerBound, upperBound) => value => lowerBound <= value && value <= upperBound);
+
+var isPartiallyVisibleThroughFrame = (frame => {
+  const isWithinVertical = isWithin(frame.top, frame.bottom);
+  const isWithinHorizontal = isWithin(frame.left, frame.right);
+  return subject => {
+    const isContained = isWithinVertical(subject.top) && isWithinVertical(subject.bottom) && isWithinHorizontal(subject.left) && isWithinHorizontal(subject.right);
+    if (isContained) {
+      return true;
+    }
+    const isPartiallyVisibleVertically = isWithinVertical(subject.top) || isWithinVertical(subject.bottom);
+    const isPartiallyVisibleHorizontally = isWithinHorizontal(subject.left) || isWithinHorizontal(subject.right);
+    const isPartiallyContained = isPartiallyVisibleVertically && isPartiallyVisibleHorizontally;
+    if (isPartiallyContained) {
+      return true;
+    }
+    const isBiggerVertically = subject.top < frame.top && subject.bottom > frame.bottom;
+    const isBiggerHorizontally = subject.left < frame.left && subject.right > frame.right;
+    const isTargetBiggerThanFrame = isBiggerVertically && isBiggerHorizontally;
+    if (isTargetBiggerThanFrame) {
+      return true;
+    }
+    const isTargetBiggerOnOneAxis = isBiggerVertically && isPartiallyVisibleHorizontally || isBiggerHorizontally && isPartiallyVisibleVertically;
+    return isTargetBiggerOnOneAxis;
+  };
+});
+
+var isTotallyVisibleThroughFrame = (frame => {
+  const isWithinVertical = isWithin(frame.top, frame.bottom);
+  const isWithinHorizontal = isWithin(frame.left, frame.right);
+  return subject => {
+    const isContained = isWithinVertical(subject.top) && isWithinVertical(subject.bottom) && isWithinHorizontal(subject.left) && isWithinHorizontal(subject.right);
+    return isContained;
+  };
+});
+
+const vertical = {
+  direction: 'vertical',
+  line: 'y',
+  crossAxisLine: 'x',
+  start: 'top',
+  end: 'bottom',
+  size: 'height',
+  crossAxisStart: 'left',
+  crossAxisEnd: 'right',
+  crossAxisSize: 'width'
+};
+const horizontal = {
+  direction: 'horizontal',
+  line: 'x',
+  crossAxisLine: 'y',
+  start: 'left',
+  end: 'right',
+  size: 'width',
+  crossAxisStart: 'top',
+  crossAxisEnd: 'bottom',
+  crossAxisSize: 'height'
+};
+
+var isTotallyVisibleThroughFrameOnAxis = (axis => frame => {
+  const isWithinVertical = isWithin(frame.top, frame.bottom);
+  const isWithinHorizontal = isWithin(frame.left, frame.right);
+  return subject => {
+    if (axis === vertical) {
+      return isWithinVertical(subject.top) && isWithinVertical(subject.bottom);
+    }
+    return isWithinHorizontal(subject.left) && isWithinHorizontal(subject.right);
+  };
+});
+
+const getDroppableDisplaced = (target, destination) => {
+  const displacement = destination.frame ? destination.frame.scroll.diff.displacement : origin;
+  return offsetByPosition(target, displacement);
+};
+const isVisibleInDroppable = (target, destination, isVisibleThroughFrameFn) => {
+  if (!destination.subject.active) {
+    return false;
+  }
+  return isVisibleThroughFrameFn(destination.subject.active)(target);
+};
+const isVisibleInViewport = (target, viewport, isVisibleThroughFrameFn) => isVisibleThroughFrameFn(viewport)(target);
+const isVisible$1 = _ref => {
+  let {
+    target: toBeDisplaced,
+    destination,
+    viewport,
+    withDroppableDisplacement,
+    isVisibleThroughFrameFn
+  } = _ref;
+  const displacedTarget = withDroppableDisplacement ? getDroppableDisplaced(toBeDisplaced, destination) : toBeDisplaced;
+  return isVisibleInDroppable(displacedTarget, destination, isVisibleThroughFrameFn) && isVisibleInViewport(displacedTarget, viewport, isVisibleThroughFrameFn);
+};
+const isPartiallyVisible = args => isVisible$1({
+  ...args,
+  isVisibleThroughFrameFn: isPartiallyVisibleThroughFrame
+});
+const isTotallyVisible = args => isVisible$1({
+  ...args,
+  isVisibleThroughFrameFn: isTotallyVisibleThroughFrame
+});
+const isTotallyVisibleOnAxis = args => isVisible$1({
+  ...args,
+  isVisibleThroughFrameFn: isTotallyVisibleThroughFrameOnAxis(args.destination.axis)
+});
+
+const getShouldAnimate = (id, last, forceShouldAnimate) => {
+  if (typeof forceShouldAnimate === 'boolean') {
+    return forceShouldAnimate;
+  }
+  if (!last) {
+    return true;
+  }
+  const {
+    invisible,
+    visible
+  } = last;
+  if (invisible[id]) {
+    return false;
+  }
+  const previous = visible[id];
+  return previous ? previous.shouldAnimate : true;
+};
+function getTarget(draggable, displacedBy) {
+  const marginBox = draggable.page.marginBox;
+  const expandBy = {
+    top: displacedBy.point.y,
+    right: 0,
+    bottom: 0,
+    left: displacedBy.point.x
+  };
+  return (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)((0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.expand)(marginBox, expandBy));
+}
+function getDisplacementGroups(_ref) {
+  let {
+    afterDragging,
+    destination,
+    displacedBy,
+    viewport,
+    forceShouldAnimate,
+    last
+  } = _ref;
+  return afterDragging.reduce(function process(groups, draggable) {
+    const target = getTarget(draggable, displacedBy);
+    const id = draggable.descriptor.id;
+    groups.all.push(id);
+    const isVisible = isPartiallyVisible({
+      target,
+      destination,
+      viewport,
+      withDroppableDisplacement: true
+    });
+    if (!isVisible) {
+      groups.invisible[draggable.descriptor.id] = true;
+      return groups;
+    }
+    const shouldAnimate = getShouldAnimate(id, last, forceShouldAnimate);
+    const displacement = {
+      draggableId: id,
+      shouldAnimate
+    };
+    groups.visible[id] = displacement;
+    return groups;
+  }, {
+    all: [],
+    visible: {},
+    invisible: {}
+  });
+}
+
+function getIndexOfLastItem(draggables, options) {
+  if (!draggables.length) {
+    return 0;
+  }
+  const indexOfLastItem = draggables[draggables.length - 1].descriptor.index;
+  return options.inHomeList ? indexOfLastItem : indexOfLastItem + 1;
+}
+function goAtEnd(_ref) {
+  let {
+    insideDestination,
+    inHomeList,
+    displacedBy,
+    destination
+  } = _ref;
+  const newIndex = getIndexOfLastItem(insideDestination, {
+    inHomeList
+  });
+  return {
+    displaced: emptyGroups,
+    displacedBy,
+    at: {
+      type: 'REORDER',
+      destination: {
+        droppableId: destination.descriptor.id,
+        index: newIndex
+      }
+    }
+  };
+}
+function calculateReorderImpact(_ref2) {
+  let {
+    draggable,
+    insideDestination,
+    destination,
+    viewport,
+    displacedBy,
+    last,
+    index,
+    forceShouldAnimate
+  } = _ref2;
+  const inHomeList = isHomeOf(draggable, destination);
+  if (index == null) {
+    return goAtEnd({
+      insideDestination,
+      inHomeList,
+      displacedBy,
+      destination
+    });
+  }
+  const match = insideDestination.find(item => item.descriptor.index === index);
+  if (!match) {
+    return goAtEnd({
+      insideDestination,
+      inHomeList,
+      displacedBy,
+      destination
+    });
+  }
+  const withoutDragging = removeDraggableFromList(draggable, insideDestination);
+  const sliceFrom = insideDestination.indexOf(match);
+  const impacted = withoutDragging.slice(sliceFrom);
+  const displaced = getDisplacementGroups({
+    afterDragging: impacted,
+    destination,
+    displacedBy,
+    last,
+    viewport: viewport.frame,
+    forceShouldAnimate
+  });
+  return {
+    displaced,
+    displacedBy,
+    at: {
+      type: 'REORDER',
+      destination: {
+        droppableId: destination.descriptor.id,
+        index
+      }
+    }
+  };
+}
+
+function didStartAfterCritical(draggableId, afterCritical) {
+  return Boolean(afterCritical.effected[draggableId]);
+}
+
+var fromCombine = (_ref => {
+  let {
+    isMovingForward,
+    destination,
+    draggables,
+    combine,
+    afterCritical
+  } = _ref;
+  if (!destination.isCombineEnabled) {
+    return null;
+  }
+  const combineId = combine.draggableId;
+  const combineWith = draggables[combineId];
+  const combineWithIndex = combineWith.descriptor.index;
+  const didCombineWithStartAfterCritical = didStartAfterCritical(combineId, afterCritical);
+  if (didCombineWithStartAfterCritical) {
+    if (isMovingForward) {
+      return combineWithIndex;
+    }
+    return combineWithIndex - 1;
+  }
+  if (isMovingForward) {
+    return combineWithIndex + 1;
+  }
+  return combineWithIndex;
+});
+
+var fromReorder = (_ref => {
+  let {
+    isMovingForward,
+    isInHomeList,
+    insideDestination,
+    location
+  } = _ref;
+  if (!insideDestination.length) {
+    return null;
+  }
+  const currentIndex = location.index;
+  const proposedIndex = isMovingForward ? currentIndex + 1 : currentIndex - 1;
+  const firstIndex = insideDestination[0].descriptor.index;
+  const lastIndex = insideDestination[insideDestination.length - 1].descriptor.index;
+  const upperBound = isInHomeList ? lastIndex : lastIndex + 1;
+  if (proposedIndex < firstIndex) {
+    return null;
+  }
+  if (proposedIndex > upperBound) {
+    return null;
+  }
+  return proposedIndex;
+});
+
+var moveToNextIndex = (_ref => {
+  let {
+    isMovingForward,
+    isInHomeList,
+    draggable,
+    draggables,
+    destination,
+    insideDestination,
+    previousImpact,
+    viewport,
+    afterCritical
+  } = _ref;
+  const wasAt = previousImpact.at;
+  !wasAt ?  true ? invariant(false, 'Cannot move in direction without previous impact location') : 0 : void 0;
+  if (wasAt.type === 'REORDER') {
+    const newIndex = fromReorder({
+      isMovingForward,
+      isInHomeList,
+      location: wasAt.destination,
+      insideDestination
+    });
+    if (newIndex == null) {
+      return null;
+    }
+    return calculateReorderImpact({
+      draggable,
+      insideDestination,
+      destination,
+      viewport,
+      last: previousImpact.displaced,
+      displacedBy: previousImpact.displacedBy,
+      index: newIndex
+    });
+  }
+  const newIndex = fromCombine({
+    isMovingForward,
+    destination,
+    displaced: previousImpact.displaced,
+    draggables,
+    combine: wasAt.combine,
+    afterCritical
+  });
+  if (newIndex == null) {
+    return null;
+  }
+  return calculateReorderImpact({
+    draggable,
+    insideDestination,
+    destination,
+    viewport,
+    last: previousImpact.displaced,
+    displacedBy: previousImpact.displacedBy,
+    index: newIndex
+  });
+});
+
+var getCombinedItemDisplacement = (_ref => {
+  let {
+    displaced,
+    afterCritical,
+    combineWith,
+    displacedBy
+  } = _ref;
+  const isDisplaced = Boolean(displaced.visible[combineWith] || displaced.invisible[combineWith]);
+  if (didStartAfterCritical(combineWith, afterCritical)) {
+    return isDisplaced ? origin : negate(displacedBy.point);
+  }
+  return isDisplaced ? displacedBy.point : origin;
+});
+
+var whenCombining = (_ref => {
+  let {
+    afterCritical,
+    impact,
+    draggables
+  } = _ref;
+  const combine = tryGetCombine(impact);
+  !combine ?  true ? invariant(false) : 0 : void 0;
+  const combineWith = combine.draggableId;
+  const center = draggables[combineWith].page.borderBox.center;
+  const displaceBy = getCombinedItemDisplacement({
+    displaced: impact.displaced,
+    afterCritical,
+    combineWith,
+    displacedBy: impact.displacedBy
+  });
+  return add(center, displaceBy);
+});
+
+const distanceFromStartToBorderBoxCenter = (axis, box) => box.margin[axis.start] + box.borderBox[axis.size] / 2;
+const distanceFromEndToBorderBoxCenter = (axis, box) => box.margin[axis.end] + box.borderBox[axis.size] / 2;
+const getCrossAxisBorderBoxCenter = (axis, target, isMoving) => target[axis.crossAxisStart] + isMoving.margin[axis.crossAxisStart] + isMoving.borderBox[axis.crossAxisSize] / 2;
+const goAfter = _ref => {
+  let {
+    axis,
+    moveRelativeTo,
+    isMoving
+  } = _ref;
+  return patch(axis.line, moveRelativeTo.marginBox[axis.end] + distanceFromStartToBorderBoxCenter(axis, isMoving), getCrossAxisBorderBoxCenter(axis, moveRelativeTo.marginBox, isMoving));
+};
+const goBefore = _ref2 => {
+  let {
+    axis,
+    moveRelativeTo,
+    isMoving
+  } = _ref2;
+  return patch(axis.line, moveRelativeTo.marginBox[axis.start] - distanceFromEndToBorderBoxCenter(axis, isMoving), getCrossAxisBorderBoxCenter(axis, moveRelativeTo.marginBox, isMoving));
+};
+const goIntoStart = _ref3 => {
+  let {
+    axis,
+    moveInto,
+    isMoving
+  } = _ref3;
+  return patch(axis.line, moveInto.contentBox[axis.start] + distanceFromStartToBorderBoxCenter(axis, isMoving), getCrossAxisBorderBoxCenter(axis, moveInto.contentBox, isMoving));
+};
+
+var whenReordering = (_ref => {
+  let {
+    impact,
+    draggable,
+    draggables,
+    droppable,
+    afterCritical
+  } = _ref;
+  const insideDestination = getDraggablesInsideDroppable(droppable.descriptor.id, draggables);
+  const draggablePage = draggable.page;
+  const axis = droppable.axis;
+  if (!insideDestination.length) {
+    return goIntoStart({
+      axis,
+      moveInto: droppable.page,
+      isMoving: draggablePage
+    });
+  }
+  const {
+    displaced,
+    displacedBy
+  } = impact;
+  const closestAfter = displaced.all[0];
+  if (closestAfter) {
+    const closest = draggables[closestAfter];
+    if (didStartAfterCritical(closestAfter, afterCritical)) {
+      return goBefore({
+        axis,
+        moveRelativeTo: closest.page,
+        isMoving: draggablePage
+      });
+    }
+    const withDisplacement = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.offset)(closest.page, displacedBy.point);
+    return goBefore({
+      axis,
+      moveRelativeTo: withDisplacement,
+      isMoving: draggablePage
+    });
+  }
+  const last = insideDestination[insideDestination.length - 1];
+  if (last.descriptor.id === draggable.descriptor.id) {
+    return draggablePage.borderBox.center;
+  }
+  if (didStartAfterCritical(last.descriptor.id, afterCritical)) {
+    const page = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.offset)(last.page, negate(afterCritical.displacedBy.point));
+    return goAfter({
+      axis,
+      moveRelativeTo: page,
+      isMoving: draggablePage
+    });
+  }
+  return goAfter({
+    axis,
+    moveRelativeTo: last.page,
+    isMoving: draggablePage
+  });
+});
+
+var withDroppableDisplacement = ((droppable, point) => {
+  const frame = droppable.frame;
+  if (!frame) {
+    return point;
+  }
+  return add(point, frame.scroll.diff.displacement);
+});
+
+const getResultWithoutDroppableDisplacement = _ref => {
+  let {
+    impact,
+    draggable,
+    droppable,
+    draggables,
+    afterCritical
+  } = _ref;
+  const original = draggable.page.borderBox.center;
+  const at = impact.at;
+  if (!droppable) {
+    return original;
+  }
+  if (!at) {
+    return original;
+  }
+  if (at.type === 'REORDER') {
+    return whenReordering({
+      impact,
+      draggable,
+      draggables,
+      droppable,
+      afterCritical
+    });
+  }
+  return whenCombining({
+    impact,
+    draggables,
+    afterCritical
+  });
+};
+var getPageBorderBoxCenterFromImpact = (args => {
+  const withoutDisplacement = getResultWithoutDroppableDisplacement(args);
+  const droppable = args.droppable;
+  const withDisplacement = droppable ? withDroppableDisplacement(droppable, withoutDisplacement) : withoutDisplacement;
+  return withDisplacement;
+});
+
+var scrollViewport = ((viewport, newScroll) => {
+  const diff = subtract(newScroll, viewport.scroll.initial);
+  const displacement = negate(diff);
+  const frame = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)({
+    top: newScroll.y,
+    bottom: newScroll.y + viewport.frame.height,
+    left: newScroll.x,
+    right: newScroll.x + viewport.frame.width
+  });
+  const updated = {
+    frame,
+    scroll: {
+      initial: viewport.scroll.initial,
+      max: viewport.scroll.max,
+      current: newScroll,
+      diff: {
+        value: diff,
+        displacement
+      }
+    }
+  };
+  return updated;
+});
+
+function getDraggables$1(ids, draggables) {
+  return ids.map(id => draggables[id]);
+}
+function tryGetVisible(id, groups) {
+  for (let i = 0; i < groups.length; i++) {
+    const displacement = groups[i].visible[id];
+    if (displacement) {
+      return displacement;
+    }
+  }
+  return null;
+}
+var speculativelyIncrease = (_ref => {
+  let {
+    impact,
+    viewport,
+    destination,
+    draggables,
+    maxScrollChange
+  } = _ref;
+  const scrolledViewport = scrollViewport(viewport, add(viewport.scroll.current, maxScrollChange));
+  const scrolledDroppable = destination.frame ? scrollDroppable(destination, add(destination.frame.scroll.current, maxScrollChange)) : destination;
+  const last = impact.displaced;
+  const withViewportScroll = getDisplacementGroups({
+    afterDragging: getDraggables$1(last.all, draggables),
+    destination,
+    displacedBy: impact.displacedBy,
+    viewport: scrolledViewport.frame,
+    last,
+    forceShouldAnimate: false
+  });
+  const withDroppableScroll = getDisplacementGroups({
+    afterDragging: getDraggables$1(last.all, draggables),
+    destination: scrolledDroppable,
+    displacedBy: impact.displacedBy,
+    viewport: viewport.frame,
+    last,
+    forceShouldAnimate: false
+  });
+  const invisible = {};
+  const visible = {};
+  const groups = [last, withViewportScroll, withDroppableScroll];
+  last.all.forEach(id => {
+    const displacement = tryGetVisible(id, groups);
+    if (displacement) {
+      visible[id] = displacement;
+      return;
+    }
+    invisible[id] = true;
+  });
+  const newImpact = {
+    ...impact,
+    displaced: {
+      all: last.all,
+      invisible,
+      visible
+    }
+  };
+  return newImpact;
+});
+
+var withViewportDisplacement = ((viewport, point) => add(viewport.scroll.diff.displacement, point));
+
+var getClientFromPageBorderBoxCenter = (_ref => {
+  let {
+    pageBorderBoxCenter,
+    draggable,
+    viewport
+  } = _ref;
+  const withoutPageScrollChange = withViewportDisplacement(viewport, pageBorderBoxCenter);
+  const offset = subtract(withoutPageScrollChange, draggable.page.borderBox.center);
+  return add(draggable.client.borderBox.center, offset);
+});
+
+var isTotallyVisibleInNewLocation = (_ref => {
+  let {
+    draggable,
+    destination,
+    newPageBorderBoxCenter,
+    viewport,
+    withDroppableDisplacement,
+    onlyOnMainAxis = false
+  } = _ref;
+  const changeNeeded = subtract(newPageBorderBoxCenter, draggable.page.borderBox.center);
+  const shifted = offsetByPosition(draggable.page.borderBox, changeNeeded);
+  const args = {
+    target: shifted,
+    destination,
+    withDroppableDisplacement,
+    viewport
+  };
+  return onlyOnMainAxis ? isTotallyVisibleOnAxis(args) : isTotallyVisible(args);
+});
+
+var moveToNextPlace = (_ref => {
+  let {
+    isMovingForward,
+    draggable,
+    destination,
+    draggables,
+    previousImpact,
+    viewport,
+    previousPageBorderBoxCenter,
+    previousClientSelection,
+    afterCritical
+  } = _ref;
+  if (!destination.isEnabled) {
+    return null;
+  }
+  const insideDestination = getDraggablesInsideDroppable(destination.descriptor.id, draggables);
+  const isInHomeList = isHomeOf(draggable, destination);
+  const impact = moveToNextCombine({
+    isMovingForward,
+    draggable,
+    destination,
+    insideDestination,
+    previousImpact
+  }) || moveToNextIndex({
+    isMovingForward,
+    isInHomeList,
+    draggable,
+    draggables,
+    destination,
+    insideDestination,
+    previousImpact,
+    viewport,
+    afterCritical
+  });
+  if (!impact) {
+    return null;
+  }
+  const pageBorderBoxCenter = getPageBorderBoxCenterFromImpact({
+    impact,
+    draggable,
+    droppable: destination,
+    draggables,
+    afterCritical
+  });
+  const isVisibleInNewLocation = isTotallyVisibleInNewLocation({
+    draggable,
+    destination,
+    newPageBorderBoxCenter: pageBorderBoxCenter,
+    viewport: viewport.frame,
+    withDroppableDisplacement: false,
+    onlyOnMainAxis: true
+  });
+  if (isVisibleInNewLocation) {
+    const clientSelection = getClientFromPageBorderBoxCenter({
+      pageBorderBoxCenter,
+      draggable,
+      viewport
+    });
+    return {
+      clientSelection,
+      impact,
+      scrollJumpRequest: null
+    };
+  }
+  const distance = subtract(pageBorderBoxCenter, previousPageBorderBoxCenter);
+  const cautious = speculativelyIncrease({
+    impact,
+    viewport,
+    destination,
+    draggables,
+    maxScrollChange: distance
+  });
+  return {
+    clientSelection: previousClientSelection,
+    impact: cautious,
+    scrollJumpRequest: distance
+  };
+});
+
+const getKnownActive = droppable => {
+  const rect = droppable.subject.active;
+  !rect ?  true ? invariant(false, 'Cannot get clipped area from droppable') : 0 : void 0;
+  return rect;
+};
+var getBestCrossAxisDroppable = (_ref => {
+  let {
+    isMovingForward,
+    pageBorderBoxCenter,
+    source,
+    droppables,
+    viewport
+  } = _ref;
+  const active = source.subject.active;
+  if (!active) {
+    return null;
+  }
+  const axis = source.axis;
+  const isBetweenSourceClipped = isWithin(active[axis.start], active[axis.end]);
+  const candidates = toDroppableList(droppables).filter(droppable => droppable !== source).filter(droppable => droppable.isEnabled).filter(droppable => Boolean(droppable.subject.active)).filter(droppable => isPartiallyVisibleThroughFrame(viewport.frame)(getKnownActive(droppable))).filter(droppable => {
+    const activeOfTarget = getKnownActive(droppable);
+    if (isMovingForward) {
+      return active[axis.crossAxisEnd] < activeOfTarget[axis.crossAxisEnd];
+    }
+    return activeOfTarget[axis.crossAxisStart] < active[axis.crossAxisStart];
+  }).filter(droppable => {
+    const activeOfTarget = getKnownActive(droppable);
+    const isBetweenDestinationClipped = isWithin(activeOfTarget[axis.start], activeOfTarget[axis.end]);
+    return isBetweenSourceClipped(activeOfTarget[axis.start]) || isBetweenSourceClipped(activeOfTarget[axis.end]) || isBetweenDestinationClipped(active[axis.start]) || isBetweenDestinationClipped(active[axis.end]);
+  }).sort((a, b) => {
+    const first = getKnownActive(a)[axis.crossAxisStart];
+    const second = getKnownActive(b)[axis.crossAxisStart];
+    if (isMovingForward) {
+      return first - second;
+    }
+    return second - first;
+  }).filter((droppable, index, array) => getKnownActive(droppable)[axis.crossAxisStart] === getKnownActive(array[0])[axis.crossAxisStart]);
+  if (!candidates.length) {
+    return null;
+  }
+  if (candidates.length === 1) {
+    return candidates[0];
+  }
+  const contains = candidates.filter(droppable => {
+    const isWithinDroppable = isWithin(getKnownActive(droppable)[axis.start], getKnownActive(droppable)[axis.end]);
+    return isWithinDroppable(pageBorderBoxCenter[axis.line]);
+  });
+  if (contains.length === 1) {
+    return contains[0];
+  }
+  if (contains.length > 1) {
+    return contains.sort((a, b) => getKnownActive(a)[axis.start] - getKnownActive(b)[axis.start])[0];
+  }
+  return candidates.sort((a, b) => {
+    const first = closest$1(pageBorderBoxCenter, getCorners(getKnownActive(a)));
+    const second = closest$1(pageBorderBoxCenter, getCorners(getKnownActive(b)));
+    if (first !== second) {
+      return first - second;
+    }
+    return getKnownActive(a)[axis.start] - getKnownActive(b)[axis.start];
+  })[0];
+});
+
+const getCurrentPageBorderBoxCenter = (draggable, afterCritical) => {
+  const original = draggable.page.borderBox.center;
+  return didStartAfterCritical(draggable.descriptor.id, afterCritical) ? subtract(original, afterCritical.displacedBy.point) : original;
+};
+const getCurrentPageBorderBox = (draggable, afterCritical) => {
+  const original = draggable.page.borderBox;
+  return didStartAfterCritical(draggable.descriptor.id, afterCritical) ? offsetByPosition(original, negate(afterCritical.displacedBy.point)) : original;
+};
+
+var getClosestDraggable = (_ref => {
+  let {
+    pageBorderBoxCenter,
+    viewport,
+    destination,
+    insideDestination,
+    afterCritical
+  } = _ref;
+  const sorted = insideDestination.filter(draggable => isTotallyVisible({
+    target: getCurrentPageBorderBox(draggable, afterCritical),
+    destination,
+    viewport: viewport.frame,
+    withDroppableDisplacement: true
+  })).sort((a, b) => {
+    const distanceToA = distance(pageBorderBoxCenter, withDroppableDisplacement(destination, getCurrentPageBorderBoxCenter(a, afterCritical)));
+    const distanceToB = distance(pageBorderBoxCenter, withDroppableDisplacement(destination, getCurrentPageBorderBoxCenter(b, afterCritical)));
+    if (distanceToA < distanceToB) {
+      return -1;
+    }
+    if (distanceToB < distanceToA) {
+      return 1;
+    }
+    return a.descriptor.index - b.descriptor.index;
+  });
+  return sorted[0] || null;
+});
+
+var getDisplacedBy = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(function getDisplacedBy(axis, displaceBy) {
+  const displacement = displaceBy[axis.line];
+  return {
+    value: displacement,
+    point: patch(axis.line, displacement)
+  };
+});
+
+const getRequiredGrowthForPlaceholder = (droppable, placeholderSize, draggables) => {
+  const axis = droppable.axis;
+  if (droppable.descriptor.mode === 'virtual') {
+    return patch(axis.line, placeholderSize[axis.line]);
+  }
+  const availableSpace = droppable.subject.page.contentBox[axis.size];
+  const insideDroppable = getDraggablesInsideDroppable(droppable.descriptor.id, draggables);
+  const spaceUsed = insideDroppable.reduce((sum, dimension) => sum + dimension.client.marginBox[axis.size], 0);
+  const requiredSpace = spaceUsed + placeholderSize[axis.line];
+  const needsToGrowBy = requiredSpace - availableSpace;
+  if (needsToGrowBy <= 0) {
+    return null;
+  }
+  return patch(axis.line, needsToGrowBy);
+};
+const withMaxScroll = (frame, max) => ({
+  ...frame,
+  scroll: {
+    ...frame.scroll,
+    max
+  }
+});
+const addPlaceholder = (droppable, draggable, draggables) => {
+  const frame = droppable.frame;
+  !!isHomeOf(draggable, droppable) ?  true ? invariant(false, 'Should not add placeholder space to home list') : 0 : void 0;
+  !!droppable.subject.withPlaceholder ?  true ? invariant(false, 'Cannot add placeholder size to a subject when it already has one') : 0 : void 0;
+  const placeholderSize = getDisplacedBy(droppable.axis, draggable.displaceBy).point;
+  const requiredGrowth = getRequiredGrowthForPlaceholder(droppable, placeholderSize, draggables);
+  const added = {
+    placeholderSize,
+    increasedBy: requiredGrowth,
+    oldFrameMaxScroll: droppable.frame ? droppable.frame.scroll.max : null
+  };
+  if (!frame) {
+    const subject = getSubject({
+      page: droppable.subject.page,
+      withPlaceholder: added,
+      axis: droppable.axis,
+      frame: droppable.frame
+    });
+    return {
+      ...droppable,
+      subject
+    };
+  }
+  const maxScroll = requiredGrowth ? add(frame.scroll.max, requiredGrowth) : frame.scroll.max;
+  const newFrame = withMaxScroll(frame, maxScroll);
+  const subject = getSubject({
+    page: droppable.subject.page,
+    withPlaceholder: added,
+    axis: droppable.axis,
+    frame: newFrame
+  });
+  return {
+    ...droppable,
+    subject,
+    frame: newFrame
+  };
+};
+const removePlaceholder = droppable => {
+  const added = droppable.subject.withPlaceholder;
+  !added ?  true ? invariant(false, 'Cannot remove placeholder form subject when there was none') : 0 : void 0;
+  const frame = droppable.frame;
+  if (!frame) {
+    const subject = getSubject({
+      page: droppable.subject.page,
+      axis: droppable.axis,
+      frame: null,
+      withPlaceholder: null
+    });
+    return {
+      ...droppable,
+      subject
+    };
+  }
+  const oldMaxScroll = added.oldFrameMaxScroll;
+  !oldMaxScroll ?  true ? invariant(false, 'Expected droppable with frame to have old max frame scroll when removing placeholder') : 0 : void 0;
+  const newFrame = withMaxScroll(frame, oldMaxScroll);
+  const subject = getSubject({
+    page: droppable.subject.page,
+    axis: droppable.axis,
+    frame: newFrame,
+    withPlaceholder: null
+  });
+  return {
+    ...droppable,
+    subject,
+    frame: newFrame
+  };
+};
+
+var moveToNewDroppable = (_ref => {
+  let {
+    previousPageBorderBoxCenter,
+    moveRelativeTo,
+    insideDestination,
+    draggable,
+    draggables,
+    destination,
+    viewport,
+    afterCritical
+  } = _ref;
+  if (!moveRelativeTo) {
+    if (insideDestination.length) {
+      return null;
+    }
+    const proposed = {
+      displaced: emptyGroups,
+      displacedBy: noDisplacedBy,
+      at: {
+        type: 'REORDER',
+        destination: {
+          droppableId: destination.descriptor.id,
+          index: 0
+        }
+      }
+    };
+    const proposedPageBorderBoxCenter = getPageBorderBoxCenterFromImpact({
+      impact: proposed,
+      draggable,
+      droppable: destination,
+      draggables,
+      afterCritical
+    });
+    const withPlaceholder = isHomeOf(draggable, destination) ? destination : addPlaceholder(destination, draggable, draggables);
+    const isVisibleInNewLocation = isTotallyVisibleInNewLocation({
+      draggable,
+      destination: withPlaceholder,
+      newPageBorderBoxCenter: proposedPageBorderBoxCenter,
+      viewport: viewport.frame,
+      withDroppableDisplacement: false,
+      onlyOnMainAxis: true
+    });
+    return isVisibleInNewLocation ? proposed : null;
+  }
+  const isGoingBeforeTarget = Boolean(previousPageBorderBoxCenter[destination.axis.line] <= moveRelativeTo.page.borderBox.center[destination.axis.line]);
+  const proposedIndex = (() => {
+    const relativeTo = moveRelativeTo.descriptor.index;
+    if (moveRelativeTo.descriptor.id === draggable.descriptor.id) {
+      return relativeTo;
+    }
+    if (isGoingBeforeTarget) {
+      return relativeTo;
+    }
+    return relativeTo + 1;
+  })();
+  const displacedBy = getDisplacedBy(destination.axis, draggable.displaceBy);
+  return calculateReorderImpact({
+    draggable,
+    insideDestination,
+    destination,
+    viewport,
+    displacedBy,
+    last: emptyGroups,
+    index: proposedIndex
+  });
+});
+
+var moveCrossAxis = (_ref => {
+  let {
+    isMovingForward,
+    previousPageBorderBoxCenter,
+    draggable,
+    isOver,
+    draggables,
+    droppables,
+    viewport,
+    afterCritical
+  } = _ref;
+  const destination = getBestCrossAxisDroppable({
+    isMovingForward,
+    pageBorderBoxCenter: previousPageBorderBoxCenter,
+    source: isOver,
+    droppables,
+    viewport
+  });
+  if (!destination) {
+    return null;
+  }
+  const insideDestination = getDraggablesInsideDroppable(destination.descriptor.id, draggables);
+  const moveRelativeTo = getClosestDraggable({
+    pageBorderBoxCenter: previousPageBorderBoxCenter,
+    viewport,
+    destination,
+    insideDestination,
+    afterCritical
+  });
+  const impact = moveToNewDroppable({
+    previousPageBorderBoxCenter,
+    destination,
+    draggable,
+    draggables,
+    moveRelativeTo,
+    insideDestination,
+    viewport,
+    afterCritical
+  });
+  if (!impact) {
+    return null;
+  }
+  const pageBorderBoxCenter = getPageBorderBoxCenterFromImpact({
+    impact,
+    draggable,
+    droppable: destination,
+    draggables,
+    afterCritical
+  });
+  const clientSelection = getClientFromPageBorderBoxCenter({
+    pageBorderBoxCenter,
+    draggable,
+    viewport
+  });
+  return {
+    clientSelection,
+    impact,
+    scrollJumpRequest: null
+  };
+});
+
+var whatIsDraggedOver = (impact => {
+  const at = impact.at;
+  if (!at) {
+    return null;
+  }
+  if (at.type === 'REORDER') {
+    return at.destination.droppableId;
+  }
+  return at.combine.droppableId;
+});
+
+const getDroppableOver$1 = (impact, droppables) => {
+  const id = whatIsDraggedOver(impact);
+  return id ? droppables[id] : null;
+};
+var moveInDirection = (_ref => {
+  let {
+    state,
+    type
+  } = _ref;
+  const isActuallyOver = getDroppableOver$1(state.impact, state.dimensions.droppables);
+  const isMainAxisMovementAllowed = Boolean(isActuallyOver);
+  const home = state.dimensions.droppables[state.critical.droppable.id];
+  const isOver = isActuallyOver || home;
+  const direction = isOver.axis.direction;
+  const isMovingOnMainAxis = direction === 'vertical' && (type === 'MOVE_UP' || type === 'MOVE_DOWN') || direction === 'horizontal' && (type === 'MOVE_LEFT' || type === 'MOVE_RIGHT');
+  if (isMovingOnMainAxis && !isMainAxisMovementAllowed) {
+    return null;
+  }
+  const isMovingForward = type === 'MOVE_DOWN' || type === 'MOVE_RIGHT';
+  const draggable = state.dimensions.draggables[state.critical.draggable.id];
+  const previousPageBorderBoxCenter = state.current.page.borderBoxCenter;
+  const {
+    draggables,
+    droppables
+  } = state.dimensions;
+  return isMovingOnMainAxis ? moveToNextPlace({
+    isMovingForward,
+    previousPageBorderBoxCenter,
+    draggable,
+    destination: isOver,
+    draggables,
+    viewport: state.viewport,
+    previousClientSelection: state.current.client.selection,
+    previousImpact: state.impact,
+    afterCritical: state.afterCritical
+  }) : moveCrossAxis({
+    isMovingForward,
+    previousPageBorderBoxCenter,
+    draggable,
+    isOver,
+    draggables,
+    droppables,
+    viewport: state.viewport,
+    afterCritical: state.afterCritical
+  });
+});
+
+function isMovementAllowed(state) {
+  return state.phase === 'DRAGGING' || state.phase === 'COLLECTING';
+}
+
+function isPositionInFrame(frame) {
+  const isWithinVertical = isWithin(frame.top, frame.bottom);
+  const isWithinHorizontal = isWithin(frame.left, frame.right);
+  return function run(point) {
+    return isWithinVertical(point.y) && isWithinHorizontal(point.x);
+  };
+}
+
+function getHasOverlap(first, second) {
+  return first.left < second.right && first.right > second.left && first.top < second.bottom && first.bottom > second.top;
+}
+function getFurthestAway(_ref) {
+  let {
+    pageBorderBox,
+    draggable,
+    candidates
+  } = _ref;
+  const startCenter = draggable.page.borderBox.center;
+  const sorted = candidates.map(candidate => {
+    const axis = candidate.axis;
+    const target = patch(candidate.axis.line, pageBorderBox.center[axis.line], candidate.page.borderBox.center[axis.crossAxisLine]);
+    return {
+      id: candidate.descriptor.id,
+      distance: distance(startCenter, target)
+    };
+  }).sort((a, b) => b.distance - a.distance);
+  return sorted[0] ? sorted[0].id : null;
+}
+function getDroppableOver(_ref2) {
+  let {
+    pageBorderBox,
+    draggable,
+    droppables
+  } = _ref2;
+  const candidates = toDroppableList(droppables).filter(item => {
+    if (!item.isEnabled) {
+      return false;
+    }
+    const active = item.subject.active;
+    if (!active) {
+      return false;
+    }
+    if (!getHasOverlap(pageBorderBox, active)) {
+      return false;
+    }
+    if (isPositionInFrame(active)(pageBorderBox.center)) {
+      return true;
+    }
+    const axis = item.axis;
+    const childCenter = active.center[axis.crossAxisLine];
+    const crossAxisStart = pageBorderBox[axis.crossAxisStart];
+    const crossAxisEnd = pageBorderBox[axis.crossAxisEnd];
+    const isContained = isWithin(active[axis.crossAxisStart], active[axis.crossAxisEnd]);
+    const isStartContained = isContained(crossAxisStart);
+    const isEndContained = isContained(crossAxisEnd);
+    if (!isStartContained && !isEndContained) {
+      return true;
+    }
+    if (isStartContained) {
+      return crossAxisStart < childCenter;
+    }
+    return crossAxisEnd > childCenter;
+  });
+  if (!candidates.length) {
+    return null;
+  }
+  if (candidates.length === 1) {
+    return candidates[0].descriptor.id;
+  }
+  return getFurthestAway({
+    pageBorderBox,
+    draggable,
+    candidates
+  });
+}
+
+const offsetRectByPosition = (rect, point) => (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)(offsetByPosition(rect, point));
+
+var withDroppableScroll = ((droppable, area) => {
+  const frame = droppable.frame;
+  if (!frame) {
+    return area;
+  }
+  return offsetRectByPosition(area, frame.scroll.diff.value);
+});
+
+function getIsDisplaced(_ref) {
+  let {
+    displaced,
+    id
+  } = _ref;
+  return Boolean(displaced.visible[id] || displaced.invisible[id]);
+}
+
+function atIndex(_ref) {
+  let {
+    draggable,
+    closest,
+    inHomeList
+  } = _ref;
+  if (!closest) {
+    return null;
+  }
+  if (!inHomeList) {
+    return closest.descriptor.index;
+  }
+  if (closest.descriptor.index > draggable.descriptor.index) {
+    return closest.descriptor.index - 1;
+  }
+  return closest.descriptor.index;
+}
+var getReorderImpact = (_ref2 => {
+  let {
+    pageBorderBoxWithDroppableScroll: targetRect,
+    draggable,
+    destination,
+    insideDestination,
+    last,
+    viewport,
+    afterCritical
+  } = _ref2;
+  const axis = destination.axis;
+  const displacedBy = getDisplacedBy(destination.axis, draggable.displaceBy);
+  const displacement = displacedBy.value;
+  const targetStart = targetRect[axis.start];
+  const targetEnd = targetRect[axis.end];
+  const withoutDragging = removeDraggableFromList(draggable, insideDestination);
+  const closest = withoutDragging.find(child => {
+    const id = child.descriptor.id;
+    const childCenter = child.page.borderBox.center[axis.line];
+    const didStartAfterCritical$1 = didStartAfterCritical(id, afterCritical);
+    const isDisplaced = getIsDisplaced({
+      displaced: last,
+      id
+    });
+    if (didStartAfterCritical$1) {
+      if (isDisplaced) {
+        return targetEnd <= childCenter;
+      }
+      return targetStart < childCenter - displacement;
+    }
+    if (isDisplaced) {
+      return targetEnd <= childCenter + displacement;
+    }
+    return targetStart < childCenter;
+  }) || null;
+  const newIndex = atIndex({
+    draggable,
+    closest,
+    inHomeList: isHomeOf(draggable, destination)
+  });
+  return calculateReorderImpact({
+    draggable,
+    insideDestination,
+    destination,
+    viewport,
+    last,
+    displacedBy,
+    index: newIndex
+  });
+});
+
+const combineThresholdDivisor = 4;
+var getCombineImpact = (_ref => {
+  let {
+    draggable,
+    pageBorderBoxWithDroppableScroll: targetRect,
+    previousImpact,
+    destination,
+    insideDestination,
+    afterCritical
+  } = _ref;
+  if (!destination.isCombineEnabled) {
+    return null;
+  }
+  const axis = destination.axis;
+  const displacedBy = getDisplacedBy(destination.axis, draggable.displaceBy);
+  const displacement = displacedBy.value;
+  const targetStart = targetRect[axis.start];
+  const targetEnd = targetRect[axis.end];
+  const withoutDragging = removeDraggableFromList(draggable, insideDestination);
+  const combineWith = withoutDragging.find(child => {
+    const id = child.descriptor.id;
+    const childRect = child.page.borderBox;
+    const childSize = childRect[axis.size];
+    const threshold = childSize / combineThresholdDivisor;
+    const didStartAfterCritical$1 = didStartAfterCritical(id, afterCritical);
+    const isDisplaced = getIsDisplaced({
+      displaced: previousImpact.displaced,
+      id
+    });
+    if (didStartAfterCritical$1) {
+      if (isDisplaced) {
+        return targetEnd > childRect[axis.start] + threshold && targetEnd < childRect[axis.end] - threshold;
+      }
+      return targetStart > childRect[axis.start] - displacement + threshold && targetStart < childRect[axis.end] - displacement - threshold;
+    }
+    if (isDisplaced) {
+      return targetEnd > childRect[axis.start] + displacement + threshold && targetEnd < childRect[axis.end] + displacement - threshold;
+    }
+    return targetStart > childRect[axis.start] + threshold && targetStart < childRect[axis.end] - threshold;
+  });
+  if (!combineWith) {
+    return null;
+  }
+  const impact = {
+    displacedBy,
+    displaced: previousImpact.displaced,
+    at: {
+      type: 'COMBINE',
+      combine: {
+        draggableId: combineWith.descriptor.id,
+        droppableId: destination.descriptor.id
+      }
+    }
+  };
+  return impact;
+});
+
+var getDragImpact = (_ref => {
+  let {
+    pageOffset,
+    draggable,
+    draggables,
+    droppables,
+    previousImpact,
+    viewport,
+    afterCritical
+  } = _ref;
+  const pageBorderBox = offsetRectByPosition(draggable.page.borderBox, pageOffset);
+  const destinationId = getDroppableOver({
+    pageBorderBox,
+    draggable,
+    droppables
+  });
+  if (!destinationId) {
+    return noImpact$1;
+  }
+  const destination = droppables[destinationId];
+  const insideDestination = getDraggablesInsideDroppable(destination.descriptor.id, draggables);
+  const pageBorderBoxWithDroppableScroll = withDroppableScroll(destination, pageBorderBox);
+  return getCombineImpact({
+    pageBorderBoxWithDroppableScroll,
+    draggable,
+    previousImpact,
+    destination,
+    insideDestination,
+    afterCritical
+  }) || getReorderImpact({
+    pageBorderBoxWithDroppableScroll,
+    draggable,
+    destination,
+    insideDestination,
+    last: previousImpact.displaced,
+    viewport,
+    afterCritical
+  });
+});
+
+var patchDroppableMap = ((droppables, updated) => ({
+  ...droppables,
+  [updated.descriptor.id]: updated
+}));
+
+const clearUnusedPlaceholder = _ref => {
+  let {
+    previousImpact,
+    impact,
+    droppables
+  } = _ref;
+  const last = whatIsDraggedOver(previousImpact);
+  const now = whatIsDraggedOver(impact);
+  if (!last) {
+    return droppables;
+  }
+  if (last === now) {
+    return droppables;
+  }
+  const lastDroppable = droppables[last];
+  if (!lastDroppable.subject.withPlaceholder) {
+    return droppables;
+  }
+  const updated = removePlaceholder(lastDroppable);
+  return patchDroppableMap(droppables, updated);
+};
+var recomputePlaceholders = (_ref2 => {
+  let {
+    draggable,
+    draggables,
+    droppables,
+    previousImpact,
+    impact
+  } = _ref2;
+  const cleaned = clearUnusedPlaceholder({
+    previousImpact,
+    impact,
+    droppables
+  });
+  const isOver = whatIsDraggedOver(impact);
+  if (!isOver) {
+    return cleaned;
+  }
+  const droppable = droppables[isOver];
+  if (isHomeOf(draggable, droppable)) {
+    return cleaned;
+  }
+  if (droppable.subject.withPlaceholder) {
+    return cleaned;
+  }
+  const patched = addPlaceholder(droppable, draggable, draggables);
+  return patchDroppableMap(cleaned, patched);
+});
+
+var update = (_ref => {
+  let {
+    state,
+    clientSelection: forcedClientSelection,
+    dimensions: forcedDimensions,
+    viewport: forcedViewport,
+    impact: forcedImpact,
+    scrollJumpRequest
+  } = _ref;
+  const viewport = forcedViewport || state.viewport;
+  const dimensions = forcedDimensions || state.dimensions;
+  const clientSelection = forcedClientSelection || state.current.client.selection;
+  const offset = subtract(clientSelection, state.initial.client.selection);
+  const client = {
+    offset,
+    selection: clientSelection,
+    borderBoxCenter: add(state.initial.client.borderBoxCenter, offset)
+  };
+  const page = {
+    selection: add(client.selection, viewport.scroll.current),
+    borderBoxCenter: add(client.borderBoxCenter, viewport.scroll.current),
+    offset: add(client.offset, viewport.scroll.diff.value)
+  };
+  const current = {
+    client,
+    page
+  };
+  if (state.phase === 'COLLECTING') {
+    return {
+      ...state,
+      dimensions,
+      viewport,
+      current
+    };
+  }
+  const draggable = dimensions.draggables[state.critical.draggable.id];
+  const newImpact = forcedImpact || getDragImpact({
+    pageOffset: page.offset,
+    draggable,
+    draggables: dimensions.draggables,
+    droppables: dimensions.droppables,
+    previousImpact: state.impact,
+    viewport,
+    afterCritical: state.afterCritical
+  });
+  const withUpdatedPlaceholders = recomputePlaceholders({
+    draggable,
+    impact: newImpact,
+    previousImpact: state.impact,
+    draggables: dimensions.draggables,
+    droppables: dimensions.droppables
+  });
+  const result = {
+    ...state,
+    current,
+    dimensions: {
+      draggables: dimensions.draggables,
+      droppables: withUpdatedPlaceholders
+    },
+    impact: newImpact,
+    viewport,
+    scrollJumpRequest: scrollJumpRequest || null,
+    forceShouldAnimate: scrollJumpRequest ? false : null
+  };
+  return result;
+});
+
+function getDraggables(ids, draggables) {
+  return ids.map(id => draggables[id]);
+}
+var recompute = (_ref => {
+  let {
+    impact,
+    viewport,
+    draggables,
+    destination,
+    forceShouldAnimate
+  } = _ref;
+  const last = impact.displaced;
+  const afterDragging = getDraggables(last.all, draggables);
+  const displaced = getDisplacementGroups({
+    afterDragging,
+    destination,
+    displacedBy: impact.displacedBy,
+    viewport: viewport.frame,
+    forceShouldAnimate,
+    last
+  });
+  return {
+    ...impact,
+    displaced
+  };
+});
+
+var getClientBorderBoxCenter = (_ref => {
+  let {
+    impact,
+    draggable,
+    droppable,
+    draggables,
+    viewport,
+    afterCritical
+  } = _ref;
+  const pageBorderBoxCenter = getPageBorderBoxCenterFromImpact({
+    impact,
+    draggable,
+    draggables,
+    droppable,
+    afterCritical
+  });
+  return getClientFromPageBorderBoxCenter({
+    pageBorderBoxCenter,
+    draggable,
+    viewport
+  });
+});
+
+var refreshSnap = (_ref => {
+  let {
+    state,
+    dimensions: forcedDimensions,
+    viewport: forcedViewport
+  } = _ref;
+  !(state.movementMode === 'SNAP') ?  true ? invariant(false) : 0 : void 0;
+  const needsVisibilityCheck = state.impact;
+  const viewport = forcedViewport || state.viewport;
+  const dimensions = forcedDimensions || state.dimensions;
+  const {
+    draggables,
+    droppables
+  } = dimensions;
+  const draggable = draggables[state.critical.draggable.id];
+  const isOver = whatIsDraggedOver(needsVisibilityCheck);
+  !isOver ?  true ? invariant(false, 'Must be over a destination in SNAP movement mode') : 0 : void 0;
+  const destination = droppables[isOver];
+  const impact = recompute({
+    impact: needsVisibilityCheck,
+    viewport,
+    destination,
+    draggables
+  });
+  const clientSelection = getClientBorderBoxCenter({
+    impact,
+    draggable,
+    droppable: destination,
+    draggables,
+    viewport,
+    afterCritical: state.afterCritical
+  });
+  return update({
+    impact,
+    clientSelection,
+    state,
+    dimensions,
+    viewport
+  });
+});
+
+var getHomeLocation = (descriptor => ({
+  index: descriptor.index,
+  droppableId: descriptor.droppableId
+}));
+
+var getLiftEffect = (_ref => {
+  let {
+    draggable,
+    home,
+    draggables,
+    viewport
+  } = _ref;
+  const displacedBy = getDisplacedBy(home.axis, draggable.displaceBy);
+  const insideHome = getDraggablesInsideDroppable(home.descriptor.id, draggables);
+  const rawIndex = insideHome.indexOf(draggable);
+  !(rawIndex !== -1) ?  true ? invariant(false, 'Expected draggable to be inside home list') : 0 : void 0;
+  const afterDragging = insideHome.slice(rawIndex + 1);
+  const effected = afterDragging.reduce((previous, item) => {
+    previous[item.descriptor.id] = true;
+    return previous;
+  }, {});
+  const afterCritical = {
+    inVirtualList: home.descriptor.mode === 'virtual',
+    displacedBy,
+    effected
+  };
+  const displaced = getDisplacementGroups({
+    afterDragging,
+    destination: home,
+    displacedBy,
+    last: null,
+    viewport: viewport.frame,
+    forceShouldAnimate: false
+  });
+  const impact = {
+    displaced,
+    displacedBy,
+    at: {
+      type: 'REORDER',
+      destination: getHomeLocation(draggable.descriptor)
+    }
+  };
+  return {
+    impact,
+    afterCritical
+  };
+});
+
+var patchDimensionMap = ((dimensions, updated) => ({
+  draggables: dimensions.draggables,
+  droppables: patchDroppableMap(dimensions.droppables, updated)
+}));
+
+const start = key => {
+  if (true) {
+    {
+      return;
+    }
+  }
+};
+const finish = key => {
+  if (true) {
+    {
+      return;
+    }
+  }
+};
+
+var offsetDraggable = (_ref => {
+  let {
+    draggable,
+    offset: offset$1,
+    initialWindowScroll
+  } = _ref;
+  const client = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.offset)(draggable.client, offset$1);
+  const page = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.withScroll)(client, initialWindowScroll);
+  const moved = {
+    ...draggable,
+    placeholder: {
+      ...draggable.placeholder,
+      client
+    },
+    client,
+    page
+  };
+  return moved;
+});
+
+var getFrame = (droppable => {
+  const frame = droppable.frame;
+  !frame ?  true ? invariant(false, 'Expected Droppable to have a frame') : 0 : void 0;
+  return frame;
+});
+
+var adjustAdditionsForScrollChanges = (_ref => {
+  let {
+    additions,
+    updatedDroppables,
+    viewport
+  } = _ref;
+  const windowScrollChange = viewport.scroll.diff.value;
+  return additions.map(draggable => {
+    const droppableId = draggable.descriptor.droppableId;
+    const modified = updatedDroppables[droppableId];
+    const frame = getFrame(modified);
+    const droppableScrollChange = frame.scroll.diff.value;
+    const totalChange = add(windowScrollChange, droppableScrollChange);
+    const moved = offsetDraggable({
+      draggable,
+      offset: totalChange,
+      initialWindowScroll: viewport.scroll.initial
+    });
+    return moved;
+  });
+});
+
+const timingsKey = 'Processing dynamic changes';
+var publishWhileDraggingInVirtual = (_ref => {
+  let {
+    state,
+    published
+  } = _ref;
+  start(timingsKey);
+  const withScrollChange = published.modified.map(update => {
+    const existing = state.dimensions.droppables[update.droppableId];
+    const scrolled = scrollDroppable(existing, update.scroll);
+    return scrolled;
+  });
+  const droppables = {
+    ...state.dimensions.droppables,
+    ...toDroppableMap(withScrollChange)
+  };
+  const updatedAdditions = toDraggableMap(adjustAdditionsForScrollChanges({
+    additions: published.additions,
+    updatedDroppables: droppables,
+    viewport: state.viewport
+  }));
+  const draggables = {
+    ...state.dimensions.draggables,
+    ...updatedAdditions
+  };
+  published.removals.forEach(id => {
+    delete draggables[id];
+  });
+  const dimensions = {
+    droppables,
+    draggables
+  };
+  const wasOverId = whatIsDraggedOver(state.impact);
+  const wasOver = wasOverId ? dimensions.droppables[wasOverId] : null;
+  const draggable = dimensions.draggables[state.critical.draggable.id];
+  const home = dimensions.droppables[state.critical.droppable.id];
+  const {
+    impact: onLiftImpact,
+    afterCritical
+  } = getLiftEffect({
+    draggable,
+    home,
+    draggables,
+    viewport: state.viewport
+  });
+  const previousImpact = wasOver && wasOver.isCombineEnabled ? state.impact : onLiftImpact;
+  const impact = getDragImpact({
+    pageOffset: state.current.page.offset,
+    draggable: dimensions.draggables[state.critical.draggable.id],
+    draggables: dimensions.draggables,
+    droppables: dimensions.droppables,
+    previousImpact,
+    viewport: state.viewport,
+    afterCritical
+  });
+  finish(timingsKey);
+  const draggingState = {
+    ...state,
+    phase: 'DRAGGING',
+    impact,
+    onLiftImpact,
+    dimensions,
+    afterCritical,
+    forceShouldAnimate: false
+  };
+  if (state.phase === 'COLLECTING') {
+    return draggingState;
+  }
+  const dropPending = {
+    ...draggingState,
+    phase: 'DROP_PENDING',
+    reason: state.reason,
+    isWaiting: false
+  };
+  return dropPending;
+});
+
+const isSnapping = state => state.movementMode === 'SNAP';
+const postDroppableChange = (state, updated, isEnabledChanging) => {
+  const dimensions = patchDimensionMap(state.dimensions, updated);
+  if (!isSnapping(state) || isEnabledChanging) {
+    return update({
+      state,
+      dimensions
+    });
+  }
+  return refreshSnap({
+    state,
+    dimensions
+  });
+};
+function removeScrollJumpRequest(state) {
+  if (state.isDragging && state.movementMode === 'SNAP') {
+    return {
+      ...state,
+      scrollJumpRequest: null
+    };
+  }
+  return state;
+}
+const idle$2 = {
+  phase: 'IDLE',
+  completed: null,
+  shouldFlush: false
+};
+var reducer = (function (state, action) {
+  if (state === void 0) {
+    state = idle$2;
+  }
+  if (action.type === 'FLUSH') {
+    return {
+      ...idle$2,
+      shouldFlush: true
+    };
+  }
+  if (action.type === 'INITIAL_PUBLISH') {
+    !(state.phase === 'IDLE') ?  true ? invariant(false, 'INITIAL_PUBLISH must come after a IDLE phase') : 0 : void 0;
+    const {
+      critical,
+      clientSelection,
+      viewport,
+      dimensions,
+      movementMode
+    } = action.payload;
+    const draggable = dimensions.draggables[critical.draggable.id];
+    const home = dimensions.droppables[critical.droppable.id];
+    const client = {
+      selection: clientSelection,
+      borderBoxCenter: draggable.client.borderBox.center,
+      offset: origin
+    };
+    const initial = {
+      client,
+      page: {
+        selection: add(client.selection, viewport.scroll.initial),
+        borderBoxCenter: add(client.selection, viewport.scroll.initial),
+        offset: add(client.selection, viewport.scroll.diff.value)
+      }
+    };
+    const isWindowScrollAllowed = toDroppableList(dimensions.droppables).every(item => !item.isFixedOnPage);
+    const {
+      impact,
+      afterCritical
+    } = getLiftEffect({
+      draggable,
+      home,
+      draggables: dimensions.draggables,
+      viewport
+    });
+    const result = {
+      phase: 'DRAGGING',
+      isDragging: true,
+      critical,
+      movementMode,
+      dimensions,
+      initial,
+      current: initial,
+      isWindowScrollAllowed,
+      impact,
+      afterCritical,
+      onLiftImpact: impact,
+      viewport,
+      scrollJumpRequest: null,
+      forceShouldAnimate: null
+    };
+    return result;
+  }
+  if (action.type === 'COLLECTION_STARTING') {
+    if (state.phase === 'COLLECTING' || state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !(state.phase === 'DRAGGING') ?  true ? invariant(false, `Collection cannot start from phase ${state.phase}`) : 0 : void 0;
+    const result = {
+      ...state,
+      phase: 'COLLECTING'
+    };
+    return result;
+  }
+  if (action.type === 'PUBLISH_WHILE_DRAGGING') {
+    !(state.phase === 'COLLECTING' || state.phase === 'DROP_PENDING') ?  true ? invariant(false, `Unexpected ${action.type} received in phase ${state.phase}`) : 0 : void 0;
+    return publishWhileDraggingInVirtual({
+      state,
+      published: action.payload
+    });
+  }
+  if (action.type === 'MOVE') {
+    if (state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `${action.type} not permitted in phase ${state.phase}`) : 0 : void 0;
+    const {
+      client: clientSelection
+    } = action.payload;
+    if (isEqual$1(clientSelection, state.current.client.selection)) {
+      return state;
+    }
+    return update({
+      state,
+      clientSelection,
+      impact: isSnapping(state) ? state.impact : null
+    });
+  }
+  if (action.type === 'UPDATE_DROPPABLE_SCROLL') {
+    if (state.phase === 'DROP_PENDING') {
+      return removeScrollJumpRequest(state);
+    }
+    if (state.phase === 'COLLECTING') {
+      return removeScrollJumpRequest(state);
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `${action.type} not permitted in phase ${state.phase}`) : 0 : void 0;
+    const {
+      id,
+      newScroll
+    } = action.payload;
+    const target = state.dimensions.droppables[id];
+    if (!target) {
+      return state;
+    }
+    const scrolled = scrollDroppable(target, newScroll);
+    return postDroppableChange(state, scrolled, false);
+  }
+  if (action.type === 'UPDATE_DROPPABLE_IS_ENABLED') {
+    if (state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `Attempting to move in an unsupported phase ${state.phase}`) : 0 : void 0;
+    const {
+      id,
+      isEnabled
+    } = action.payload;
+    const target = state.dimensions.droppables[id];
+    !target ?  true ? invariant(false, `Cannot find Droppable[id: ${id}] to toggle its enabled state`) : 0 : void 0;
+    !(target.isEnabled !== isEnabled) ?  true ? invariant(false, `Trying to set droppable isEnabled to ${String(isEnabled)}
+      but it is already ${String(target.isEnabled)}`) : 0 : void 0;
+    const updated = {
+      ...target,
+      isEnabled
+    };
+    return postDroppableChange(state, updated, true);
+  }
+  if (action.type === 'UPDATE_DROPPABLE_IS_COMBINE_ENABLED') {
+    if (state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `Attempting to move in an unsupported phase ${state.phase}`) : 0 : void 0;
+    const {
+      id,
+      isCombineEnabled
+    } = action.payload;
+    const target = state.dimensions.droppables[id];
+    !target ?  true ? invariant(false, `Cannot find Droppable[id: ${id}] to toggle its isCombineEnabled state`) : 0 : void 0;
+    !(target.isCombineEnabled !== isCombineEnabled) ?  true ? invariant(false, `Trying to set droppable isCombineEnabled to ${String(isCombineEnabled)}
+      but it is already ${String(target.isCombineEnabled)}`) : 0 : void 0;
+    const updated = {
+      ...target,
+      isCombineEnabled
+    };
+    return postDroppableChange(state, updated, true);
+  }
+  if (action.type === 'MOVE_BY_WINDOW_SCROLL') {
+    if (state.phase === 'DROP_PENDING' || state.phase === 'DROP_ANIMATING') {
+      return state;
+    }
+    !isMovementAllowed(state) ?  true ? invariant(false, `Cannot move by window in phase ${state.phase}`) : 0 : void 0;
+    !state.isWindowScrollAllowed ?  true ? invariant(false, 'Window scrolling is currently not supported for fixed lists') : 0 : void 0;
+    const newScroll = action.payload.newScroll;
+    if (isEqual$1(state.viewport.scroll.current, newScroll)) {
+      return removeScrollJumpRequest(state);
+    }
+    const viewport = scrollViewport(state.viewport, newScroll);
+    if (isSnapping(state)) {
+      return refreshSnap({
+        state,
+        viewport
+      });
+    }
+    return update({
+      state,
+      viewport
+    });
+  }
+  if (action.type === 'UPDATE_VIEWPORT_MAX_SCROLL') {
+    if (!isMovementAllowed(state)) {
+      return state;
+    }
+    const maxScroll = action.payload.maxScroll;
+    if (isEqual$1(maxScroll, state.viewport.scroll.max)) {
+      return state;
+    }
+    const withMaxScroll = {
+      ...state.viewport,
+      scroll: {
+        ...state.viewport.scroll,
+        max: maxScroll
+      }
+    };
+    return {
+      ...state,
+      viewport: withMaxScroll
+    };
+  }
+  if (action.type === 'MOVE_UP' || action.type === 'MOVE_DOWN' || action.type === 'MOVE_LEFT' || action.type === 'MOVE_RIGHT') {
+    if (state.phase === 'COLLECTING' || state.phase === 'DROP_PENDING') {
+      return state;
+    }
+    !(state.phase === 'DRAGGING') ?  true ? invariant(false, `${action.type} received while not in DRAGGING phase`) : 0 : void 0;
+    const result = moveInDirection({
+      state,
+      type: action.type
+    });
+    if (!result) {
+      return state;
+    }
+    return update({
+      state,
+      impact: result.impact,
+      clientSelection: result.clientSelection,
+      scrollJumpRequest: result.scrollJumpRequest
+    });
+  }
+  if (action.type === 'DROP_PENDING') {
+    const reason = action.payload.reason;
+    !(state.phase === 'COLLECTING') ?  true ? invariant(false, 'Can only move into the DROP_PENDING phase from the COLLECTING phase') : 0 : void 0;
+    const newState = {
+      ...state,
+      phase: 'DROP_PENDING',
+      isWaiting: true,
+      reason
+    };
+    return newState;
+  }
+  if (action.type === 'DROP_ANIMATE') {
+    const {
+      completed,
+      dropDuration,
+      newHomeClientOffset
+    } = action.payload;
+    !(state.phase === 'DRAGGING' || state.phase === 'DROP_PENDING') ?  true ? invariant(false, `Cannot animate drop from phase ${state.phase}`) : 0 : void 0;
+    const result = {
+      phase: 'DROP_ANIMATING',
+      completed,
+      dropDuration,
+      newHomeClientOffset,
+      dimensions: state.dimensions
+    };
+    return result;
+  }
+  if (action.type === 'DROP_COMPLETE') {
+    const {
+      completed
+    } = action.payload;
+    return {
+      phase: 'IDLE',
+      completed,
+      shouldFlush: false
+    };
+  }
+  return state;
+});
+
+const beforeInitialCapture = args => ({
+  type: 'BEFORE_INITIAL_CAPTURE',
+  payload: args
+});
+const lift$1 = args => ({
+  type: 'LIFT',
+  payload: args
+});
+const initialPublish = args => ({
+  type: 'INITIAL_PUBLISH',
+  payload: args
+});
+const publishWhileDragging = args => ({
+  type: 'PUBLISH_WHILE_DRAGGING',
+  payload: args
+});
+const collectionStarting = () => ({
+  type: 'COLLECTION_STARTING',
+  payload: null
+});
+const updateDroppableScroll = args => ({
+  type: 'UPDATE_DROPPABLE_SCROLL',
+  payload: args
+});
+const updateDroppableIsEnabled = args => ({
+  type: 'UPDATE_DROPPABLE_IS_ENABLED',
+  payload: args
+});
+const updateDroppableIsCombineEnabled = args => ({
+  type: 'UPDATE_DROPPABLE_IS_COMBINE_ENABLED',
+  payload: args
+});
+const move = args => ({
+  type: 'MOVE',
+  payload: args
+});
+const moveByWindowScroll = args => ({
+  type: 'MOVE_BY_WINDOW_SCROLL',
+  payload: args
+});
+const updateViewportMaxScroll = args => ({
+  type: 'UPDATE_VIEWPORT_MAX_SCROLL',
+  payload: args
+});
+const moveUp = () => ({
+  type: 'MOVE_UP',
+  payload: null
+});
+const moveDown = () => ({
+  type: 'MOVE_DOWN',
+  payload: null
+});
+const moveRight = () => ({
+  type: 'MOVE_RIGHT',
+  payload: null
+});
+const moveLeft = () => ({
+  type: 'MOVE_LEFT',
+  payload: null
+});
+const flush = () => ({
+  type: 'FLUSH',
+  payload: null
+});
+const animateDrop = args => ({
+  type: 'DROP_ANIMATE',
+  payload: args
+});
+const completeDrop = args => ({
+  type: 'DROP_COMPLETE',
+  payload: args
+});
+const drop$1 = args => ({
+  type: 'DROP',
+  payload: args
+});
+const dropPending = args => ({
+  type: 'DROP_PENDING',
+  payload: args
+});
+const dropAnimationFinished = () => ({
+  type: 'DROP_ANIMATION_FINISHED',
+  payload: null
+});
+
+function checkIndexes(insideDestination) {
+  if (insideDestination.length <= 1) {
+    return;
+  }
+  const indexes = insideDestination.map(d => d.descriptor.index);
+  const errors = {};
+  for (let i = 1; i < indexes.length; i++) {
+    const current = indexes[i];
+    const previous = indexes[i - 1];
+    if (current !== previous + 1) {
+      errors[current] = true;
+    }
+  }
+  if (!Object.keys(errors).length) {
+    return;
+  }
+  const formatted = indexes.map(index => {
+    const hasError = Boolean(errors[index]);
+    return hasError ? `[🔥${index}]` : `${index}`;
+  }).join(', ');
+   true ? warning(`
+    Detected non-consecutive <Draggable /> indexes.
+
+    (This can cause unexpected bugs)
+
+    ${formatted}
+  `) : 0;
+}
+function validateDimensions(critical, dimensions) {
+  if (true) {
+    const insideDestination = getDraggablesInsideDroppable(critical.droppable.id, dimensions.draggables);
+    checkIndexes(insideDestination);
+  }
+}
+
+var lift = (marshal => _ref => {
+  let {
+    getState,
+    dispatch
+  } = _ref;
+  return next => action => {
+    if (action.type !== 'LIFT') {
+      next(action);
+      return;
+    }
+    const {
+      id,
+      clientSelection,
+      movementMode
+    } = action.payload;
+    const initial = getState();
+    if (initial.phase === 'DROP_ANIMATING') {
+      dispatch(completeDrop({
+        completed: initial.completed
+      }));
+    }
+    !(getState().phase === 'IDLE') ?  true ? invariant(false, 'Unexpected phase to start a drag') : 0 : void 0;
+    dispatch(flush());
+    dispatch(beforeInitialCapture({
+      draggableId: id,
+      movementMode
+    }));
+    const scrollOptions = {
+      shouldPublishImmediately: movementMode === 'SNAP'
+    };
+    const request = {
+      draggableId: id,
+      scrollOptions
+    };
+    const {
+      critical,
+      dimensions,
+      viewport
+    } = marshal.startPublishing(request);
+    validateDimensions(critical, dimensions);
+    dispatch(initialPublish({
+      critical,
+      dimensions,
+      clientSelection,
+      movementMode,
+      viewport
+    }));
+  };
+});
+
+var style = (marshal => () => next => action => {
+  if (action.type === 'INITIAL_PUBLISH') {
+    marshal.dragging();
+  }
+  if (action.type === 'DROP_ANIMATE') {
+    marshal.dropping(action.payload.completed.result.reason);
+  }
+  if (action.type === 'FLUSH' || action.type === 'DROP_COMPLETE') {
+    marshal.resting();
+  }
+  next(action);
+});
+
+const curves = {
+  outOfTheWay: 'cubic-bezier(0.2, 0, 0, 1)',
+  drop: 'cubic-bezier(.2,1,.1,1)'
+};
+const combine = {
+  opacity: {
+    drop: 0,
+    combining: 0.7
+  },
+  scale: {
+    drop: 0.75
+  }
+};
+const timings = {
+  outOfTheWay: 0.2,
+  minDropTime: 0.33,
+  maxDropTime: 0.55
+};
+const outOfTheWayTiming = `${timings.outOfTheWay}s ${curves.outOfTheWay}`;
+const transitions = {
+  fluid: `opacity ${outOfTheWayTiming}`,
+  snap: `transform ${outOfTheWayTiming}, opacity ${outOfTheWayTiming}`,
+  drop: duration => {
+    const timing = `${duration}s ${curves.drop}`;
+    return `transform ${timing}, opacity ${timing}`;
+  },
+  outOfTheWay: `transform ${outOfTheWayTiming}`,
+  placeholder: `height ${outOfTheWayTiming}, width ${outOfTheWayTiming}, margin ${outOfTheWayTiming}`
+};
+const moveTo = offset => isEqual$1(offset, origin) ? undefined : `translate(${offset.x}px, ${offset.y}px)`;
+const transforms = {
+  moveTo,
+  drop: (offset, isCombining) => {
+    const translate = moveTo(offset);
+    if (!translate) {
+      return undefined;
+    }
+    if (!isCombining) {
+      return translate;
+    }
+    return `${translate} scale(${combine.scale.drop})`;
+  }
+};
+
+const {
+  minDropTime,
+  maxDropTime
+} = timings;
+const dropTimeRange = maxDropTime - minDropTime;
+const maxDropTimeAtDistance = 1500;
+const cancelDropModifier = 0.6;
+var getDropDuration = (_ref => {
+  let {
+    current,
+    destination,
+    reason
+  } = _ref;
+  const distance$1 = distance(current, destination);
+  if (distance$1 <= 0) {
+    return minDropTime;
+  }
+  if (distance$1 >= maxDropTimeAtDistance) {
+    return maxDropTime;
+  }
+  const percentage = distance$1 / maxDropTimeAtDistance;
+  const duration = minDropTime + dropTimeRange * percentage;
+  const withDuration = reason === 'CANCEL' ? duration * cancelDropModifier : duration;
+  return Number(withDuration.toFixed(2));
+});
+
+var getNewHomeClientOffset = (_ref => {
+  let {
+    impact,
+    draggable,
+    dimensions,
+    viewport,
+    afterCritical
+  } = _ref;
+  const {
+    draggables,
+    droppables
+  } = dimensions;
+  const droppableId = whatIsDraggedOver(impact);
+  const destination = droppableId ? droppables[droppableId] : null;
+  const home = droppables[draggable.descriptor.droppableId];
+  const newClientCenter = getClientBorderBoxCenter({
+    impact,
+    draggable,
+    draggables,
+    afterCritical,
+    droppable: destination || home,
+    viewport
+  });
+  const offset = subtract(newClientCenter, draggable.client.borderBox.center);
+  return offset;
+});
+
+var getDropImpact = (_ref => {
+  let {
+    draggables,
+    reason,
+    lastImpact,
+    home,
+    viewport,
+    onLiftImpact
+  } = _ref;
+  if (!lastImpact.at || reason !== 'DROP') {
+    const recomputedHomeImpact = recompute({
+      draggables,
+      impact: onLiftImpact,
+      destination: home,
+      viewport,
+      forceShouldAnimate: true
+    });
+    return {
+      impact: recomputedHomeImpact,
+      didDropInsideDroppable: false
+    };
+  }
+  if (lastImpact.at.type === 'REORDER') {
+    return {
+      impact: lastImpact,
+      didDropInsideDroppable: true
+    };
+  }
+  const withoutMovement = {
+    ...lastImpact,
+    displaced: emptyGroups
+  };
+  return {
+    impact: withoutMovement,
+    didDropInsideDroppable: true
+  };
+});
+
+const dropMiddleware = _ref => {
+  let {
+    getState,
+    dispatch
+  } = _ref;
+  return next => action => {
+    if (action.type !== 'DROP') {
+      next(action);
+      return;
+    }
+    const state = getState();
+    const reason = action.payload.reason;
+    if (state.phase === 'COLLECTING') {
+      dispatch(dropPending({
+        reason
+      }));
+      return;
+    }
+    if (state.phase === 'IDLE') {
+      return;
+    }
+    const isWaitingForDrop = state.phase === 'DROP_PENDING' && state.isWaiting;
+    !!isWaitingForDrop ?  true ? invariant(false, 'A DROP action occurred while DROP_PENDING and still waiting') : 0 : void 0;
+    !(state.phase === 'DRAGGING' || state.phase === 'DROP_PENDING') ?  true ? invariant(false, `Cannot drop in phase: ${state.phase}`) : 0 : void 0;
+    const critical = state.critical;
+    const dimensions = state.dimensions;
+    const draggable = dimensions.draggables[state.critical.draggable.id];
+    const {
+      impact,
+      didDropInsideDroppable
+    } = getDropImpact({
+      reason,
+      lastImpact: state.impact,
+      afterCritical: state.afterCritical,
+      onLiftImpact: state.onLiftImpact,
+      home: state.dimensions.droppables[state.critical.droppable.id],
+      viewport: state.viewport,
+      draggables: state.dimensions.draggables
+    });
+    const destination = didDropInsideDroppable ? tryGetDestination(impact) : null;
+    const combine = didDropInsideDroppable ? tryGetCombine(impact) : null;
+    const source = {
+      index: critical.draggable.index,
+      droppableId: critical.droppable.id
+    };
+    const result = {
+      draggableId: draggable.descriptor.id,
+      type: draggable.descriptor.type,
+      source,
+      reason,
+      mode: state.movementMode,
+      destination,
+      combine
+    };
+    const newHomeClientOffset = getNewHomeClientOffset({
+      impact,
+      draggable,
+      dimensions,
+      viewport: state.viewport,
+      afterCritical: state.afterCritical
+    });
+    const completed = {
+      critical: state.critical,
+      afterCritical: state.afterCritical,
+      result,
+      impact
+    };
+    const isAnimationRequired = !isEqual$1(state.current.client.offset, newHomeClientOffset) || Boolean(result.combine);
+    if (!isAnimationRequired) {
+      dispatch(completeDrop({
+        completed
+      }));
+      return;
+    }
+    const dropDuration = getDropDuration({
+      current: state.current.client.offset,
+      destination: newHomeClientOffset,
+      reason
+    });
+    const args = {
+      newHomeClientOffset,
+      dropDuration,
+      completed
+    };
+    dispatch(animateDrop(args));
+  };
+};
+var drop = dropMiddleware;
+
+var getWindowScroll = (() => ({
+  x: window.pageXOffset,
+  y: window.pageYOffset
+}));
+
+function getWindowScrollBinding(update) {
+  return {
+    eventName: 'scroll',
+    options: {
+      passive: true,
+      capture: false
+    },
+    fn: event => {
+      if (event.target !== window && event.target !== window.document) {
+        return;
+      }
+      update();
+    }
+  };
+}
+function getScrollListener(_ref) {
+  let {
+    onWindowScroll
+  } = _ref;
+  function updateScroll() {
+    onWindowScroll(getWindowScroll());
+  }
+  const scheduled = (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(updateScroll);
+  const binding = getWindowScrollBinding(scheduled);
+  let unbind = noop$2;
+  function isActive() {
+    return unbind !== noop$2;
+  }
+  function start() {
+    !!isActive() ?  true ? invariant(false, 'Cannot start scroll listener when already active') : 0 : void 0;
+    unbind = bindEvents(window, [binding]);
+  }
+  function stop() {
+    !isActive() ?  true ? invariant(false, 'Cannot stop scroll listener when not active') : 0 : void 0;
+    scheduled.cancel();
+    unbind();
+    unbind = noop$2;
+  }
+  return {
+    start,
+    stop,
+    isActive
+  };
+}
+
+const shouldEnd = action => action.type === 'DROP_COMPLETE' || action.type === 'DROP_ANIMATE' || action.type === 'FLUSH';
+const scrollListener = store => {
+  const listener = getScrollListener({
+    onWindowScroll: newScroll => {
+      store.dispatch(moveByWindowScroll({
+        newScroll
+      }));
+    }
+  });
+  return next => action => {
+    if (!listener.isActive() && action.type === 'INITIAL_PUBLISH') {
+      listener.start();
+    }
+    if (listener.isActive() && shouldEnd(action)) {
+      listener.stop();
+    }
+    next(action);
+  };
+};
+var scrollListener$1 = scrollListener;
+
+var getExpiringAnnounce = (announce => {
+  let wasCalled = false;
+  let isExpired = false;
+  const timeoutId = setTimeout(() => {
+    isExpired = true;
+  });
+  const result = message => {
+    if (wasCalled) {
+       true ? warning('Announcement already made. Not making a second announcement') : 0;
+      return;
+    }
+    if (isExpired) {
+       true ? warning(`
+        Announcements cannot be made asynchronously.
+        Default message has already been announced.
+      `) : 0;
+      return;
+    }
+    wasCalled = true;
+    announce(message);
+    clearTimeout(timeoutId);
+  };
+  result.wasCalled = () => wasCalled;
+  return result;
+});
+
+var getAsyncMarshal = (() => {
+  const entries = [];
+  const execute = timerId => {
+    const index = entries.findIndex(item => item.timerId === timerId);
+    !(index !== -1) ?  true ? invariant(false, 'Could not find timer') : 0 : void 0;
+    const [entry] = entries.splice(index, 1);
+    entry.callback();
+  };
+  const add = fn => {
+    const timerId = setTimeout(() => execute(timerId));
+    const entry = {
+      timerId,
+      callback: fn
+    };
+    entries.push(entry);
+  };
+  const flush = () => {
+    if (!entries.length) {
+      return;
+    }
+    const shallow = [...entries];
+    entries.length = 0;
+    shallow.forEach(entry => {
+      clearTimeout(entry.timerId);
+      entry.callback();
+    });
+  };
+  return {
+    add,
+    flush
+  };
+});
+
+const areLocationsEqual = (first, second) => {
+  if (first == null && second == null) {
+    return true;
+  }
+  if (first == null || second == null) {
+    return false;
+  }
+  return first.droppableId === second.droppableId && first.index === second.index;
+};
+const isCombineEqual = (first, second) => {
+  if (first == null && second == null) {
+    return true;
+  }
+  if (first == null || second == null) {
+    return false;
+  }
+  return first.draggableId === second.draggableId && first.droppableId === second.droppableId;
+};
+const isCriticalEqual = (first, second) => {
+  if (first === second) {
+    return true;
+  }
+  const isDraggableEqual = first.draggable.id === second.draggable.id && first.draggable.droppableId === second.draggable.droppableId && first.draggable.type === second.draggable.type && first.draggable.index === second.draggable.index;
+  const isDroppableEqual = first.droppable.id === second.droppable.id && first.droppable.type === second.droppable.type;
+  return isDraggableEqual && isDroppableEqual;
+};
+
+const withTimings = (key, fn) => {
+  start();
+  fn();
+  finish();
+};
+const getDragStart = (critical, mode) => ({
+  draggableId: critical.draggable.id,
+  type: critical.droppable.type,
+  source: {
+    droppableId: critical.droppable.id,
+    index: critical.draggable.index
+  },
+  mode
+});
+function execute(responder, data, announce, getDefaultMessage) {
+  if (!responder) {
+    announce(getDefaultMessage(data));
+    return;
+  }
+  const willExpire = getExpiringAnnounce(announce);
+  const provided = {
+    announce: willExpire
+  };
+  responder(data, provided);
+  if (!willExpire.wasCalled()) {
+    announce(getDefaultMessage(data));
+  }
+}
+var getPublisher = ((getResponders, announce) => {
+  const asyncMarshal = getAsyncMarshal();
+  let dragging = null;
+  const beforeCapture = (draggableId, mode) => {
+    !!dragging ?  true ? invariant(false, 'Cannot fire onBeforeCapture as a drag start has already been published') : 0 : void 0;
+    withTimings('onBeforeCapture', () => {
+      const fn = getResponders().onBeforeCapture;
+      if (fn) {
+        const before = {
+          draggableId,
+          mode
+        };
+        fn(before);
+      }
+    });
+  };
+  const beforeStart = (critical, mode) => {
+    !!dragging ?  true ? invariant(false, 'Cannot fire onBeforeDragStart as a drag start has already been published') : 0 : void 0;
+    withTimings('onBeforeDragStart', () => {
+      const fn = getResponders().onBeforeDragStart;
+      if (fn) {
+        fn(getDragStart(critical, mode));
+      }
+    });
+  };
+  const start = (critical, mode) => {
+    !!dragging ?  true ? invariant(false, 'Cannot fire onBeforeDragStart as a drag start has already been published') : 0 : void 0;
+    const data = getDragStart(critical, mode);
+    dragging = {
+      mode,
+      lastCritical: critical,
+      lastLocation: data.source,
+      lastCombine: null
+    };
+    asyncMarshal.add(() => {
+      withTimings('onDragStart', () => execute(getResponders().onDragStart, data, announce, preset$1.onDragStart));
+    });
+  };
+  const update = (critical, impact) => {
+    const location = tryGetDestination(impact);
+    const combine = tryGetCombine(impact);
+    !dragging ?  true ? invariant(false, 'Cannot fire onDragMove when onDragStart has not been called') : 0 : void 0;
+    const hasCriticalChanged = !isCriticalEqual(critical, dragging.lastCritical);
+    if (hasCriticalChanged) {
+      dragging.lastCritical = critical;
+    }
+    const hasLocationChanged = !areLocationsEqual(dragging.lastLocation, location);
+    if (hasLocationChanged) {
+      dragging.lastLocation = location;
+    }
+    const hasGroupingChanged = !isCombineEqual(dragging.lastCombine, combine);
+    if (hasGroupingChanged) {
+      dragging.lastCombine = combine;
+    }
+    if (!hasCriticalChanged && !hasLocationChanged && !hasGroupingChanged) {
+      return;
+    }
+    const data = {
+      ...getDragStart(critical, dragging.mode),
+      combine,
+      destination: location
+    };
+    asyncMarshal.add(() => {
+      withTimings('onDragUpdate', () => execute(getResponders().onDragUpdate, data, announce, preset$1.onDragUpdate));
+    });
+  };
+  const flush = () => {
+    !dragging ?  true ? invariant(false, 'Can only flush responders while dragging') : 0 : void 0;
+    asyncMarshal.flush();
+  };
+  const drop = result => {
+    !dragging ?  true ? invariant(false, 'Cannot fire onDragEnd when there is no matching onDragStart') : 0 : void 0;
+    dragging = null;
+    withTimings('onDragEnd', () => execute(getResponders().onDragEnd, result, announce, preset$1.onDragEnd));
+  };
+  const abort = () => {
+    if (!dragging) {
+      return;
+    }
+    const result = {
+      ...getDragStart(dragging.lastCritical, dragging.mode),
+      combine: null,
+      destination: null,
+      reason: 'CANCEL'
+    };
+    drop(result);
+  };
+  return {
+    beforeCapture,
+    beforeStart,
+    start,
+    update,
+    flush,
+    drop,
+    abort
+  };
+});
+
+var responders = ((getResponders, announce) => {
+  const publisher = getPublisher(getResponders, announce);
+  return store => next => action => {
+    if (action.type === 'BEFORE_INITIAL_CAPTURE') {
+      publisher.beforeCapture(action.payload.draggableId, action.payload.movementMode);
+      return;
+    }
+    if (action.type === 'INITIAL_PUBLISH') {
+      const critical = action.payload.critical;
+      publisher.beforeStart(critical, action.payload.movementMode);
+      next(action);
+      publisher.start(critical, action.payload.movementMode);
+      return;
+    }
+    if (action.type === 'DROP_COMPLETE') {
+      const result = action.payload.completed.result;
+      publisher.flush();
+      next(action);
+      publisher.drop(result);
+      return;
+    }
+    next(action);
+    if (action.type === 'FLUSH') {
+      publisher.abort();
+      return;
+    }
+    const state = store.getState();
+    if (state.phase === 'DRAGGING') {
+      publisher.update(state.critical, state.impact);
+    }
+  };
+});
+
+const dropAnimationFinishMiddleware = store => next => action => {
+  if (action.type !== 'DROP_ANIMATION_FINISHED') {
+    next(action);
+    return;
+  }
+  const state = store.getState();
+  !(state.phase === 'DROP_ANIMATING') ?  true ? invariant(false, 'Cannot finish a drop animating when no drop is occurring') : 0 : void 0;
+  store.dispatch(completeDrop({
+    completed: state.completed
+  }));
+};
+var dropAnimationFinish = dropAnimationFinishMiddleware;
+
+const dropAnimationFlushOnScrollMiddleware = store => {
+  let unbind = null;
+  let frameId = null;
+  function clear() {
+    if (frameId) {
+      cancelAnimationFrame(frameId);
+      frameId = null;
+    }
+    if (unbind) {
+      unbind();
+      unbind = null;
+    }
+  }
+  return next => action => {
+    if (action.type === 'FLUSH' || action.type === 'DROP_COMPLETE' || action.type === 'DROP_ANIMATION_FINISHED') {
+      clear();
+    }
+    next(action);
+    if (action.type !== 'DROP_ANIMATE') {
+      return;
+    }
+    const binding = {
+      eventName: 'scroll',
+      options: {
+        capture: true,
+        passive: false,
+        once: true
+      },
+      fn: function flushDropAnimation() {
+        const state = store.getState();
+        if (state.phase === 'DROP_ANIMATING') {
+          store.dispatch(dropAnimationFinished());
+        }
+      }
+    };
+    frameId = requestAnimationFrame(() => {
+      frameId = null;
+      unbind = bindEvents(window, [binding]);
+    });
+  };
+};
+var dropAnimationFlushOnScroll = dropAnimationFlushOnScrollMiddleware;
+
+var dimensionMarshalStopper = (marshal => () => next => action => {
+  if (action.type === 'DROP_COMPLETE' || action.type === 'FLUSH' || action.type === 'DROP_ANIMATE') {
+    marshal.stopPublishing();
+  }
+  next(action);
+});
+
+var focus = (marshal => {
+  let isWatching = false;
+  return () => next => action => {
+    if (action.type === 'INITIAL_PUBLISH') {
+      isWatching = true;
+      marshal.tryRecordFocus(action.payload.critical.draggable.id);
+      next(action);
+      marshal.tryRestoreFocusRecorded();
+      return;
+    }
+    next(action);
+    if (!isWatching) {
+      return;
+    }
+    if (action.type === 'FLUSH') {
+      isWatching = false;
+      marshal.tryRestoreFocusRecorded();
+      return;
+    }
+    if (action.type === 'DROP_COMPLETE') {
+      isWatching = false;
+      const result = action.payload.completed.result;
+      if (result.combine) {
+        marshal.tryShiftRecord(result.draggableId, result.combine.draggableId);
+      }
+      marshal.tryRestoreFocusRecorded();
+    }
+  };
+});
+
+const shouldStop = action => action.type === 'DROP_COMPLETE' || action.type === 'DROP_ANIMATE' || action.type === 'FLUSH';
+var autoScroll = (autoScroller => store => next => action => {
+  if (shouldStop(action)) {
+    autoScroller.stop();
+    next(action);
+    return;
+  }
+  if (action.type === 'INITIAL_PUBLISH') {
+    next(action);
+    const state = store.getState();
+    !(state.phase === 'DRAGGING') ?  true ? invariant(false, 'Expected phase to be DRAGGING after INITIAL_PUBLISH') : 0 : void 0;
+    autoScroller.start(state);
+    return;
+  }
+  next(action);
+  autoScroller.scroll(store.getState());
+});
+
+const pendingDrop = store => next => action => {
+  next(action);
+  if (action.type !== 'PUBLISH_WHILE_DRAGGING') {
+    return;
+  }
+  const postActionState = store.getState();
+  if (postActionState.phase !== 'DROP_PENDING') {
+    return;
+  }
+  if (postActionState.isWaiting) {
+    return;
+  }
+  store.dispatch(drop$1({
+    reason: postActionState.reason
+  }));
+};
+var pendingDrop$1 = pendingDrop;
+
+const composeEnhancers =  true && typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+  name: '@hello-pangea/dnd'
+}) : redux__WEBPACK_IMPORTED_MODULE_7__.compose;
+var createStore = (_ref => {
+  let {
+    dimensionMarshal,
+    focusMarshal,
+    styleMarshal,
+    getResponders,
+    announce,
+    autoScroller
+  } = _ref;
+  return (0,redux__WEBPACK_IMPORTED_MODULE_7__.createStore)(reducer, composeEnhancers((0,redux__WEBPACK_IMPORTED_MODULE_7__.applyMiddleware)(style(styleMarshal), dimensionMarshalStopper(dimensionMarshal), lift(dimensionMarshal), drop, dropAnimationFinish, dropAnimationFlushOnScroll, pendingDrop$1, autoScroll(autoScroller), scrollListener$1, focus(focusMarshal), responders(getResponders, announce))));
+});
+
+const clean$1 = () => ({
+  additions: {},
+  removals: {},
+  modified: {}
+});
+function createPublisher(_ref) {
+  let {
+    registry,
+    callbacks
+  } = _ref;
+  let staging = clean$1();
+  let frameId = null;
+  const collect = () => {
+    if (frameId) {
+      return;
+    }
+    callbacks.collectionStarting();
+    frameId = requestAnimationFrame(() => {
+      frameId = null;
+      start();
+      const {
+        additions,
+        removals,
+        modified
+      } = staging;
+      const added = Object.keys(additions).map(id => registry.draggable.getById(id).getDimension(origin)).sort((a, b) => a.descriptor.index - b.descriptor.index);
+      const updated = Object.keys(modified).map(id => {
+        const entry = registry.droppable.getById(id);
+        const scroll = entry.callbacks.getScrollWhileDragging();
+        return {
+          droppableId: id,
+          scroll
+        };
+      });
+      const result = {
+        additions: added,
+        removals: Object.keys(removals),
+        modified: updated
+      };
+      staging = clean$1();
+      finish();
+      callbacks.publish(result);
+    });
+  };
+  const add = entry => {
+    const id = entry.descriptor.id;
+    staging.additions[id] = entry;
+    staging.modified[entry.descriptor.droppableId] = true;
+    if (staging.removals[id]) {
+      delete staging.removals[id];
+    }
+    collect();
+  };
+  const remove = entry => {
+    const descriptor = entry.descriptor;
+    staging.removals[descriptor.id] = true;
+    staging.modified[descriptor.droppableId] = true;
+    if (staging.additions[descriptor.id]) {
+      delete staging.additions[descriptor.id];
+    }
+    collect();
+  };
+  const stop = () => {
+    if (!frameId) {
+      return;
+    }
+    cancelAnimationFrame(frameId);
+    frameId = null;
+    staging = clean$1();
+  };
+  return {
+    add,
+    remove,
+    stop
+  };
+}
+
+var getMaxScroll = (_ref => {
+  let {
+    scrollHeight,
+    scrollWidth,
+    height,
+    width
+  } = _ref;
+  const maxScroll = subtract({
+    x: scrollWidth,
+    y: scrollHeight
+  }, {
+    x: width,
+    y: height
+  });
+  const adjustedMaxScroll = {
+    x: Math.max(0, maxScroll.x),
+    y: Math.max(0, maxScroll.y)
+  };
+  return adjustedMaxScroll;
+});
+
+var getDocumentElement = (() => {
+  const doc = document.documentElement;
+  !doc ?  true ? invariant(false, 'Cannot find document.documentElement') : 0 : void 0;
+  return doc;
+});
+
+var getMaxWindowScroll = (() => {
+  const doc = getDocumentElement();
+  const maxScroll = getMaxScroll({
+    scrollHeight: doc.scrollHeight,
+    scrollWidth: doc.scrollWidth,
+    width: doc.clientWidth,
+    height: doc.clientHeight
+  });
+  return maxScroll;
+});
+
+var getViewport = (() => {
+  const scroll = getWindowScroll();
+  const maxScroll = getMaxWindowScroll();
+  const top = scroll.y;
+  const left = scroll.x;
+  const doc = getDocumentElement();
+  const width = doc.clientWidth;
+  const height = doc.clientHeight;
+  const right = left + width;
+  const bottom = top + height;
+  const frame = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)({
+    top,
+    left,
+    right,
+    bottom
+  });
+  const viewport = {
+    frame,
+    scroll: {
+      initial: scroll,
+      current: scroll,
+      max: maxScroll,
+      diff: {
+        value: origin,
+        displacement: origin
+      }
+    }
+  };
+  return viewport;
+});
+
+var getInitialPublish = (_ref => {
+  let {
+    critical,
+    scrollOptions,
+    registry
+  } = _ref;
+  start();
+  const viewport = getViewport();
+  const windowScroll = viewport.scroll.current;
+  const home = critical.droppable;
+  const droppables = registry.droppable.getAllByType(home.type).map(entry => entry.callbacks.getDimensionAndWatchScroll(windowScroll, scrollOptions));
+  const draggables = registry.draggable.getAllByType(critical.draggable.type).map(entry => entry.getDimension(windowScroll));
+  const dimensions = {
+    draggables: toDraggableMap(draggables),
+    droppables: toDroppableMap(droppables)
+  };
+  finish();
+  const result = {
+    dimensions,
+    critical,
+    viewport
+  };
+  return result;
+});
+
+function shouldPublishUpdate(registry, dragging, entry) {
+  if (entry.descriptor.id === dragging.id) {
+    return false;
+  }
+  if (entry.descriptor.type !== dragging.type) {
+    return false;
+  }
+  const home = registry.droppable.getById(entry.descriptor.droppableId);
+  if (home.descriptor.mode !== 'virtual') {
+     true ? warning(`
+      You are attempting to add or remove a Draggable [id: ${entry.descriptor.id}]
+      while a drag is occurring. This is only supported for virtual lists.
+
+      See https://github.com/hello-pangea/dnd/blob/main/docs/patterns/virtual-lists.md
+    `) : 0;
+    return false;
+  }
+  return true;
+}
+var createDimensionMarshal = ((registry, callbacks) => {
+  let collection = null;
+  const publisher = createPublisher({
+    callbacks: {
+      publish: callbacks.publishWhileDragging,
+      collectionStarting: callbacks.collectionStarting
+    },
+    registry
+  });
+  const updateDroppableIsEnabled = (id, isEnabled) => {
+    !registry.droppable.exists(id) ?  true ? invariant(false, `Cannot update is enabled flag of Droppable ${id} as it is not registered`) : 0 : void 0;
+    if (!collection) {
+      return;
+    }
+    callbacks.updateDroppableIsEnabled({
+      id,
+      isEnabled
+    });
+  };
+  const updateDroppableIsCombineEnabled = (id, isCombineEnabled) => {
+    if (!collection) {
+      return;
+    }
+    !registry.droppable.exists(id) ?  true ? invariant(false, `Cannot update isCombineEnabled flag of Droppable ${id} as it is not registered`) : 0 : void 0;
+    callbacks.updateDroppableIsCombineEnabled({
+      id,
+      isCombineEnabled
+    });
+  };
+  const updateDroppableScroll = (id, newScroll) => {
+    if (!collection) {
+      return;
+    }
+    !registry.droppable.exists(id) ?  true ? invariant(false, `Cannot update the scroll on Droppable ${id} as it is not registered`) : 0 : void 0;
+    callbacks.updateDroppableScroll({
+      id,
+      newScroll
+    });
+  };
+  const scrollDroppable = (id, change) => {
+    if (!collection) {
+      return;
+    }
+    registry.droppable.getById(id).callbacks.scroll(change);
+  };
+  const stopPublishing = () => {
+    if (!collection) {
+      return;
+    }
+    publisher.stop();
+    const home = collection.critical.droppable;
+    registry.droppable.getAllByType(home.type).forEach(entry => entry.callbacks.dragStopped());
+    collection.unsubscribe();
+    collection = null;
+  };
+  const subscriber = event => {
+    !collection ?  true ? invariant(false, 'Should only be subscribed when a collection is occurring') : 0 : void 0;
+    const dragging = collection.critical.draggable;
+    if (event.type === 'ADDITION') {
+      if (shouldPublishUpdate(registry, dragging, event.value)) {
+        publisher.add(event.value);
+      }
+    }
+    if (event.type === 'REMOVAL') {
+      if (shouldPublishUpdate(registry, dragging, event.value)) {
+        publisher.remove(event.value);
+      }
+    }
+  };
+  const startPublishing = request => {
+    !!collection ?  true ? invariant(false, 'Cannot start capturing critical dimensions as there is already a collection') : 0 : void 0;
+    const entry = registry.draggable.getById(request.draggableId);
+    const home = registry.droppable.getById(entry.descriptor.droppableId);
+    const critical = {
+      draggable: entry.descriptor,
+      droppable: home.descriptor
+    };
+    const unsubscribe = registry.subscribe(subscriber);
+    collection = {
+      critical,
+      unsubscribe
+    };
+    return getInitialPublish({
+      critical,
+      registry,
+      scrollOptions: request.scrollOptions
+    });
+  };
+  const marshal = {
+    updateDroppableIsEnabled,
+    updateDroppableIsCombineEnabled,
+    scrollDroppable,
+    updateDroppableScroll,
+    startPublishing,
+    stopPublishing
+  };
+  return marshal;
+});
+
+var canStartDrag = ((state, id) => {
+  if (state.phase === 'IDLE') {
+    return true;
+  }
+  if (state.phase !== 'DROP_ANIMATING') {
+    return false;
+  }
+  if (state.completed.result.draggableId === id) {
+    return false;
+  }
+  return state.completed.result.reason === 'DROP';
+});
+
+var scrollWindow = (change => {
+  window.scrollBy(change.x, change.y);
+});
+
+const getScrollableDroppables = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(droppables => toDroppableList(droppables).filter(droppable => {
+  if (!droppable.isEnabled) {
+    return false;
+  }
+  if (!droppable.frame) {
+    return false;
+  }
+  return true;
+}));
+const getScrollableDroppableOver = (target, droppables) => {
+  const maybe = getScrollableDroppables(droppables).find(droppable => {
+    !droppable.frame ?  true ? invariant(false, 'Invalid result') : 0 : void 0;
+    return isPositionInFrame(droppable.frame.pageMarginBox)(target);
+  }) || null;
+  return maybe;
+};
+var getBestScrollableDroppable = (_ref => {
+  let {
+    center,
+    destination,
+    droppables
+  } = _ref;
+  if (destination) {
+    const dimension = droppables[destination];
+    if (!dimension.frame) {
+      return null;
+    }
+    return dimension;
+  }
+  const dimension = getScrollableDroppableOver(center, droppables);
+  return dimension;
+});
+
+const defaultAutoScrollerOptions = {
+  startFromPercentage: 0.25,
+  maxScrollAtPercentage: 0.05,
+  maxPixelScroll: 28,
+  ease: percentage => percentage ** 2,
+  durationDampening: {
+    stopDampeningAt: 1200,
+    accelerateAt: 360
+  },
+  disabled: false
+};
+
+var getDistanceThresholds = (function (container, axis, getAutoScrollerOptions) {
+  if (getAutoScrollerOptions === void 0) {
+    getAutoScrollerOptions = () => defaultAutoScrollerOptions;
+  }
+  const autoScrollerOptions = getAutoScrollerOptions();
+  const startScrollingFrom = container[axis.size] * autoScrollerOptions.startFromPercentage;
+  const maxScrollValueAt = container[axis.size] * autoScrollerOptions.maxScrollAtPercentage;
+  const thresholds = {
+    startScrollingFrom,
+    maxScrollValueAt
+  };
+  return thresholds;
+});
+
+var getPercentage = (_ref => {
+  let {
+    startOfRange,
+    endOfRange,
+    current
+  } = _ref;
+  const range = endOfRange - startOfRange;
+  if (range === 0) {
+     true ? warning(`
+      Detected distance range of 0 in the fluid auto scroller
+      This is unexpected and would cause a divide by 0 issue.
+      Not allowing an auto scroll
+    `) : 0;
+    return 0;
+  }
+  const currentInRange = current - startOfRange;
+  const percentage = currentInRange / range;
+  return percentage;
+});
+
+var minScroll = 1;
+
+var getValueFromDistance = (function (distanceToEdge, thresholds, getAutoScrollerOptions) {
+  if (getAutoScrollerOptions === void 0) {
+    getAutoScrollerOptions = () => defaultAutoScrollerOptions;
+  }
+  const autoScrollerOptions = getAutoScrollerOptions();
+  if (distanceToEdge > thresholds.startScrollingFrom) {
+    return 0;
+  }
+  if (distanceToEdge <= thresholds.maxScrollValueAt) {
+    return autoScrollerOptions.maxPixelScroll;
+  }
+  if (distanceToEdge === thresholds.startScrollingFrom) {
+    return minScroll;
+  }
+  const percentageFromMaxScrollValueAt = getPercentage({
+    startOfRange: thresholds.maxScrollValueAt,
+    endOfRange: thresholds.startScrollingFrom,
+    current: distanceToEdge
+  });
+  const percentageFromStartScrollingFrom = 1 - percentageFromMaxScrollValueAt;
+  const scroll = autoScrollerOptions.maxPixelScroll * autoScrollerOptions.ease(percentageFromStartScrollingFrom);
+  return Math.ceil(scroll);
+});
+
+var dampenValueByTime = ((proposedScroll, dragStartTime, getAutoScrollerOptions) => {
+  const autoScrollerOptions = getAutoScrollerOptions();
+  const accelerateAt = autoScrollerOptions.durationDampening.accelerateAt;
+  const stopAt = autoScrollerOptions.durationDampening.stopDampeningAt;
+  const startOfRange = dragStartTime;
+  const endOfRange = stopAt;
+  const now = Date.now();
+  const runTime = now - startOfRange;
+  if (runTime >= stopAt) {
+    return proposedScroll;
+  }
+  if (runTime < accelerateAt) {
+    return minScroll;
+  }
+  const betweenAccelerateAtAndStopAtPercentage = getPercentage({
+    startOfRange: accelerateAt,
+    endOfRange,
+    current: runTime
+  });
+  const scroll = proposedScroll * autoScrollerOptions.ease(betweenAccelerateAtAndStopAtPercentage);
+  return Math.ceil(scroll);
+});
+
+var getValue = (_ref => {
+  let {
+    distanceToEdge,
+    thresholds,
+    dragStartTime,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  } = _ref;
+  const scroll = getValueFromDistance(distanceToEdge, thresholds, getAutoScrollerOptions);
+  if (scroll === 0) {
+    return 0;
+  }
+  if (!shouldUseTimeDampening) {
+    return scroll;
+  }
+  return Math.max(dampenValueByTime(scroll, dragStartTime, getAutoScrollerOptions), minScroll);
+});
+
+var getScrollOnAxis = (_ref => {
+  let {
+    container,
+    distanceToEdges,
+    dragStartTime,
+    axis,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  } = _ref;
+  const thresholds = getDistanceThresholds(container, axis, getAutoScrollerOptions);
+  const isCloserToEnd = distanceToEdges[axis.end] < distanceToEdges[axis.start];
+  if (isCloserToEnd) {
+    return getValue({
+      distanceToEdge: distanceToEdges[axis.end],
+      thresholds,
+      dragStartTime,
+      shouldUseTimeDampening,
+      getAutoScrollerOptions
+    });
+  }
+  return -1 * getValue({
+    distanceToEdge: distanceToEdges[axis.start],
+    thresholds,
+    dragStartTime,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+});
+
+var adjustForSizeLimits = (_ref => {
+  let {
+    container,
+    subject,
+    proposedScroll
+  } = _ref;
+  const isTooBigVertically = subject.height > container.height;
+  const isTooBigHorizontally = subject.width > container.width;
+  if (!isTooBigHorizontally && !isTooBigVertically) {
+    return proposedScroll;
+  }
+  if (isTooBigHorizontally && isTooBigVertically) {
+    return null;
+  }
+  return {
+    x: isTooBigHorizontally ? 0 : proposedScroll.x,
+    y: isTooBigVertically ? 0 : proposedScroll.y
+  };
+});
+
+const clean = apply(value => value === 0 ? 0 : value);
+var getScroll$1 = (_ref => {
+  let {
+    dragStartTime,
+    container,
+    subject,
+    center,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  } = _ref;
+  const distanceToEdges = {
+    top: center.y - container.top,
+    right: container.right - center.x,
+    bottom: container.bottom - center.y,
+    left: center.x - container.left
+  };
+  const y = getScrollOnAxis({
+    container,
+    distanceToEdges,
+    dragStartTime,
+    axis: vertical,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  const x = getScrollOnAxis({
+    container,
+    distanceToEdges,
+    dragStartTime,
+    axis: horizontal,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  const required = clean({
+    x,
+    y
+  });
+  if (isEqual$1(required, origin)) {
+    return null;
+  }
+  const limited = adjustForSizeLimits({
+    container,
+    subject,
+    proposedScroll: required
+  });
+  if (!limited) {
+    return null;
+  }
+  return isEqual$1(limited, origin) ? null : limited;
+});
+
+const smallestSigned = apply(value => {
+  if (value === 0) {
+    return 0;
+  }
+  return value > 0 ? 1 : -1;
+});
+const getOverlap = (() => {
+  const getRemainder = (target, max) => {
+    if (target < 0) {
+      return target;
+    }
+    if (target > max) {
+      return target - max;
+    }
+    return 0;
+  };
+  return _ref => {
+    let {
+      current,
+      max,
+      change
+    } = _ref;
+    const targetScroll = add(current, change);
+    const overlap = {
+      x: getRemainder(targetScroll.x, max.x),
+      y: getRemainder(targetScroll.y, max.y)
+    };
+    if (isEqual$1(overlap, origin)) {
+      return null;
+    }
+    return overlap;
+  };
+})();
+const canPartiallyScroll = _ref2 => {
+  let {
+    max: rawMax,
+    current,
+    change
+  } = _ref2;
+  const max = {
+    x: Math.max(current.x, rawMax.x),
+    y: Math.max(current.y, rawMax.y)
+  };
+  const smallestChange = smallestSigned(change);
+  const overlap = getOverlap({
+    max,
+    current,
+    change: smallestChange
+  });
+  if (!overlap) {
+    return true;
+  }
+  if (smallestChange.x !== 0 && overlap.x === 0) {
+    return true;
+  }
+  if (smallestChange.y !== 0 && overlap.y === 0) {
+    return true;
+  }
+  return false;
+};
+const canScrollWindow = (viewport, change) => canPartiallyScroll({
+  current: viewport.scroll.current,
+  max: viewport.scroll.max,
+  change
+});
+const getWindowOverlap = (viewport, change) => {
+  if (!canScrollWindow(viewport, change)) {
+    return null;
+  }
+  const max = viewport.scroll.max;
+  const current = viewport.scroll.current;
+  return getOverlap({
+    current,
+    max,
+    change
+  });
+};
+const canScrollDroppable = (droppable, change) => {
+  const frame = droppable.frame;
+  if (!frame) {
+    return false;
+  }
+  return canPartiallyScroll({
+    current: frame.scroll.current,
+    max: frame.scroll.max,
+    change
+  });
+};
+const getDroppableOverlap = (droppable, change) => {
+  const frame = droppable.frame;
+  if (!frame) {
+    return null;
+  }
+  if (!canScrollDroppable(droppable, change)) {
+    return null;
+  }
+  return getOverlap({
+    current: frame.scroll.current,
+    max: frame.scroll.max,
+    change
+  });
+};
+
+var getWindowScrollChange = (_ref => {
+  let {
+    viewport,
+    subject,
+    center,
+    dragStartTime,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  } = _ref;
+  const scroll = getScroll$1({
+    dragStartTime,
+    container: viewport.frame,
+    subject,
+    center,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  return scroll && canScrollWindow(viewport, scroll) ? scroll : null;
+});
+
+var getDroppableScrollChange = (_ref => {
+  let {
+    droppable,
+    subject,
+    center,
+    dragStartTime,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  } = _ref;
+  const frame = droppable.frame;
+  if (!frame) {
+    return null;
+  }
+  const scroll = getScroll$1({
+    dragStartTime,
+    container: frame.pageMarginBox,
+    subject,
+    center,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  return scroll && canScrollDroppable(droppable, scroll) ? scroll : null;
+});
+
+var scroll = (_ref => {
+  let {
+    state,
+    dragStartTime,
+    shouldUseTimeDampening,
+    scrollWindow,
+    scrollDroppable,
+    getAutoScrollerOptions
+  } = _ref;
+  const center = state.current.page.borderBoxCenter;
+  const draggable = state.dimensions.draggables[state.critical.draggable.id];
+  const subject = draggable.page.marginBox;
+  if (state.isWindowScrollAllowed) {
+    const viewport = state.viewport;
+    const change = getWindowScrollChange({
+      dragStartTime,
+      viewport,
+      subject,
+      center,
+      shouldUseTimeDampening,
+      getAutoScrollerOptions
+    });
+    if (change) {
+      scrollWindow(change);
+      return;
+    }
+  }
+  const droppable = getBestScrollableDroppable({
+    center,
+    destination: whatIsDraggedOver(state.impact),
+    droppables: state.dimensions.droppables
+  });
+  if (!droppable) {
+    return;
+  }
+  const change = getDroppableScrollChange({
+    dragStartTime,
+    droppable,
+    subject,
+    center,
+    shouldUseTimeDampening,
+    getAutoScrollerOptions
+  });
+  if (change) {
+    scrollDroppable(droppable.descriptor.id, change);
+  }
+});
+
+var createFluidScroller = (_ref => {
+  let {
+    scrollWindow,
+    scrollDroppable,
+    getAutoScrollerOptions = () => defaultAutoScrollerOptions
+  } = _ref;
+  const scheduleWindowScroll = (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(scrollWindow);
+  const scheduleDroppableScroll = (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(scrollDroppable);
+  let dragging = null;
+  const tryScroll = state => {
+    !dragging ?  true ? invariant(false, 'Cannot fluid scroll if not dragging') : 0 : void 0;
+    const {
+      shouldUseTimeDampening,
+      dragStartTime
+    } = dragging;
+    scroll({
+      state,
+      scrollWindow: scheduleWindowScroll,
+      scrollDroppable: scheduleDroppableScroll,
+      dragStartTime,
+      shouldUseTimeDampening,
+      getAutoScrollerOptions
+    });
+  };
+  const start$1 = state => {
+    start();
+    !!dragging ?  true ? invariant(false, 'Cannot start auto scrolling when already started') : 0 : void 0;
+    const dragStartTime = Date.now();
+    let wasScrollNeeded = false;
+    const fakeScrollCallback = () => {
+      wasScrollNeeded = true;
+    };
+    scroll({
+      state,
+      dragStartTime: 0,
+      shouldUseTimeDampening: false,
+      scrollWindow: fakeScrollCallback,
+      scrollDroppable: fakeScrollCallback,
+      getAutoScrollerOptions
+    });
+    dragging = {
+      dragStartTime,
+      shouldUseTimeDampening: wasScrollNeeded
+    };
+    finish();
+    if (wasScrollNeeded) {
+      tryScroll(state);
+    }
+  };
+  const stop = () => {
+    if (!dragging) {
+      return;
+    }
+    scheduleWindowScroll.cancel();
+    scheduleDroppableScroll.cancel();
+    dragging = null;
+  };
+  return {
+    start: start$1,
+    stop,
+    scroll: tryScroll
+  };
+});
+
+var createJumpScroller = (_ref => {
+  let {
+    move,
+    scrollDroppable,
+    scrollWindow
+  } = _ref;
+  const moveByOffset = (state, offset) => {
+    const client = add(state.current.client.selection, offset);
+    move({
+      client
+    });
+  };
+  const scrollDroppableAsMuchAsItCan = (droppable, change) => {
+    if (!canScrollDroppable(droppable, change)) {
+      return change;
+    }
+    const overlap = getDroppableOverlap(droppable, change);
+    if (!overlap) {
+      scrollDroppable(droppable.descriptor.id, change);
+      return null;
+    }
+    const whatTheDroppableCanScroll = subtract(change, overlap);
+    scrollDroppable(droppable.descriptor.id, whatTheDroppableCanScroll);
+    const remainder = subtract(change, whatTheDroppableCanScroll);
+    return remainder;
+  };
+  const scrollWindowAsMuchAsItCan = (isWindowScrollAllowed, viewport, change) => {
+    if (!isWindowScrollAllowed) {
+      return change;
+    }
+    if (!canScrollWindow(viewport, change)) {
+      return change;
+    }
+    const overlap = getWindowOverlap(viewport, change);
+    if (!overlap) {
+      scrollWindow(change);
+      return null;
+    }
+    const whatTheWindowCanScroll = subtract(change, overlap);
+    scrollWindow(whatTheWindowCanScroll);
+    const remainder = subtract(change, whatTheWindowCanScroll);
+    return remainder;
+  };
+  const jumpScroller = state => {
+    const request = state.scrollJumpRequest;
+    if (!request) {
+      return;
+    }
+    const destination = whatIsDraggedOver(state.impact);
+    !destination ?  true ? invariant(false, 'Cannot perform a jump scroll when there is no destination') : 0 : void 0;
+    const droppableRemainder = scrollDroppableAsMuchAsItCan(state.dimensions.droppables[destination], request);
+    if (!droppableRemainder) {
+      return;
+    }
+    const viewport = state.viewport;
+    const windowRemainder = scrollWindowAsMuchAsItCan(state.isWindowScrollAllowed, viewport, droppableRemainder);
+    if (!windowRemainder) {
+      return;
+    }
+    moveByOffset(state, windowRemainder);
+  };
+  return jumpScroller;
+});
+
+var createAutoScroller = (_ref => {
+  let {
+    scrollDroppable,
+    scrollWindow,
+    move,
+    getAutoScrollerOptions
+  } = _ref;
+  const fluidScroller = createFluidScroller({
+    scrollWindow,
+    scrollDroppable,
+    getAutoScrollerOptions
+  });
+  const jumpScroll = createJumpScroller({
+    move,
+    scrollWindow,
+    scrollDroppable
+  });
+  const scroll = state => {
+    const autoScrollerOptions = getAutoScrollerOptions();
+    if (autoScrollerOptions.disabled || state.phase !== 'DRAGGING') {
+      return;
+    }
+    if (state.movementMode === 'FLUID') {
+      fluidScroller.scroll(state);
+      return;
+    }
+    if (!state.scrollJumpRequest) {
+      return;
+    }
+    jumpScroll(state);
+  };
+  const scroller = {
+    scroll,
+    start: fluidScroller.start,
+    stop: fluidScroller.stop
+  };
+  return scroller;
+});
+
+const prefix = 'data-rfd';
+const dragHandle = (() => {
+  const base = `${prefix}-drag-handle`;
+  return {
+    base,
+    draggableId: `${base}-draggable-id`,
+    contextId: `${base}-context-id`
+  };
+})();
+const draggable = (() => {
+  const base = `${prefix}-draggable`;
+  return {
+    base,
+    contextId: `${base}-context-id`,
+    id: `${base}-id`
+  };
+})();
+const droppable = (() => {
+  const base = `${prefix}-droppable`;
+  return {
+    base,
+    contextId: `${base}-context-id`,
+    id: `${base}-id`
+  };
+})();
+const scrollContainer = {
+  contextId: `${prefix}-scroll-container-context-id`
+};
+
+const makeGetSelector = context => attribute => `[${attribute}="${context}"]`;
+const getStyles = (rules, property) => rules.map(rule => {
+  const value = rule.styles[property];
+  if (!value) {
+    return '';
+  }
+  return `${rule.selector} { ${value} }`;
+}).join(' ');
+const noPointerEvents = 'pointer-events: none;';
+var getStyles$1 = (contextId => {
+  const getSelector = makeGetSelector(contextId);
+  const dragHandle$1 = (() => {
+    const grabCursor = `
+      cursor: -webkit-grab;
+      cursor: grab;
+    `;
+    return {
+      selector: getSelector(dragHandle.contextId),
+      styles: {
+        always: `
+          -webkit-touch-callout: none;
+          -webkit-tap-highlight-color: rgba(0,0,0,0);
+          touch-action: manipulation;
+        `,
+        resting: grabCursor,
+        dragging: noPointerEvents,
+        dropAnimating: grabCursor
+      }
+    };
+  })();
+  const draggable$1 = (() => {
+    const transition = `
+      transition: ${transitions.outOfTheWay};
+    `;
+    return {
+      selector: getSelector(draggable.contextId),
+      styles: {
+        dragging: transition,
+        dropAnimating: transition,
+        userCancel: transition
+      }
+    };
+  })();
+  const droppable$1 = {
+    selector: getSelector(droppable.contextId),
+    styles: {
+      always: `overflow-anchor: none;`
+    }
+  };
+  const body = {
+    selector: 'body',
+    styles: {
+      dragging: `
+        cursor: grabbing;
+        cursor: -webkit-grabbing;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        overflow-anchor: none;
+      `
+    }
+  };
+  const rules = [draggable$1, dragHandle$1, droppable$1, body];
+  return {
+    always: getStyles(rules, 'always'),
+    resting: getStyles(rules, 'resting'),
+    dragging: getStyles(rules, 'dragging'),
+    dropAnimating: getStyles(rules, 'dropAnimating'),
+    userCancel: getStyles(rules, 'userCancel')
+  };
+});
+
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' && typeof window.document !== 'undefined' && typeof window.document.createElement !== 'undefined' ? react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect : react__WEBPACK_IMPORTED_MODULE_0__.useEffect;
+var useLayoutEffect = useIsomorphicLayoutEffect;
+
+const getHead = () => {
+  const head = document.querySelector('head');
+  !head ?  true ? invariant(false, 'Cannot find the head to append a style to') : 0 : void 0;
+  return head;
+};
+const createStyleEl = nonce => {
+  const el = document.createElement('style');
+  if (nonce) {
+    el.setAttribute('nonce', nonce);
+  }
+  el.type = 'text/css';
+  return el;
+};
+function useStyleMarshal(contextId, nonce) {
+  const styles = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => getStyles$1(contextId), [contextId]);
+  const alwaysRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const dynamicRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const setDynamicStyle = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)((0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(proposed => {
+    const el = dynamicRef.current;
+    !el ?  true ? invariant(false, 'Cannot set dynamic style element if it is not set') : 0 : void 0;
+    el.textContent = proposed;
+  }), []);
+  const setAlwaysStyle = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(proposed => {
+    const el = alwaysRef.current;
+    !el ?  true ? invariant(false, 'Cannot set dynamic style element if it is not set') : 0 : void 0;
+    el.textContent = proposed;
+  }, []);
+  useLayoutEffect(() => {
+    !(!alwaysRef.current && !dynamicRef.current) ?  true ? invariant(false, 'style elements already mounted') : 0 : void 0;
+    const always = createStyleEl(nonce);
+    const dynamic = createStyleEl(nonce);
+    alwaysRef.current = always;
+    dynamicRef.current = dynamic;
+    always.setAttribute(`${prefix}-always`, contextId);
+    dynamic.setAttribute(`${prefix}-dynamic`, contextId);
+    getHead().appendChild(always);
+    getHead().appendChild(dynamic);
+    setAlwaysStyle(styles.always);
+    setDynamicStyle(styles.resting);
+    return () => {
+      const remove = ref => {
+        const current = ref.current;
+        !current ?  true ? invariant(false, 'Cannot unmount ref as it is not set') : 0 : void 0;
+        getHead().removeChild(current);
+        ref.current = null;
+      };
+      remove(alwaysRef);
+      remove(dynamicRef);
+    };
+  }, [nonce, setAlwaysStyle, setDynamicStyle, styles.always, styles.resting, contextId]);
+  const dragging = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => setDynamicStyle(styles.dragging), [setDynamicStyle, styles.dragging]);
+  const dropping = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(reason => {
+    if (reason === 'DROP') {
+      setDynamicStyle(styles.dropAnimating);
+      return;
+    }
+    setDynamicStyle(styles.userCancel);
+  }, [setDynamicStyle, styles.dropAnimating, styles.userCancel]);
+  const resting = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    if (!dynamicRef.current) {
+      return;
+    }
+    setDynamicStyle(styles.resting);
+  }, [setDynamicStyle, styles.resting]);
+  const marshal = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    dragging,
+    dropping,
+    resting
+  }), [dragging, dropping, resting]);
+  return marshal;
+}
+
+function querySelectorAll(parentNode, selector) {
+  return Array.from(parentNode.querySelectorAll(selector));
+}
+
+var getWindowFromEl = (el => el?.ownerDocument?.defaultView || window);
+
+function isHtmlElement(el) {
+  return el instanceof getWindowFromEl(el).HTMLElement;
+}
+
+function findDragHandle(contextId, draggableId) {
+  const selector = `[${dragHandle.contextId}="${contextId}"]`;
+  const possible = querySelectorAll(document, selector);
+  if (!possible.length) {
+     true ? warning(`Unable to find any drag handles in the context "${contextId}"`) : 0;
+    return null;
+  }
+  const handle = possible.find(el => {
+    return el.getAttribute(dragHandle.draggableId) === draggableId;
+  });
+  if (!handle) {
+     true ? warning(`Unable to find drag handle with id "${draggableId}" as no handle with a matching id was found`) : 0;
+    return null;
+  }
+  if (!isHtmlElement(handle)) {
+     true ? warning('drag handle needs to be a HTMLElement') : 0;
+    return null;
+  }
+  return handle;
+}
+
+function useFocusMarshal(contextId) {
+  const entriesRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)({});
+  const recordRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const restoreFocusFrameRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const isMountedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
+  const register = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function register(id, focus) {
+    const entry = {
+      id,
+      focus
+    };
+    entriesRef.current[id] = entry;
+    return function unregister() {
+      const entries = entriesRef.current;
+      const current = entries[id];
+      if (current !== entry) {
+        delete entries[id];
+      }
+    };
+  }, []);
+  const tryGiveFocus = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryGiveFocus(tryGiveFocusTo) {
+    const handle = findDragHandle(contextId, tryGiveFocusTo);
+    if (handle && handle !== document.activeElement) {
+      handle.focus();
+    }
+  }, [contextId]);
+  const tryShiftRecord = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryShiftRecord(previous, redirectTo) {
+    if (recordRef.current === previous) {
+      recordRef.current = redirectTo;
+    }
+  }, []);
+  const tryRestoreFocusRecorded = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryRestoreFocusRecorded() {
+    if (restoreFocusFrameRef.current) {
+      return;
+    }
+    if (!isMountedRef.current) {
+      return;
+    }
+    restoreFocusFrameRef.current = requestAnimationFrame(() => {
+      restoreFocusFrameRef.current = null;
+      const record = recordRef.current;
+      if (record) {
+        tryGiveFocus(record);
+      }
+    });
+  }, [tryGiveFocus]);
+  const tryRecordFocus = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryRecordFocus(id) {
+    recordRef.current = null;
+    const focused = document.activeElement;
+    if (!focused) {
+      return;
+    }
+    if (focused.getAttribute(dragHandle.draggableId) !== id) {
+      return;
+    }
+    recordRef.current = id;
+  }, []);
+  useLayoutEffect(() => {
+    isMountedRef.current = true;
+    return function clearFrameOnUnmount() {
+      isMountedRef.current = false;
+      const frameId = restoreFocusFrameRef.current;
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }, []);
+  const marshal = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    register,
+    tryRecordFocus,
+    tryRestoreFocusRecorded,
+    tryShiftRecord
+  }), [register, tryRecordFocus, tryRestoreFocusRecorded, tryShiftRecord]);
+  return marshal;
+}
+
+function createRegistry() {
+  const entries = {
+    draggables: {},
+    droppables: {}
+  };
+  const subscribers = [];
+  function subscribe(cb) {
+    subscribers.push(cb);
+    return function unsubscribe() {
+      const index = subscribers.indexOf(cb);
+      if (index === -1) {
+        return;
+      }
+      subscribers.splice(index, 1);
+    };
+  }
+  function notify(event) {
+    if (subscribers.length) {
+      subscribers.forEach(cb => cb(event));
+    }
+  }
+  function findDraggableById(id) {
+    return entries.draggables[id] || null;
+  }
+  function getDraggableById(id) {
+    const entry = findDraggableById(id);
+    !entry ?  true ? invariant(false, `Cannot find draggable entry with id [${id}]`) : 0 : void 0;
+    return entry;
+  }
+  const draggableAPI = {
+    register: entry => {
+      entries.draggables[entry.descriptor.id] = entry;
+      notify({
+        type: 'ADDITION',
+        value: entry
+      });
+    },
+    update: (entry, last) => {
+      const current = entries.draggables[last.descriptor.id];
+      if (!current) {
+        return;
+      }
+      if (current.uniqueId !== entry.uniqueId) {
+        return;
+      }
+      delete entries.draggables[last.descriptor.id];
+      entries.draggables[entry.descriptor.id] = entry;
+    },
+    unregister: entry => {
+      const draggableId = entry.descriptor.id;
+      const current = findDraggableById(draggableId);
+      if (!current) {
+        return;
+      }
+      if (entry.uniqueId !== current.uniqueId) {
+        return;
+      }
+      delete entries.draggables[draggableId];
+      if (entries.droppables[entry.descriptor.droppableId]) {
+        notify({
+          type: 'REMOVAL',
+          value: entry
+        });
+      }
+    },
+    getById: getDraggableById,
+    findById: findDraggableById,
+    exists: id => Boolean(findDraggableById(id)),
+    getAllByType: type => Object.values(entries.draggables).filter(entry => entry.descriptor.type === type)
+  };
+  function findDroppableById(id) {
+    return entries.droppables[id] || null;
+  }
+  function getDroppableById(id) {
+    const entry = findDroppableById(id);
+    !entry ?  true ? invariant(false, `Cannot find droppable entry with id [${id}]`) : 0 : void 0;
+    return entry;
+  }
+  const droppableAPI = {
+    register: entry => {
+      entries.droppables[entry.descriptor.id] = entry;
+    },
+    unregister: entry => {
+      const current = findDroppableById(entry.descriptor.id);
+      if (!current) {
+        return;
+      }
+      if (entry.uniqueId !== current.uniqueId) {
+        return;
+      }
+      delete entries.droppables[entry.descriptor.id];
+    },
+    getById: getDroppableById,
+    findById: findDroppableById,
+    exists: id => Boolean(findDroppableById(id)),
+    getAllByType: type => Object.values(entries.droppables).filter(entry => entry.descriptor.type === type)
+  };
+  function clean() {
+    entries.draggables = {};
+    entries.droppables = {};
+    subscribers.length = 0;
+  }
+  return {
+    draggable: draggableAPI,
+    droppable: droppableAPI,
+    subscribe,
+    clean
+  };
+}
+
+function useRegistry() {
+  const registry = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(createRegistry, []);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    return function unmount() {
+      if (react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('16') || react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('17')) {
+        requestAnimationFrame(registry.clean);
+      } else {
+        registry.clean();
+      }
+    };
+  }, [registry]);
+  return registry;
+}
+
+var StoreContext = react__WEBPACK_IMPORTED_MODULE_0___default().createContext(null);
+
+var getBodyElement = (() => {
+  const body = document.body;
+  !body ?  true ? invariant(false, 'Cannot find document.body') : 0 : void 0;
+  return body;
+});
+
+const visuallyHidden = {
+  position: 'absolute',
+  width: '1px',
+  height: '1px',
+  margin: '-1px',
+  border: '0',
+  padding: '0',
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  'clip-path': 'inset(100%)'
+};
+var visuallyHidden$1 = visuallyHidden;
+
+const getId = contextId => `rfd-announcement-${contextId}`;
+function useAnnouncer(contextId) {
+  const id = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => getId(contextId), [contextId]);
+  const ref = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function setup() {
+    const el = document.createElement('div');
+    ref.current = el;
+    el.id = id;
+    el.setAttribute('aria-live', 'assertive');
+    el.setAttribute('aria-atomic', 'true');
+    (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_3__["default"])(el.style, visuallyHidden$1);
+    getBodyElement().appendChild(el);
+    return function cleanup() {
+      setTimeout(function remove() {
+        const body = getBodyElement();
+        if (body.contains(el)) {
+          body.removeChild(el);
+        }
+        if (el === ref.current) {
+          ref.current = null;
+        }
+      });
+    };
+  }, [id]);
+  const announce = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(message => {
+    const el = ref.current;
+    if (el) {
+      el.textContent = message;
+      return;
+    }
+     true ? warning(`
+      A screen reader message was trying to be announced but it was unable to do so.
+      This can occur if you unmount your <DragDropContext /> in your onDragEnd.
+      Consider calling provided.announce() before the unmount so that the instruction will
+      not be lost for users relying on a screen reader.
+
+      Message not passed to screen reader:
+
+      "${message}"
+    `) : 0;
+  }, []);
+  return announce;
+}
+
+let count$1 = 0;
+const defaults = {
+  separator: '::'
+};
+function resetDeprecatedUniqueId() {
+  count$1 = 0;
+}
+function useDeprecatedUniqueId(prefix, options) {
+  if (options === void 0) {
+    options = defaults;
+  }
+  return (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => `${prefix}${options.separator}${count$1++}`, [options.separator, prefix]);
+}
+function useUniqueId(prefix, options) {
+  if (options === void 0) {
+    options = defaults;
+  }
+  const id = react__WEBPACK_IMPORTED_MODULE_0___default().useId();
+  return (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => `${prefix}${options.separator}${id}`, [options.separator, prefix, id]);
+}
+var useUniqueId$1 = "useId" in (react__WEBPACK_IMPORTED_MODULE_0___default()) ? useUniqueId : useDeprecatedUniqueId;
+
+function getElementId(_ref) {
+  let {
+    contextId,
+    uniqueId
+  } = _ref;
+  return `rfd-hidden-text-${contextId}-${uniqueId}`;
+}
+function useHiddenTextElement(_ref2) {
+  let {
+    contextId,
+    text
+  } = _ref2;
+  const uniqueId = useUniqueId$1('hidden-text', {
+    separator: '-'
+  });
+  const id = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => getElementId({
+    contextId,
+    uniqueId
+  }), [uniqueId, contextId]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function mount() {
+    const el = document.createElement('div');
+    el.id = id;
+    el.textContent = text;
+    el.style.display = 'none';
+    getBodyElement().appendChild(el);
+    return function unmount() {
+      const body = getBodyElement();
+      if (body.contains(el)) {
+        body.removeChild(el);
+      }
+    };
+  }, [id, text]);
+  return id;
+}
+
+var AppContext = react__WEBPACK_IMPORTED_MODULE_0___default().createContext(null);
+
+var peerDependencies = {
+	react: "^16.8.5 || ^17.0.0 || ^18.0.0",
+	"react-dom": "^16.8.5 || ^17.0.0 || ^18.0.0"
+};
+
+const semver = /(\d+)\.(\d+)\.(\d+)/;
+const getVersion = value => {
+  const result = semver.exec(value);
+  !(result != null) ?  true ? invariant(false, `Unable to parse React version ${value}`) : 0 : void 0;
+  const major = Number(result[1]);
+  const minor = Number(result[2]);
+  const patch = Number(result[3]);
+  return {
+    major,
+    minor,
+    patch,
+    raw: value
+  };
+};
+const isSatisfied = (expected, actual) => {
+  if (actual.major > expected.major) {
+    return true;
+  }
+  if (actual.major < expected.major) {
+    return false;
+  }
+  if (actual.minor > expected.minor) {
+    return true;
+  }
+  if (actual.minor < expected.minor) {
+    return false;
+  }
+  return actual.patch >= expected.patch;
+};
+var checkReactVersion = ((peerDepValue, actualValue) => {
+  const peerDep = getVersion(peerDepValue);
+  const actual = getVersion(actualValue);
+  if (isSatisfied(peerDep, actual)) {
+    return;
+  }
+   true ? warning(`
+    React version: [${actual.raw}]
+    does not satisfy expected peer dependency version: [${peerDep.raw}]
+
+    This can result in run time bugs, and even fatal crashes
+  `) : 0;
+});
+
+const suffix = `
+  We expect a html5 doctype: <!doctype html>
+  This is to ensure consistent browser layout and measurement
+
+  More information: https://github.com/hello-pangea/dnd/blob/main/docs/guides/doctype.md
+`;
+var checkDoctype = (doc => {
+  const doctype = doc.doctype;
+  if (!doctype) {
+     true ? warning(`
+      No <!doctype html> found.
+
+      ${suffix}
+    `) : 0;
+    return;
+  }
+  if (doctype.name.toLowerCase() !== 'html') {
+     true ? warning(`
+      Unexpected <!doctype> found: (${doctype.name})
+
+      ${suffix}
+    `) : 0;
+  }
+  if (doctype.publicId !== '') {
+     true ? warning(`
+      Unexpected <!doctype> publicId found: (${doctype.publicId})
+      A html5 doctype does not have a publicId
+
+      ${suffix}
+    `) : 0;
+  }
+});
+
+function useDev(useHook) {
+  if (true) {
+    useHook();
+  }
+}
+
+function useDevSetupWarning(fn, inputs) {
+  useDev(() => {
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+      try {
+        fn();
+      } catch (e) {
+        error(`
+          A setup problem was encountered.
+
+          > ${e.message}
+        `);
+      }
+    }, inputs);
+  });
+}
+
+function useStartupValidation() {
+  useDevSetupWarning(() => {
+    checkReactVersion(peerDependencies.react, (react__WEBPACK_IMPORTED_MODULE_0___default().version));
+    checkDoctype(document);
+  }, []);
+}
+
+function usePrevious(current) {
+  const ref = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(current);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    ref.current = current;
+  });
+  return ref;
+}
+
+function create() {
+  let lock = null;
+  function isClaimed() {
+    return Boolean(lock);
+  }
+  function isActive(value) {
+    return value === lock;
+  }
+  function claim(abandon) {
+    !!lock ?  true ? invariant(false, 'Cannot claim lock as it is already claimed') : 0 : void 0;
+    const newLock = {
+      abandon
+    };
+    lock = newLock;
+    return newLock;
+  }
+  function release() {
+    !lock ?  true ? invariant(false, 'Cannot release lock when there is no lock') : 0 : void 0;
+    lock = null;
+  }
+  function tryAbandon() {
+    if (lock) {
+      lock.abandon();
+      release();
+    }
+  }
+  return {
+    isClaimed,
+    isActive,
+    claim,
+    release,
+    tryAbandon
+  };
+}
+
+function isDragging(state) {
+  if (state.phase === 'IDLE' || state.phase === 'DROP_ANIMATING') {
+    return false;
+  }
+  return state.isDragging;
+}
+
+const tab = 9;
+const enter = 13;
+const escape = 27;
+const space = 32;
+const pageUp = 33;
+const pageDown = 34;
+const end = 35;
+const home = 36;
+const arrowLeft = 37;
+const arrowUp = 38;
+const arrowRight = 39;
+const arrowDown = 40;
+
+const preventedKeys = {
+  [enter]: true,
+  [tab]: true
+};
+var preventStandardKeyEvents = (event => {
+  if (preventedKeys[event.keyCode]) {
+    event.preventDefault();
+  }
+});
+
+const supportedEventName = (() => {
+  const base = 'visibilitychange';
+  if (typeof document === 'undefined') {
+    return base;
+  }
+  const candidates = [base, `ms${base}`, `webkit${base}`, `moz${base}`, `o${base}`];
+  const supported = candidates.find(eventName => `on${eventName}` in document);
+  return supported || base;
+})();
+var supportedPageVisibilityEventName = supportedEventName;
+
+const primaryButton = 0;
+const sloppyClickThreshold = 5;
+function isSloppyClickThresholdExceeded(original, current) {
+  return Math.abs(current.x - original.x) >= sloppyClickThreshold || Math.abs(current.y - original.y) >= sloppyClickThreshold;
+}
+const idle$1 = {
+  type: 'IDLE'
+};
+function getCaptureBindings(_ref) {
+  let {
+    cancel,
+    completed,
+    getPhase,
+    setPhase
+  } = _ref;
+  return [{
+    eventName: 'mousemove',
+    fn: event => {
+      const {
+        button,
+        clientX,
+        clientY
+      } = event;
+      if (button !== primaryButton) {
+        return;
+      }
+      const point = {
+        x: clientX,
+        y: clientY
+      };
+      const phase = getPhase();
+      if (phase.type === 'DRAGGING') {
+        event.preventDefault();
+        phase.actions.move(point);
+        return;
+      }
+      !(phase.type === 'PENDING') ?  true ? invariant(false, 'Cannot be IDLE') : 0 : void 0;
+      const pending = phase.point;
+      if (!isSloppyClickThresholdExceeded(pending, point)) {
+        return;
+      }
+      event.preventDefault();
+      const actions = phase.actions.fluidLift(point);
+      setPhase({
+        type: 'DRAGGING',
+        actions
+      });
+    }
+  }, {
+    eventName: 'mouseup',
+    fn: event => {
+      const phase = getPhase();
+      if (phase.type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      event.preventDefault();
+      phase.actions.drop({
+        shouldBlockNextClick: true
+      });
+      completed();
+    }
+  }, {
+    eventName: 'mousedown',
+    fn: event => {
+      if (getPhase().type === 'DRAGGING') {
+        event.preventDefault();
+      }
+      cancel();
+    }
+  }, {
+    eventName: 'keydown',
+    fn: event => {
+      const phase = getPhase();
+      if (phase.type === 'PENDING') {
+        cancel();
+        return;
+      }
+      if (event.keyCode === escape) {
+        event.preventDefault();
+        cancel();
+        return;
+      }
+      preventStandardKeyEvents(event);
+    }
+  }, {
+    eventName: 'resize',
+    fn: cancel
+  }, {
+    eventName: 'scroll',
+    options: {
+      passive: true,
+      capture: false
+    },
+    fn: () => {
+      if (getPhase().type === 'PENDING') {
+        cancel();
+      }
+    }
+  }, {
+    eventName: 'webkitmouseforcedown',
+    fn: event => {
+      const phase = getPhase();
+      !(phase.type !== 'IDLE') ?  true ? invariant(false, 'Unexpected phase') : 0 : void 0;
+      if (phase.actions.shouldRespectForcePress()) {
+        cancel();
+        return;
+      }
+      event.preventDefault();
+    }
+  }, {
+    eventName: supportedPageVisibilityEventName,
+    fn: cancel
+  }];
+}
+function useMouseSensor(api) {
+  const phaseRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(idle$1);
+  const unbindEventsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(noop$2);
+  const startCaptureBinding = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    eventName: 'mousedown',
+    fn: function onMouseDown(event) {
+      if (event.defaultPrevented) {
+        return;
+      }
+      if (event.button !== primaryButton) {
+        return;
+      }
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      const draggableId = api.findClosestDraggableId(event);
+      if (!draggableId) {
+        return;
+      }
+      const actions = api.tryGetLock(draggableId, stop, {
+        sourceEvent: event
+      });
+      if (!actions) {
+        return;
+      }
+      event.preventDefault();
+      const point = {
+        x: event.clientX,
+        y: event.clientY
+      };
+      unbindEventsRef.current();
+      startPendingDrag(actions, point);
+    }
+  }), [api]);
+  const preventForcePressBinding = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    eventName: 'webkitmouseforcewillbegin',
+    fn: event => {
+      if (event.defaultPrevented) {
+        return;
+      }
+      const id = api.findClosestDraggableId(event);
+      if (!id) {
+        return;
+      }
+      const options = api.findOptionsForDraggable(id);
+      if (!options) {
+        return;
+      }
+      if (options.shouldRespectForcePress) {
+        return;
+      }
+      if (!api.canGetLock(id)) {
+        return;
+      }
+      event.preventDefault();
+    }
+  }), [api]);
+  const listenForCapture = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function listenForCapture() {
+    const options = {
+      passive: false,
+      capture: true
+    };
+    unbindEventsRef.current = bindEvents(window, [preventForcePressBinding, startCaptureBinding], options);
+  }, [preventForcePressBinding, startCaptureBinding]);
+  const stop = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const current = phaseRef.current;
+    if (current.type === 'IDLE') {
+      return;
+    }
+    phaseRef.current = idle$1;
+    unbindEventsRef.current();
+    listenForCapture();
+  }, [listenForCapture]);
+  const cancel = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const phase = phaseRef.current;
+    stop();
+    if (phase.type === 'DRAGGING') {
+      phase.actions.cancel({
+        shouldBlockNextClick: true
+      });
+    }
+    if (phase.type === 'PENDING') {
+      phase.actions.abort();
+    }
+  }, [stop]);
+  const bindCapturingEvents = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function bindCapturingEvents() {
+    const options = {
+      capture: true,
+      passive: false
+    };
+    const bindings = getCaptureBindings({
+      cancel,
+      completed: stop,
+      getPhase: () => phaseRef.current,
+      setPhase: phase => {
+        phaseRef.current = phase;
+      }
+    });
+    unbindEventsRef.current = bindEvents(window, bindings, options);
+  }, [cancel, stop]);
+  const startPendingDrag = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function startPendingDrag(actions, point) {
+    !(phaseRef.current.type === 'IDLE') ?  true ? invariant(false, 'Expected to move from IDLE to PENDING drag') : 0 : void 0;
+    phaseRef.current = {
+      type: 'PENDING',
+      point,
+      actions
+    };
+    bindCapturingEvents();
+  }, [bindCapturingEvents]);
+  useLayoutEffect(function mount() {
+    listenForCapture();
+    return function unmount() {
+      unbindEventsRef.current();
+    };
+  }, [listenForCapture]);
+}
+
+function noop$1() {}
+const scrollJumpKeys = {
+  [pageDown]: true,
+  [pageUp]: true,
+  [home]: true,
+  [end]: true
+};
+function getDraggingBindings(actions, stop) {
+  function cancel() {
+    stop();
+    actions.cancel();
+  }
+  function drop() {
+    stop();
+    actions.drop();
+  }
+  return [{
+    eventName: 'keydown',
+    fn: event => {
+      if (event.keyCode === escape) {
+        event.preventDefault();
+        cancel();
+        return;
+      }
+      if (event.keyCode === space) {
+        event.preventDefault();
+        drop();
+        return;
+      }
+      if (event.keyCode === arrowDown) {
+        event.preventDefault();
+        actions.moveDown();
+        return;
+      }
+      if (event.keyCode === arrowUp) {
+        event.preventDefault();
+        actions.moveUp();
+        return;
+      }
+      if (event.keyCode === arrowRight) {
+        event.preventDefault();
+        actions.moveRight();
+        return;
+      }
+      if (event.keyCode === arrowLeft) {
+        event.preventDefault();
+        actions.moveLeft();
+        return;
+      }
+      if (scrollJumpKeys[event.keyCode]) {
+        event.preventDefault();
+        return;
+      }
+      preventStandardKeyEvents(event);
+    }
+  }, {
+    eventName: 'mousedown',
+    fn: cancel
+  }, {
+    eventName: 'mouseup',
+    fn: cancel
+  }, {
+    eventName: 'click',
+    fn: cancel
+  }, {
+    eventName: 'touchstart',
+    fn: cancel
+  }, {
+    eventName: 'resize',
+    fn: cancel
+  }, {
+    eventName: 'wheel',
+    fn: cancel,
+    options: {
+      passive: true
+    }
+  }, {
+    eventName: supportedPageVisibilityEventName,
+    fn: cancel
+  }];
+}
+function useKeyboardSensor(api) {
+  const unbindEventsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(noop$1);
+  const startCaptureBinding = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    eventName: 'keydown',
+    fn: function onKeyDown(event) {
+      if (event.defaultPrevented) {
+        return;
+      }
+      if (event.keyCode !== space) {
+        return;
+      }
+      const draggableId = api.findClosestDraggableId(event);
+      if (!draggableId) {
+        return;
+      }
+      const preDrag = api.tryGetLock(draggableId, stop, {
+        sourceEvent: event
+      });
+      if (!preDrag) {
+        return;
+      }
+      event.preventDefault();
+      let isCapturing = true;
+      const actions = preDrag.snapLift();
+      unbindEventsRef.current();
+      function stop() {
+        !isCapturing ?  true ? invariant(false, 'Cannot stop capturing a keyboard drag when not capturing') : 0 : void 0;
+        isCapturing = false;
+        unbindEventsRef.current();
+        listenForCapture();
+      }
+      unbindEventsRef.current = bindEvents(window, getDraggingBindings(actions, stop), {
+        capture: true,
+        passive: false
+      });
+    }
+  }), [api]);
+  const listenForCapture = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryStartCapture() {
+    const options = {
+      passive: false,
+      capture: true
+    };
+    unbindEventsRef.current = bindEvents(window, [startCaptureBinding], options);
+  }, [startCaptureBinding]);
+  useLayoutEffect(function mount() {
+    listenForCapture();
+    return function unmount() {
+      unbindEventsRef.current();
+    };
+  }, [listenForCapture]);
+}
+
+const idle = {
+  type: 'IDLE'
+};
+const timeForLongPress = 120;
+const forcePressThreshold = 0.15;
+function getWindowBindings(_ref) {
+  let {
+    cancel,
+    getPhase
+  } = _ref;
+  return [{
+    eventName: 'orientationchange',
+    fn: cancel
+  }, {
+    eventName: 'resize',
+    fn: cancel
+  }, {
+    eventName: 'contextmenu',
+    fn: event => {
+      event.preventDefault();
+    }
+  }, {
+    eventName: 'keydown',
+    fn: event => {
+      if (getPhase().type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      if (event.keyCode === escape) {
+        event.preventDefault();
+      }
+      cancel();
+    }
+  }, {
+    eventName: supportedPageVisibilityEventName,
+    fn: cancel
+  }];
+}
+function getHandleBindings(_ref2) {
+  let {
+    cancel,
+    completed,
+    getPhase
+  } = _ref2;
+  return [{
+    eventName: 'touchmove',
+    options: {
+      capture: false
+    },
+    fn: event => {
+      const phase = getPhase();
+      if (phase.type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      phase.hasMoved = true;
+      const {
+        clientX,
+        clientY
+      } = event.touches[0];
+      const point = {
+        x: clientX,
+        y: clientY
+      };
+      event.preventDefault();
+      phase.actions.move(point);
+    }
+  }, {
+    eventName: 'touchend',
+    fn: event => {
+      const phase = getPhase();
+      if (phase.type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      event.preventDefault();
+      phase.actions.drop({
+        shouldBlockNextClick: true
+      });
+      completed();
+    }
+  }, {
+    eventName: 'touchcancel',
+    fn: event => {
+      if (getPhase().type !== 'DRAGGING') {
+        cancel();
+        return;
+      }
+      event.preventDefault();
+      cancel();
+    }
+  }, {
+    eventName: 'touchforcechange',
+    fn: event => {
+      const phase = getPhase();
+      !(phase.type !== 'IDLE') ?  true ? invariant(false) : 0 : void 0;
+      const touch = event.touches[0];
+      if (!touch) {
+        return;
+      }
+      const isForcePress = touch.force >= forcePressThreshold;
+      if (!isForcePress) {
+        return;
+      }
+      const shouldRespect = phase.actions.shouldRespectForcePress();
+      if (phase.type === 'PENDING') {
+        if (shouldRespect) {
+          cancel();
+        }
+        return;
+      }
+      if (shouldRespect) {
+        if (phase.hasMoved) {
+          event.preventDefault();
+          return;
+        }
+        cancel();
+        return;
+      }
+      event.preventDefault();
+    }
+  }, {
+    eventName: supportedPageVisibilityEventName,
+    fn: cancel
+  }];
+}
+function useTouchSensor(api) {
+  const phaseRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(idle);
+  const unbindEventsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(noop$2);
+  const getPhase = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function getPhase() {
+    return phaseRef.current;
+  }, []);
+  const setPhase = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function setPhase(phase) {
+    phaseRef.current = phase;
+  }, []);
+  const startCaptureBinding = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    eventName: 'touchstart',
+    fn: function onTouchStart(event) {
+      if (event.defaultPrevented) {
+        return;
+      }
+      const draggableId = api.findClosestDraggableId(event);
+      if (!draggableId) {
+        return;
+      }
+      const actions = api.tryGetLock(draggableId, stop, {
+        sourceEvent: event
+      });
+      if (!actions) {
+        return;
+      }
+      const touch = event.touches[0];
+      const {
+        clientX,
+        clientY
+      } = touch;
+      const point = {
+        x: clientX,
+        y: clientY
+      };
+      unbindEventsRef.current();
+      startPendingDrag(actions, point);
+    }
+  }), [api]);
+  const listenForCapture = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function listenForCapture() {
+    const options = {
+      capture: true,
+      passive: false
+    };
+    unbindEventsRef.current = bindEvents(window, [startCaptureBinding], options);
+  }, [startCaptureBinding]);
+  const stop = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const current = phaseRef.current;
+    if (current.type === 'IDLE') {
+      return;
+    }
+    if (current.type === 'PENDING') {
+      clearTimeout(current.longPressTimerId);
+    }
+    setPhase(idle);
+    unbindEventsRef.current();
+    listenForCapture();
+  }, [listenForCapture, setPhase]);
+  const cancel = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const phase = phaseRef.current;
+    stop();
+    if (phase.type === 'DRAGGING') {
+      phase.actions.cancel({
+        shouldBlockNextClick: true
+      });
+    }
+    if (phase.type === 'PENDING') {
+      phase.actions.abort();
+    }
+  }, [stop]);
+  const bindCapturingEvents = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function bindCapturingEvents() {
+    const options = {
+      capture: true,
+      passive: false
+    };
+    const args = {
+      cancel,
+      completed: stop,
+      getPhase
+    };
+    const unbindTarget = bindEvents(window, getHandleBindings(args), options);
+    const unbindWindow = bindEvents(window, getWindowBindings(args), options);
+    unbindEventsRef.current = function unbindAll() {
+      unbindTarget();
+      unbindWindow();
+    };
+  }, [cancel, getPhase, stop]);
+  const startDragging = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function startDragging() {
+    const phase = getPhase();
+    !(phase.type === 'PENDING') ?  true ? invariant(false, `Cannot start dragging from phase ${phase.type}`) : 0 : void 0;
+    const actions = phase.actions.fluidLift(phase.point);
+    setPhase({
+      type: 'DRAGGING',
+      actions,
+      hasMoved: false
+    });
+  }, [getPhase, setPhase]);
+  const startPendingDrag = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function startPendingDrag(actions, point) {
+    !(getPhase().type === 'IDLE') ?  true ? invariant(false, 'Expected to move from IDLE to PENDING drag') : 0 : void 0;
+    const longPressTimerId = setTimeout(startDragging, timeForLongPress);
+    setPhase({
+      type: 'PENDING',
+      point,
+      actions,
+      longPressTimerId
+    });
+    bindCapturingEvents();
+  }, [bindCapturingEvents, getPhase, setPhase, startDragging]);
+  useLayoutEffect(function mount() {
+    listenForCapture();
+    return function unmount() {
+      unbindEventsRef.current();
+      const phase = getPhase();
+      if (phase.type === 'PENDING') {
+        clearTimeout(phase.longPressTimerId);
+        setPhase(idle);
+      }
+    };
+  }, [getPhase, listenForCapture, setPhase]);
+  useLayoutEffect(function webkitHack() {
+    const unbind = bindEvents(window, [{
+      eventName: 'touchmove',
+      fn: () => {},
+      options: {
+        capture: false,
+        passive: false
+      }
+    }]);
+    return unbind;
+  }, []);
+}
+
+function useValidateSensorHooks(sensorHooks) {
+  useDev(() => {
+    const previousRef = usePrevious(sensorHooks);
+    useDevSetupWarning(() => {
+      !(previousRef.current.length === sensorHooks.length) ?  true ? invariant(false, 'Cannot change the amount of sensor hooks after mounting') : 0 : void 0;
+    });
+  });
+}
+
+const interactiveTagNames = ['input', 'button', 'textarea', 'select', 'option', 'optgroup', 'video', 'audio'];
+function isAnInteractiveElement(parent, current) {
+  if (current == null) {
+    return false;
+  }
+  const hasAnInteractiveTag = interactiveTagNames.includes(current.tagName.toLowerCase());
+  if (hasAnInteractiveTag) {
+    return true;
+  }
+  const attribute = current.getAttribute('contenteditable');
+  if (attribute === 'true' || attribute === '') {
+    return true;
+  }
+  if (current === parent) {
+    return false;
+  }
+  return isAnInteractiveElement(parent, current.parentElement);
+}
+function isEventInInteractiveElement(draggable, event) {
+  const target = event.target;
+  if (!isHtmlElement(target)) {
+    return false;
+  }
+  return isAnInteractiveElement(draggable, target);
+}
+
+var getBorderBoxCenterPosition = (el => (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getRect)(el.getBoundingClientRect()).center);
+
+function isElement(el) {
+  return el instanceof getWindowFromEl(el).Element;
+}
+
+const supportedMatchesName = (() => {
+  const base = 'matches';
+  if (typeof document === 'undefined') {
+    return base;
+  }
+  const candidates = [base, 'msMatchesSelector', 'webkitMatchesSelector'];
+  const value = candidates.find(name => name in Element.prototype);
+  return value || base;
+})();
+function closestPonyfill(el, selector) {
+  if (el == null) {
+    return null;
+  }
+  if (el[supportedMatchesName](selector)) {
+    return el;
+  }
+  return closestPonyfill(el.parentElement, selector);
+}
+function closest(el, selector) {
+  if (el.closest) {
+    return el.closest(selector);
+  }
+  return closestPonyfill(el, selector);
+}
+
+function getSelector(contextId) {
+  return `[${dragHandle.contextId}="${contextId}"]`;
+}
+function findClosestDragHandleFromEvent(contextId, event) {
+  const target = event.target;
+  if (!isElement(target)) {
+     true ? warning('event.target must be a Element') : 0;
+    return null;
+  }
+  const selector = getSelector(contextId);
+  const handle = closest(target, selector);
+  if (!handle) {
+    return null;
+  }
+  if (!isHtmlElement(handle)) {
+     true ? warning('drag handle must be a HTMLElement') : 0;
+    return null;
+  }
+  return handle;
+}
+function tryGetClosestDraggableIdFromEvent(contextId, event) {
+  const handle = findClosestDragHandleFromEvent(contextId, event);
+  if (!handle) {
+    return null;
+  }
+  return handle.getAttribute(dragHandle.draggableId);
+}
+
+function findDraggable(contextId, draggableId) {
+  const selector = `[${draggable.contextId}="${contextId}"]`;
+  const possible = querySelectorAll(document, selector);
+  const draggable$1 = possible.find(el => {
+    return el.getAttribute(draggable.id) === draggableId;
+  });
+  if (!draggable$1) {
+    return null;
+  }
+  if (!isHtmlElement(draggable$1)) {
+     true ? warning('Draggable element is not a HTMLElement') : 0;
+    return null;
+  }
+  return draggable$1;
+}
+
+function preventDefault(event) {
+  event.preventDefault();
+}
+function isActive(_ref) {
+  let {
+    expected,
+    phase,
+    isLockActive,
+    shouldWarn
+  } = _ref;
+  if (!isLockActive()) {
+    if (shouldWarn) {
+       true ? warning(`
+        Cannot perform action.
+        The sensor no longer has an action lock.
+
+        Tips:
+
+        - Throw away your action handlers when forceStop() is called
+        - Check actions.isActive() if you really need to
+      `) : 0;
+    }
+    return false;
+  }
+  if (expected !== phase) {
+    if (shouldWarn) {
+       true ? warning(`
+        Cannot perform action.
+        The actions you used belong to an outdated phase
+
+        Current phase: ${expected}
+        You called an action from outdated phase: ${phase}
+
+        Tips:
+
+        - Do not use preDragActions actions after calling preDragActions.lift()
+      `) : 0;
+    }
+    return false;
+  }
+  return true;
+}
+function canStart(_ref2) {
+  let {
+    lockAPI,
+    store,
+    registry,
+    draggableId
+  } = _ref2;
+  if (lockAPI.isClaimed()) {
+    return false;
+  }
+  const entry = registry.draggable.findById(draggableId);
+  if (!entry) {
+     true ? warning(`Unable to find draggable with id: ${draggableId}`) : 0;
+    return false;
+  }
+  if (!entry.options.isEnabled) {
+    return false;
+  }
+  if (!canStartDrag(store.getState(), draggableId)) {
+    return false;
+  }
+  return true;
+}
+function tryStart(_ref3) {
+  let {
+    lockAPI,
+    contextId,
+    store,
+    registry,
+    draggableId,
+    forceSensorStop,
+    sourceEvent
+  } = _ref3;
+  const shouldStart = canStart({
+    lockAPI,
+    store,
+    registry,
+    draggableId
+  });
+  if (!shouldStart) {
+    return null;
+  }
+  const entry = registry.draggable.getById(draggableId);
+  const el = findDraggable(contextId, entry.descriptor.id);
+  if (!el) {
+     true ? warning(`Unable to find draggable element with id: ${draggableId}`) : 0;
+    return null;
+  }
+  if (sourceEvent && !entry.options.canDragInteractiveElements && isEventInInteractiveElement(el, sourceEvent)) {
+    return null;
+  }
+  const lock = lockAPI.claim(forceSensorStop || noop$2);
+  let phase = 'PRE_DRAG';
+  function getShouldRespectForcePress() {
+    return entry.options.shouldRespectForcePress;
+  }
+  function isLockActive() {
+    return lockAPI.isActive(lock);
+  }
+  function tryDispatch(expected, getAction) {
+    if (isActive({
+      expected,
+      phase,
+      isLockActive,
+      shouldWarn: true
+    })) {
+      store.dispatch(getAction());
+    }
+  }
+  const tryDispatchWhenDragging = tryDispatch.bind(null, 'DRAGGING');
+  function lift(args) {
+    function completed() {
+      lockAPI.release();
+      phase = 'COMPLETED';
+    }
+    if (phase !== 'PRE_DRAG') {
+      completed();
+       true ? invariant(false, `Cannot lift in phase ${phase}`) : 0 ;
+    }
+    store.dispatch(lift$1(args.liftActionArgs));
+    phase = 'DRAGGING';
+    function finish(reason, options) {
+      if (options === void 0) {
+        options = {
+          shouldBlockNextClick: false
+        };
+      }
+      args.cleanup();
+      if (options.shouldBlockNextClick) {
+        const unbind = bindEvents(window, [{
+          eventName: 'click',
+          fn: preventDefault,
+          options: {
+            once: true,
+            passive: false,
+            capture: true
+          }
+        }]);
+        setTimeout(unbind);
+      }
+      completed();
+      store.dispatch(drop$1({
+        reason
+      }));
+    }
+    return {
+      isActive: () => isActive({
+        expected: 'DRAGGING',
+        phase,
+        isLockActive,
+        shouldWarn: false
+      }),
+      shouldRespectForcePress: getShouldRespectForcePress,
+      drop: options => finish('DROP', options),
+      cancel: options => finish('CANCEL', options),
+      ...args.actions
+    };
+  }
+  function fluidLift(clientSelection) {
+    const move$1 = (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(client => {
+      tryDispatchWhenDragging(() => move({
+        client
+      }));
+    });
+    const api = lift({
+      liftActionArgs: {
+        id: draggableId,
+        clientSelection,
+        movementMode: 'FLUID'
+      },
+      cleanup: () => move$1.cancel(),
+      actions: {
+        move: move$1
+      }
+    });
+    return {
+      ...api,
+      move: move$1
+    };
+  }
+  function snapLift() {
+    const actions = {
+      moveUp: () => tryDispatchWhenDragging(moveUp),
+      moveRight: () => tryDispatchWhenDragging(moveRight),
+      moveDown: () => tryDispatchWhenDragging(moveDown),
+      moveLeft: () => tryDispatchWhenDragging(moveLeft)
+    };
+    return lift({
+      liftActionArgs: {
+        id: draggableId,
+        clientSelection: getBorderBoxCenterPosition(el),
+        movementMode: 'SNAP'
+      },
+      cleanup: noop$2,
+      actions
+    });
+  }
+  function abortPreDrag() {
+    const shouldRelease = isActive({
+      expected: 'PRE_DRAG',
+      phase,
+      isLockActive,
+      shouldWarn: true
+    });
+    if (shouldRelease) {
+      lockAPI.release();
+    }
+  }
+  const preDrag = {
+    isActive: () => isActive({
+      expected: 'PRE_DRAG',
+      phase,
+      isLockActive,
+      shouldWarn: false
+    }),
+    shouldRespectForcePress: getShouldRespectForcePress,
+    fluidLift,
+    snapLift,
+    abort: abortPreDrag
+  };
+  return preDrag;
+}
+const defaultSensors = [useMouseSensor, useKeyboardSensor, useTouchSensor];
+function useSensorMarshal(_ref4) {
+  let {
+    contextId,
+    store,
+    registry,
+    customSensors,
+    enableDefaultSensors
+  } = _ref4;
+  const useSensors = [...(enableDefaultSensors ? defaultSensors : []), ...(customSensors || [])];
+  const lockAPI = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(() => create())[0];
+  const tryAbandonLock = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryAbandonLock(previous, current) {
+    if (isDragging(previous) && !isDragging(current)) {
+      lockAPI.tryAbandon();
+    }
+  }, [lockAPI]);
+  useLayoutEffect(function listenToStore() {
+    let previous = store.getState();
+    const unsubscribe = store.subscribe(() => {
+      const current = store.getState();
+      tryAbandonLock(previous, current);
+      previous = current;
+    });
+    return unsubscribe;
+  }, [lockAPI, store, tryAbandonLock]);
+  useLayoutEffect(() => {
+    return lockAPI.tryAbandon;
+  }, [lockAPI.tryAbandon]);
+  const canGetLock = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(draggableId => {
+    return canStart({
+      lockAPI,
+      registry,
+      store,
+      draggableId
+    });
+  }, [lockAPI, registry, store]);
+  const tryGetLock = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)((draggableId, forceStop, options) => tryStart({
+    lockAPI,
+    registry,
+    contextId,
+    store,
+    draggableId,
+    forceSensorStop: forceStop || null,
+    sourceEvent: options && options.sourceEvent ? options.sourceEvent : null
+  }), [contextId, lockAPI, registry, store]);
+  const findClosestDraggableId = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(event => tryGetClosestDraggableIdFromEvent(contextId, event), [contextId]);
+  const findOptionsForDraggable = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(id => {
+    const entry = registry.draggable.findById(id);
+    return entry ? entry.options : null;
+  }, [registry.draggable]);
+  const tryReleaseLock = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function tryReleaseLock() {
+    if (!lockAPI.isClaimed()) {
+      return;
+    }
+    lockAPI.tryAbandon();
+    if (store.getState().phase !== 'IDLE') {
+      store.dispatch(flush());
+    }
+  }, [lockAPI, store]);
+  const isLockClaimed = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => lockAPI.isClaimed(), [lockAPI]);
+  const api = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    canGetLock,
+    tryGetLock,
+    findClosestDraggableId,
+    findOptionsForDraggable,
+    tryReleaseLock,
+    isLockClaimed
+  }), [canGetLock, tryGetLock, findClosestDraggableId, findOptionsForDraggable, tryReleaseLock, isLockClaimed]);
+  useValidateSensorHooks(useSensors);
+  for (let i = 0; i < useSensors.length; i++) {
+    useSensors[i](api);
+  }
+}
+
+const createResponders = props => ({
+  onBeforeCapture: t => {
+    const onBeforeCapureCallback = () => {
+      if (props.onBeforeCapture) {
+        props.onBeforeCapture(t);
+      }
+    };
+    if (react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('16') || react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('17')) {
+      onBeforeCapureCallback();
+    } else {
+      (0,react_dom__WEBPACK_IMPORTED_MODULE_1__.flushSync)(onBeforeCapureCallback);
+    }
+  },
+  onBeforeDragStart: props.onBeforeDragStart,
+  onDragStart: props.onDragStart,
+  onDragEnd: props.onDragEnd,
+  onDragUpdate: props.onDragUpdate
+});
+const createAutoScrollerOptions = props => ({
+  ...defaultAutoScrollerOptions,
+  ...props.autoScrollerOptions,
+  durationDampening: {
+    ...defaultAutoScrollerOptions.durationDampening,
+    ...props.autoScrollerOptions
+  }
+});
+function getStore(lazyRef) {
+  !lazyRef.current ?  true ? invariant(false, 'Could not find store from lazy ref') : 0 : void 0;
+  return lazyRef.current;
+}
+function App(props) {
+  const {
+    contextId,
+    setCallbacks,
+    sensors,
+    nonce,
+    dragHandleUsageInstructions
+  } = props;
+  const lazyStoreRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  useStartupValidation();
+  const lastPropsRef = usePrevious(props);
+  const getResponders = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    return createResponders(lastPropsRef.current);
+  }, [lastPropsRef]);
+  const getAutoScrollerOptions = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    return createAutoScrollerOptions(lastPropsRef.current);
+  }, [lastPropsRef]);
+  const announce = useAnnouncer(contextId);
+  const dragHandleUsageInstructionsId = useHiddenTextElement({
+    contextId,
+    text: dragHandleUsageInstructions
+  });
+  const styleMarshal = useStyleMarshal(contextId, nonce);
+  const lazyDispatch = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(action => {
+    getStore(lazyStoreRef).dispatch(action);
+  }, []);
+  const marshalCallbacks = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => (0,redux__WEBPACK_IMPORTED_MODULE_7__.bindActionCreators)({
+    publishWhileDragging,
+    updateDroppableScroll,
+    updateDroppableIsEnabled,
+    updateDroppableIsCombineEnabled,
+    collectionStarting
+  }, lazyDispatch), [lazyDispatch]);
+  const registry = useRegistry();
+  const dimensionMarshal = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => {
+    return createDimensionMarshal(registry, marshalCallbacks);
+  }, [registry, marshalCallbacks]);
+  const autoScroller = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => createAutoScroller({
+    scrollWindow,
+    scrollDroppable: dimensionMarshal.scrollDroppable,
+    getAutoScrollerOptions,
+    ...(0,redux__WEBPACK_IMPORTED_MODULE_7__.bindActionCreators)({
+      move
+    }, lazyDispatch)
+  }), [dimensionMarshal.scrollDroppable, lazyDispatch, getAutoScrollerOptions]);
+  const focusMarshal = useFocusMarshal(contextId);
+  const store = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => createStore({
+    announce,
+    autoScroller,
+    dimensionMarshal,
+    focusMarshal,
+    getResponders,
+    styleMarshal
+  }), [announce, autoScroller, dimensionMarshal, focusMarshal, getResponders, styleMarshal]);
+  if (true) {
+    if (lazyStoreRef.current && lazyStoreRef.current !== store) {
+       true ? warning('unexpected store change') : 0;
+    }
+  }
+  lazyStoreRef.current = store;
+  const tryResetStore = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const current = getStore(lazyStoreRef);
+    const state = current.getState();
+    if (state.phase !== 'IDLE') {
+      current.dispatch(flush());
+    }
+  }, []);
+  const isDragging = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const state = getStore(lazyStoreRef).getState();
+    if (state.phase === 'DROP_ANIMATING') {
+      return true;
+    }
+    if (state.phase === 'IDLE') {
+      return false;
+    }
+    return state.isDragging;
+  }, []);
+  const appCallbacks = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    isDragging,
+    tryAbort: tryResetStore
+  }), [isDragging, tryResetStore]);
+  setCallbacks(appCallbacks);
+  const getCanLift = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(id => canStartDrag(getStore(lazyStoreRef).getState(), id), []);
+  const getIsMovementAllowed = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => isMovementAllowed(getStore(lazyStoreRef).getState()), []);
+  const appContext = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    marshal: dimensionMarshal,
+    focus: focusMarshal,
+    contextId,
+    canLift: getCanLift,
+    isMovementAllowed: getIsMovementAllowed,
+    dragHandleUsageInstructionsId,
+    registry
+  }), [contextId, dimensionMarshal, dragHandleUsageInstructionsId, focusMarshal, getCanLift, getIsMovementAllowed, registry]);
+  useSensorMarshal({
+    contextId,
+    store,
+    registry,
+    customSensors: sensors || null,
+    enableDefaultSensors: props.enableDefaultSensors !== false
+  });
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    return tryResetStore;
+  }, [tryResetStore]);
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AppContext.Provider, {
+    value: appContext
+  }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_redux__WEBPACK_IMPORTED_MODULE_2__.Provider, {
+    context: StoreContext,
+    store: store
+  }, props.children));
+}
+
+let count = 0;
+function resetDeprecatedUniqueContextId() {
+  count = 0;
+}
+function useDeprecatedUniqueContextId() {
+  return (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => `${count++}`, []);
+}
+function useUniqueContextId() {
+  return react__WEBPACK_IMPORTED_MODULE_0___default().useId();
+}
+var useUniqueContextId$1 = "useId" in (react__WEBPACK_IMPORTED_MODULE_0___default()) ? useUniqueContextId : useDeprecatedUniqueContextId;
+
+function resetServerContext() {
+  if ("useId" in (react__WEBPACK_IMPORTED_MODULE_0___default())) {
+     true ? warning(`It is not necessary to call resetServerContext when using React 18+`) : 0;
+    return;
+  }
+  resetDeprecatedUniqueContextId();
+  resetDeprecatedUniqueId();
+}
+function DragDropContext(props) {
+  const contextId = useUniqueContextId$1();
+  const dragHandleUsageInstructions = props.dragHandleUsageInstructions || preset$1.dragHandleUsageInstructions;
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(ErrorBoundary, null, setCallbacks => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(App, {
+    nonce: props.nonce,
+    contextId: contextId,
+    setCallbacks: setCallbacks,
+    dragHandleUsageInstructions: dragHandleUsageInstructions,
+    enableDefaultSensors: props.enableDefaultSensors,
+    sensors: props.sensors,
+    onBeforeCapture: props.onBeforeCapture,
+    onBeforeDragStart: props.onBeforeDragStart,
+    onDragStart: props.onDragStart,
+    onDragUpdate: props.onDragUpdate,
+    onDragEnd: props.onDragEnd,
+    autoScrollerOptions: props.autoScrollerOptions
+  }, props.children));
+}
+
+const zIndexOptions = {
+  dragging: 5000,
+  dropAnimating: 4500
+};
+const getDraggingTransition = (shouldAnimateDragMovement, dropping) => {
+  if (dropping) {
+    return transitions.drop(dropping.duration);
+  }
+  if (shouldAnimateDragMovement) {
+    return transitions.snap;
+  }
+  return transitions.fluid;
+};
+const getDraggingOpacity = (isCombining, isDropAnimating) => {
+  if (!isCombining) {
+    return undefined;
+  }
+  return isDropAnimating ? combine.opacity.drop : combine.opacity.combining;
+};
+const getShouldDraggingAnimate = dragging => {
+  if (dragging.forceShouldAnimate != null) {
+    return dragging.forceShouldAnimate;
+  }
+  return dragging.mode === 'SNAP';
+};
+function getDraggingStyle(dragging) {
+  const dimension = dragging.dimension;
+  const box = dimension.client;
+  const {
+    offset,
+    combineWith,
+    dropping
+  } = dragging;
+  const isCombining = Boolean(combineWith);
+  const shouldAnimate = getShouldDraggingAnimate(dragging);
+  const isDropAnimating = Boolean(dropping);
+  const transform = isDropAnimating ? transforms.drop(offset, isCombining) : transforms.moveTo(offset);
+  const style = {
+    position: 'fixed',
+    top: box.marginBox.top,
+    left: box.marginBox.left,
+    boxSizing: 'border-box',
+    width: box.borderBox.width,
+    height: box.borderBox.height,
+    transition: getDraggingTransition(shouldAnimate, dropping),
+    transform,
+    opacity: getDraggingOpacity(isCombining, isDropAnimating),
+    zIndex: isDropAnimating ? zIndexOptions.dropAnimating : zIndexOptions.dragging,
+    pointerEvents: 'none'
+  };
+  return style;
+}
+function getSecondaryStyle(secondary) {
+  return {
+    transform: transforms.moveTo(secondary.offset),
+    transition: secondary.shouldAnimateDisplacement ? undefined : 'none'
+  };
+}
+function getStyle$1(mapped) {
+  return mapped.type === 'DRAGGING' ? getDraggingStyle(mapped) : getSecondaryStyle(mapped);
+}
+
+function getDimension$1(descriptor, el, windowScroll) {
+  if (windowScroll === void 0) {
+    windowScroll = origin;
+  }
+  const computedStyles = window.getComputedStyle(el);
+  const borderBox = el.getBoundingClientRect();
+  const client = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.calculateBox)(borderBox, computedStyles);
+  const page = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.withScroll)(client, windowScroll);
+  const placeholder = {
+    client,
+    tagName: el.tagName.toLowerCase(),
+    display: computedStyles.display
+  };
+  const displaceBy = {
+    x: client.marginBox.width,
+    y: client.marginBox.height
+  };
+  const dimension = {
+    descriptor,
+    placeholder,
+    displaceBy,
+    client,
+    page
+  };
+  return dimension;
+}
+
+function useDraggablePublisher(args) {
+  const uniqueId = useUniqueId$1('draggable');
+  const {
+    descriptor,
+    registry,
+    getDraggableRef,
+    canDragInteractiveElements,
+    shouldRespectForcePress,
+    isEnabled
+  } = args;
+  const options = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    canDragInteractiveElements,
+    shouldRespectForcePress,
+    isEnabled
+  }), [canDragInteractiveElements, isEnabled, shouldRespectForcePress]);
+  const getDimension = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(windowScroll => {
+    const el = getDraggableRef();
+    !el ?  true ? invariant(false, 'Cannot get dimension when no ref is set') : 0 : void 0;
+    return getDimension$1(descriptor, el, windowScroll);
+  }, [descriptor, getDraggableRef]);
+  const entry = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    uniqueId,
+    descriptor,
+    options,
+    getDimension
+  }), [descriptor, getDimension, options, uniqueId]);
+  const publishedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(entry);
+  const isFirstPublishRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
+  useLayoutEffect(() => {
+    registry.draggable.register(publishedRef.current);
+    return () => registry.draggable.unregister(publishedRef.current);
+  }, [registry.draggable]);
+  useLayoutEffect(() => {
+    if (isFirstPublishRef.current) {
+      isFirstPublishRef.current = false;
+      return;
+    }
+    const last = publishedRef.current;
+    publishedRef.current = entry;
+    registry.draggable.update(entry, last);
+  }, [entry, registry.draggable]);
+}
+
+var DroppableContext = react__WEBPACK_IMPORTED_MODULE_0___default().createContext(null);
+
+function checkIsValidInnerRef(el) {
+  !(el && isHtmlElement(el)) ?  true ? invariant(false, `
+    provided.innerRef has not been provided with a HTMLElement.
+
+    You can find a guide on using the innerRef callback functions at:
+    https://github.com/hello-pangea/dnd/blob/main/docs/guides/using-inner-ref.md
+  `) : 0 : void 0;
+}
+
+function useValidation$1(props, contextId, getRef) {
+  useDevSetupWarning(() => {
+    function prefix(id) {
+      return `Draggable[id: ${id}]: `;
+    }
+    const id = props.draggableId;
+    !id ?  true ? invariant(false, 'Draggable requires a draggableId') : 0 : void 0;
+    !(typeof id === 'string') ?  true ? invariant(false, `Draggable requires a [string] draggableId.
+      Provided: [type: ${typeof id}] (value: ${id})`) : 0 : void 0;
+    !Number.isInteger(props.index) ?  true ? invariant(false, `${prefix(id)} requires an integer index prop`) : 0 : void 0;
+    if (props.mapped.type === 'DRAGGING') {
+      return;
+    }
+    checkIsValidInnerRef(getRef());
+    if (props.isEnabled) {
+      !findDragHandle(contextId, id) ?  true ? invariant(false, `${prefix(id)} Unable to find drag handle`) : 0 : void 0;
+    }
+  });
+}
+function useClonePropValidation(isClone) {
+  useDev(() => {
+    const initialRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(isClone);
+    useDevSetupWarning(() => {
+      !(isClone === initialRef.current) ?  true ? invariant(false, 'Draggable isClone prop value changed during component life') : 0 : void 0;
+    }, [isClone]);
+  });
+}
+
+function useRequiredContext(Context) {
+  const result = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(Context);
+  !result ?  true ? invariant(false, 'Could not find required context') : 0 : void 0;
+  return result;
+}
+
+function preventHtml5Dnd(event) {
+  event.preventDefault();
+}
+const Draggable = props => {
+  const ref = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const setRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function (el) {
+    if (el === void 0) {
+      el = null;
+    }
+    ref.current = el;
+  }, []);
+  const getRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => ref.current, []);
+  const {
+    contextId,
+    dragHandleUsageInstructionsId,
+    registry
+  } = useRequiredContext(AppContext);
+  const {
+    type,
+    droppableId
+  } = useRequiredContext(DroppableContext);
+  const descriptor = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    id: props.draggableId,
+    index: props.index,
+    type,
+    droppableId
+  }), [props.draggableId, props.index, type, droppableId]);
+  const {
+    children,
+    draggableId,
+    isEnabled,
+    shouldRespectForcePress,
+    canDragInteractiveElements,
+    isClone,
+    mapped,
+    dropAnimationFinished: dropAnimationFinishedAction
+  } = props;
+  useValidation$1(props, contextId, getRef);
+  useClonePropValidation(isClone);
+  if (!isClone) {
+    const forPublisher = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+      descriptor,
+      registry,
+      getDraggableRef: getRef,
+      canDragInteractiveElements,
+      shouldRespectForcePress,
+      isEnabled
+    }), [descriptor, registry, getRef, canDragInteractiveElements, shouldRespectForcePress, isEnabled]);
+    useDraggablePublisher(forPublisher);
+  }
+  const dragHandleProps = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => isEnabled ? {
+    tabIndex: 0,
+    role: 'button',
+    'aria-describedby': dragHandleUsageInstructionsId,
+    'data-rfd-drag-handle-draggable-id': draggableId,
+    'data-rfd-drag-handle-context-id': contextId,
+    draggable: false,
+    onDragStart: preventHtml5Dnd
+  } : null, [contextId, dragHandleUsageInstructionsId, draggableId, isEnabled]);
+  const onMoveEnd = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(event => {
+    if (mapped.type !== 'DRAGGING') {
+      return;
+    }
+    if (!mapped.dropping) {
+      return;
+    }
+    if (event.propertyName !== 'transform') {
+      return;
+    }
+    if (react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('16') || react__WEBPACK_IMPORTED_MODULE_0___default().version.startsWith('17')) {
+      dropAnimationFinishedAction();
+    } else {
+      (0,react_dom__WEBPACK_IMPORTED_MODULE_1__.flushSync)(dropAnimationFinishedAction);
+    }
+  }, [dropAnimationFinishedAction, mapped]);
+  const provided = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => {
+    const style = getStyle$1(mapped);
+    const onTransitionEnd = mapped.type === 'DRAGGING' && mapped.dropping ? onMoveEnd : undefined;
+    const result = {
+      innerRef: setRef,
+      draggableProps: {
+        'data-rfd-draggable-context-id': contextId,
+        'data-rfd-draggable-id': draggableId,
+        style,
+        onTransitionEnd
+      },
+      dragHandleProps
+    };
+    return result;
+  }, [contextId, dragHandleProps, draggableId, mapped, onMoveEnd, setRef]);
+  const rubric = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    draggableId: descriptor.id,
+    type: descriptor.type,
+    source: {
+      index: descriptor.index,
+      droppableId: descriptor.droppableId
+    }
+  }), [descriptor.droppableId, descriptor.id, descriptor.index, descriptor.type]);
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, children(provided, mapped.snapshot, rubric));
+};
+var Draggable$1 = Draggable;
+
+var isStrictEqual = ((a, b) => a === b);
+
+var whatIsDraggedOverFromResult = (result => {
+  const {
+    combine,
+    destination
+  } = result;
+  if (destination) {
+    return destination.droppableId;
+  }
+  if (combine) {
+    return combine.droppableId;
+  }
+  return null;
+});
+
+const getCombineWithFromResult = result => {
+  return result.combine ? result.combine.draggableId : null;
+};
+const getCombineWithFromImpact = impact => {
+  return impact.at && impact.at.type === 'COMBINE' ? impact.at.combine.draggableId : null;
+};
+function getDraggableSelector() {
+  const memoizedOffset = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((x, y) => ({
+    x,
+    y
+  }));
+  const getMemoizedSnapshot = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(function (mode, isClone, draggingOver, combineWith, dropping) {
+    if (draggingOver === void 0) {
+      draggingOver = null;
+    }
+    if (combineWith === void 0) {
+      combineWith = null;
+    }
+    if (dropping === void 0) {
+      dropping = null;
+    }
+    return {
+      isDragging: true,
+      isClone,
+      isDropAnimating: Boolean(dropping),
+      dropAnimation: dropping,
+      mode,
+      draggingOver,
+      combineWith,
+      combineTargetFor: null
+    };
+  });
+  const getMemoizedProps = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(function (offset, mode, dimension, isClone, draggingOver, combineWith, forceShouldAnimate) {
+    if (draggingOver === void 0) {
+      draggingOver = null;
+    }
+    if (combineWith === void 0) {
+      combineWith = null;
+    }
+    if (forceShouldAnimate === void 0) {
+      forceShouldAnimate = null;
+    }
+    return {
+      mapped: {
+        type: 'DRAGGING',
+        dropping: null,
+        draggingOver,
+        combineWith,
+        mode,
+        offset,
+        dimension,
+        forceShouldAnimate,
+        snapshot: getMemoizedSnapshot(mode, isClone, draggingOver, combineWith, null)
+      }
+    };
+  });
+  const selector = (state, ownProps) => {
+    if (isDragging(state)) {
+      if (state.critical.draggable.id !== ownProps.draggableId) {
+        return null;
+      }
+      const offset = state.current.client.offset;
+      const dimension = state.dimensions.draggables[ownProps.draggableId];
+      const draggingOver = whatIsDraggedOver(state.impact);
+      const combineWith = getCombineWithFromImpact(state.impact);
+      const forceShouldAnimate = state.forceShouldAnimate;
+      return getMemoizedProps(memoizedOffset(offset.x, offset.y), state.movementMode, dimension, ownProps.isClone, draggingOver, combineWith, forceShouldAnimate);
+    }
+    if (state.phase === 'DROP_ANIMATING') {
+      const completed = state.completed;
+      if (completed.result.draggableId !== ownProps.draggableId) {
+        return null;
+      }
+      const isClone = ownProps.isClone;
+      const dimension = state.dimensions.draggables[ownProps.draggableId];
+      const result = completed.result;
+      const mode = result.mode;
+      const draggingOver = whatIsDraggedOverFromResult(result);
+      const combineWith = getCombineWithFromResult(result);
+      const duration = state.dropDuration;
+      const dropping = {
+        duration,
+        curve: curves.drop,
+        moveTo: state.newHomeClientOffset,
+        opacity: combineWith ? combine.opacity.drop : null,
+        scale: combineWith ? combine.scale.drop : null
+      };
+      return {
+        mapped: {
+          type: 'DRAGGING',
+          offset: state.newHomeClientOffset,
+          dimension,
+          dropping,
+          draggingOver,
+          combineWith,
+          mode,
+          forceShouldAnimate: null,
+          snapshot: getMemoizedSnapshot(mode, isClone, draggingOver, combineWith, dropping)
+        }
+      };
+    }
+    return null;
+  };
+  return selector;
+}
+function getSecondarySnapshot(combineTargetFor) {
+  if (combineTargetFor === void 0) {
+    combineTargetFor = null;
+  }
+  return {
+    isDragging: false,
+    isDropAnimating: false,
+    isClone: false,
+    dropAnimation: null,
+    mode: null,
+    draggingOver: null,
+    combineTargetFor,
+    combineWith: null
+  };
+}
+const atRest = {
+  mapped: {
+    type: 'SECONDARY',
+    offset: origin,
+    combineTargetFor: null,
+    shouldAnimateDisplacement: true,
+    snapshot: getSecondarySnapshot(null)
+  }
+};
+function getSecondarySelector() {
+  const memoizedOffset = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((x, y) => ({
+    x,
+    y
+  }));
+  const getMemoizedSnapshot = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(getSecondarySnapshot);
+  const getMemoizedProps = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(function (offset, combineTargetFor, shouldAnimateDisplacement) {
+    if (combineTargetFor === void 0) {
+      combineTargetFor = null;
+    }
+    return {
+      mapped: {
+        type: 'SECONDARY',
+        offset,
+        combineTargetFor,
+        shouldAnimateDisplacement,
+        snapshot: getMemoizedSnapshot(combineTargetFor)
+      }
+    };
+  });
+  const getFallback = combineTargetFor => {
+    return combineTargetFor ? getMemoizedProps(origin, combineTargetFor, true) : null;
+  };
+  const getProps = (ownId, draggingId, impact, afterCritical) => {
+    const visualDisplacement = impact.displaced.visible[ownId];
+    const isAfterCriticalInVirtualList = Boolean(afterCritical.inVirtualList && afterCritical.effected[ownId]);
+    const combine = tryGetCombine(impact);
+    const combineTargetFor = combine && combine.draggableId === ownId ? draggingId : null;
+    if (!visualDisplacement) {
+      if (!isAfterCriticalInVirtualList) {
+        return getFallback(combineTargetFor);
+      }
+      if (impact.displaced.invisible[ownId]) {
+        return null;
+      }
+      const change = negate(afterCritical.displacedBy.point);
+      const offset = memoizedOffset(change.x, change.y);
+      return getMemoizedProps(offset, combineTargetFor, true);
+    }
+    if (isAfterCriticalInVirtualList) {
+      return getFallback(combineTargetFor);
+    }
+    const displaceBy = impact.displacedBy.point;
+    const offset = memoizedOffset(displaceBy.x, displaceBy.y);
+    return getMemoizedProps(offset, combineTargetFor, visualDisplacement.shouldAnimate);
+  };
+  const selector = (state, ownProps) => {
+    if (isDragging(state)) {
+      if (state.critical.draggable.id === ownProps.draggableId) {
+        return null;
+      }
+      return getProps(ownProps.draggableId, state.critical.draggable.id, state.impact, state.afterCritical);
+    }
+    if (state.phase === 'DROP_ANIMATING') {
+      const completed = state.completed;
+      if (completed.result.draggableId === ownProps.draggableId) {
+        return null;
+      }
+      return getProps(ownProps.draggableId, completed.result.draggableId, completed.impact, completed.afterCritical);
+    }
+    return null;
+  };
+  return selector;
+}
+const makeMapStateToProps$1 = () => {
+  const draggingSelector = getDraggableSelector();
+  const secondarySelector = getSecondarySelector();
+  const selector = (state, ownProps) => draggingSelector(state, ownProps) || secondarySelector(state, ownProps) || atRest;
+  return selector;
+};
+const mapDispatchToProps$1 = {
+  dropAnimationFinished: dropAnimationFinished
+};
+const ConnectedDraggable = (0,react_redux__WEBPACK_IMPORTED_MODULE_2__.connect)(makeMapStateToProps$1, mapDispatchToProps$1, null, {
+  context: StoreContext,
+  areStatePropsEqual: isStrictEqual
+})(Draggable$1);
+var ConnectedDraggable$1 = ConnectedDraggable;
+
+function PrivateDraggable(props) {
+  const droppableContext = useRequiredContext(DroppableContext);
+  const isUsingCloneFor = droppableContext.isUsingCloneFor;
+  if (isUsingCloneFor === props.draggableId && !props.isClone) {
+    return null;
+  }
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(ConnectedDraggable$1, props);
+}
+function PublicDraggable(props) {
+  const isEnabled = typeof props.isDragDisabled === 'boolean' ? !props.isDragDisabled : true;
+  const canDragInteractiveElements = Boolean(props.disableInteractiveElementBlocking);
+  const shouldRespectForcePress = Boolean(props.shouldRespectForcePress);
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PrivateDraggable, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_3__["default"])({}, props, {
+    isClone: false,
+    isEnabled: isEnabled,
+    canDragInteractiveElements: canDragInteractiveElements,
+    shouldRespectForcePress: shouldRespectForcePress
+  }));
+}
+
+const isEqual = base => value => base === value;
+const isScroll = isEqual('scroll');
+const isAuto = isEqual('auto');
+const isVisible = isEqual('visible');
+const isEither = (overflow, fn) => fn(overflow.overflowX) || fn(overflow.overflowY);
+const isBoth = (overflow, fn) => fn(overflow.overflowX) && fn(overflow.overflowY);
+const isElementScrollable = el => {
+  const style = window.getComputedStyle(el);
+  const overflow = {
+    overflowX: style.overflowX,
+    overflowY: style.overflowY
+  };
+  return isEither(overflow, isScroll) || isEither(overflow, isAuto);
+};
+const isBodyScrollable = () => {
+  if (false) {}
+  const body = getBodyElement();
+  const html = document.documentElement;
+  !html ?  true ? invariant(false) : 0 : void 0;
+  if (!isElementScrollable(body)) {
+    return false;
+  }
+  const htmlStyle = window.getComputedStyle(html);
+  const htmlOverflow = {
+    overflowX: htmlStyle.overflowX,
+    overflowY: htmlStyle.overflowY
+  };
+  if (isBoth(htmlOverflow, isVisible)) {
+    return false;
+  }
+   true ? warning(`
+    We have detected that your <body> element might be a scroll container.
+    We have found no reliable way of detecting whether the <body> element is a scroll container.
+    Under most circumstances a <body> scroll bar will be on the <html> element (document.documentElement)
+
+    Because we cannot determine if the <body> is a scroll container, and generally it is not one,
+    we will be treating the <body> as *not* a scroll container
+
+    More information: https://github.com/hello-pangea/dnd/blob/main/docs/guides/how-we-detect-scroll-containers.md
+  `) : 0;
+  return false;
+};
+const getClosestScrollable = el => {
+  if (el == null) {
+    return null;
+  }
+  if (el === document.body) {
+    return isBodyScrollable() ? el : null;
+  }
+  if (el === document.documentElement) {
+    return null;
+  }
+  if (!isElementScrollable(el)) {
+    return getClosestScrollable(el.parentElement);
+  }
+  return el;
+};
+var getClosestScrollable$1 = getClosestScrollable;
+
+var checkForNestedScrollContainers = (scrollable => {
+  if (!scrollable) {
+    return;
+  }
+  const anotherScrollParent = getClosestScrollable$1(scrollable.parentElement);
+  if (!anotherScrollParent) {
+    return;
+  }
+   true ? warning(`
+    Droppable: unsupported nested scroll container detected.
+    A Droppable can only have one scroll parent (which can be itself)
+    Nested scroll containers are currently not supported.
+
+    We hope to support nested scroll containers soon: https://github.com/atlassian/react-beautiful-dnd/issues/131
+  `) : 0;
+});
+
+var getScroll = (el => ({
+  x: el.scrollLeft,
+  y: el.scrollTop
+}));
+
+const getIsFixed = el => {
+  if (!el) {
+    return false;
+  }
+  const style = window.getComputedStyle(el);
+  if (style.position === 'fixed') {
+    return true;
+  }
+  return getIsFixed(el.parentElement);
+};
+var getEnv = (start => {
+  const closestScrollable = getClosestScrollable$1(start);
+  const isFixedOnPage = getIsFixed(start);
+  return {
+    closestScrollable,
+    isFixedOnPage
+  };
+});
+
+var getDroppableDimension = (_ref => {
+  let {
+    descriptor,
+    isEnabled,
+    isCombineEnabled,
+    isFixedOnPage,
+    direction,
+    client,
+    page,
+    closest
+  } = _ref;
+  const frame = (() => {
+    if (!closest) {
+      return null;
+    }
+    const {
+      scrollSize,
+      client: frameClient
+    } = closest;
+    const maxScroll = getMaxScroll({
+      scrollHeight: scrollSize.scrollHeight,
+      scrollWidth: scrollSize.scrollWidth,
+      height: frameClient.paddingBox.height,
+      width: frameClient.paddingBox.width
+    });
+    return {
+      pageMarginBox: closest.page.marginBox,
+      frameClient,
+      scrollSize,
+      shouldClipSubject: closest.shouldClipSubject,
+      scroll: {
+        initial: closest.scroll,
+        current: closest.scroll,
+        max: maxScroll,
+        diff: {
+          value: origin,
+          displacement: origin
+        }
+      }
+    };
+  })();
+  const axis = direction === 'vertical' ? vertical : horizontal;
+  const subject = getSubject({
+    page,
+    withPlaceholder: null,
+    axis,
+    frame
+  });
+  const dimension = {
+    descriptor,
+    isCombineEnabled,
+    isFixedOnPage,
+    axis,
+    isEnabled,
+    client,
+    page,
+    frame,
+    subject
+  };
+  return dimension;
+});
+
+const getClient = (targetRef, closestScrollable) => {
+  const base = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getBox)(targetRef);
+  if (!closestScrollable) {
+    return base;
+  }
+  if (targetRef !== closestScrollable) {
+    return base;
+  }
+  const top = base.paddingBox.top - closestScrollable.scrollTop;
+  const left = base.paddingBox.left - closestScrollable.scrollLeft;
+  const bottom = top + closestScrollable.scrollHeight;
+  const right = left + closestScrollable.scrollWidth;
+  const paddingBox = {
+    top,
+    right,
+    bottom,
+    left
+  };
+  const borderBox = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.expand)(paddingBox, base.border);
+  const client = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.createBox)({
+    borderBox,
+    margin: base.margin,
+    border: base.border,
+    padding: base.padding
+  });
+  return client;
+};
+var getDimension = (_ref => {
+  let {
+    ref,
+    descriptor,
+    env,
+    windowScroll,
+    direction,
+    isDropDisabled,
+    isCombineEnabled,
+    shouldClipSubject
+  } = _ref;
+  const closestScrollable = env.closestScrollable;
+  const client = getClient(ref, closestScrollable);
+  const page = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.withScroll)(client, windowScroll);
+  const closest = (() => {
+    if (!closestScrollable) {
+      return null;
+    }
+    const frameClient = (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.getBox)(closestScrollable);
+    const scrollSize = {
+      scrollHeight: closestScrollable.scrollHeight,
+      scrollWidth: closestScrollable.scrollWidth
+    };
+    return {
+      client: frameClient,
+      page: (0,css_box_model__WEBPACK_IMPORTED_MODULE_4__.withScroll)(frameClient, windowScroll),
+      scroll: getScroll(closestScrollable),
+      scrollSize,
+      shouldClipSubject
+    };
+  })();
+  const dimension = getDroppableDimension({
+    descriptor,
+    isEnabled: !isDropDisabled,
+    isCombineEnabled,
+    isFixedOnPage: env.isFixedOnPage,
+    direction,
+    client,
+    page,
+    closest
+  });
+  return dimension;
+});
+
+const immediate = {
+  passive: false
+};
+const delayed = {
+  passive: true
+};
+var getListenerOptions = (options => options.shouldPublishImmediately ? immediate : delayed);
+
+const getClosestScrollableFromDrag = dragging => dragging && dragging.env.closestScrollable || null;
+function useDroppablePublisher(args) {
+  const whileDraggingRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const appContext = useRequiredContext(AppContext);
+  const uniqueId = useUniqueId$1('droppable');
+  const {
+    registry,
+    marshal
+  } = appContext;
+  const previousRef = usePrevious(args);
+  const descriptor = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    id: args.droppableId,
+    type: args.type,
+    mode: args.mode
+  }), [args.droppableId, args.mode, args.type]);
+  const publishedDescriptorRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(descriptor);
+  const memoizedUpdateScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((x, y) => {
+    !whileDraggingRef.current ?  true ? invariant(false, 'Can only update scroll when dragging') : 0 : void 0;
+    const scroll = {
+      x,
+      y
+    };
+    marshal.updateDroppableScroll(descriptor.id, scroll);
+  }), [descriptor.id, marshal]);
+  const getClosestScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const dragging = whileDraggingRef.current;
+    if (!dragging || !dragging.env.closestScrollable) {
+      return origin;
+    }
+    return getScroll(dragging.env.closestScrollable);
+  }, []);
+  const updateScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const scroll = getClosestScroll();
+    memoizedUpdateScroll(scroll.x, scroll.y);
+  }, [getClosestScroll, memoizedUpdateScroll]);
+  const scheduleScrollUpdate = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => (0,raf_schd__WEBPACK_IMPORTED_MODULE_6__["default"])(updateScroll), [updateScroll]);
+  const onClosestScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const dragging = whileDraggingRef.current;
+    const closest = getClosestScrollableFromDrag(dragging);
+    !(dragging && closest) ?  true ? invariant(false, 'Could not find scroll options while scrolling') : 0 : void 0;
+    const options = dragging.scrollOptions;
+    if (options.shouldPublishImmediately) {
+      updateScroll();
+      return;
+    }
+    scheduleScrollUpdate();
+  }, [scheduleScrollUpdate, updateScroll]);
+  const getDimensionAndWatchScroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)((windowScroll, options) => {
+    !!whileDraggingRef.current ?  true ? invariant(false, 'Cannot collect a droppable while a drag is occurring') : 0 : void 0;
+    const previous = previousRef.current;
+    const ref = previous.getDroppableRef();
+    !ref ?  true ? invariant(false, 'Cannot collect without a droppable ref') : 0 : void 0;
+    const env = getEnv(ref);
+    const dragging = {
+      ref,
+      descriptor,
+      env,
+      scrollOptions: options
+    };
+    whileDraggingRef.current = dragging;
+    const dimension = getDimension({
+      ref,
+      descriptor,
+      env,
+      windowScroll,
+      direction: previous.direction,
+      isDropDisabled: previous.isDropDisabled,
+      isCombineEnabled: previous.isCombineEnabled,
+      shouldClipSubject: !previous.ignoreContainerClipping
+    });
+    const scrollable = env.closestScrollable;
+    if (scrollable) {
+      scrollable.setAttribute(scrollContainer.contextId, appContext.contextId);
+      scrollable.addEventListener('scroll', onClosestScroll, getListenerOptions(dragging.scrollOptions));
+      if (true) {
+        checkForNestedScrollContainers(scrollable);
+      }
+    }
+    return dimension;
+  }, [appContext.contextId, descriptor, onClosestScroll, previousRef]);
+  const getScrollWhileDragging = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const dragging = whileDraggingRef.current;
+    const closest = getClosestScrollableFromDrag(dragging);
+    !(dragging && closest) ?  true ? invariant(false, 'Can only recollect Droppable client for Droppables that have a scroll container') : 0 : void 0;
+    return getScroll(closest);
+  }, []);
+  const dragStopped = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    const dragging = whileDraggingRef.current;
+    !dragging ?  true ? invariant(false, 'Cannot stop drag when no active drag') : 0 : void 0;
+    const closest = getClosestScrollableFromDrag(dragging);
+    whileDraggingRef.current = null;
+    if (!closest) {
+      return;
+    }
+    scheduleScrollUpdate.cancel();
+    closest.removeAttribute(scrollContainer.contextId);
+    closest.removeEventListener('scroll', onClosestScroll, getListenerOptions(dragging.scrollOptions));
+  }, [onClosestScroll, scheduleScrollUpdate]);
+  const scroll = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(change => {
+    const dragging = whileDraggingRef.current;
+    !dragging ?  true ? invariant(false, 'Cannot scroll when there is no drag') : 0 : void 0;
+    const closest = getClosestScrollableFromDrag(dragging);
+    !closest ?  true ? invariant(false, 'Cannot scroll a droppable with no closest scrollable') : 0 : void 0;
+    closest.scrollTop += change.y;
+    closest.scrollLeft += change.x;
+  }, []);
+  const callbacks = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => {
+    return {
+      getDimensionAndWatchScroll,
+      getScrollWhileDragging,
+      dragStopped,
+      scroll
+    };
+  }, [dragStopped, getDimensionAndWatchScroll, getScrollWhileDragging, scroll]);
+  const entry = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    uniqueId,
+    descriptor,
+    callbacks
+  }), [callbacks, descriptor, uniqueId]);
+  useLayoutEffect(() => {
+    publishedDescriptorRef.current = entry.descriptor;
+    registry.droppable.register(entry);
+    return () => {
+      if (whileDraggingRef.current) {
+         true ? warning('Unsupported: changing the droppableId or type of a Droppable during a drag') : 0;
+        dragStopped();
+      }
+      registry.droppable.unregister(entry);
+    };
+  }, [callbacks, descriptor, dragStopped, entry, marshal, registry.droppable]);
+  useLayoutEffect(() => {
+    if (!whileDraggingRef.current) {
+      return;
+    }
+    marshal.updateDroppableIsEnabled(publishedDescriptorRef.current.id, !args.isDropDisabled);
+  }, [args.isDropDisabled, marshal]);
+  useLayoutEffect(() => {
+    if (!whileDraggingRef.current) {
+      return;
+    }
+    marshal.updateDroppableIsCombineEnabled(publishedDescriptorRef.current.id, args.isCombineEnabled);
+  }, [args.isCombineEnabled, marshal]);
+}
+
+function noop() {}
+const empty = {
+  width: 0,
+  height: 0,
+  margin: noSpacing
+};
+const getSize = _ref => {
+  let {
+    isAnimatingOpenOnMount,
+    placeholder,
+    animate
+  } = _ref;
+  if (isAnimatingOpenOnMount) {
+    return empty;
+  }
+  if (animate === 'close') {
+    return empty;
+  }
+  return {
+    height: placeholder.client.borderBox.height,
+    width: placeholder.client.borderBox.width,
+    margin: placeholder.client.margin
+  };
+};
+const getStyle = _ref2 => {
+  let {
+    isAnimatingOpenOnMount,
+    placeholder,
+    animate
+  } = _ref2;
+  const size = getSize({
+    isAnimatingOpenOnMount,
+    placeholder,
+    animate
+  });
+  return {
+    display: placeholder.display,
+    boxSizing: 'border-box',
+    width: size.width,
+    height: size.height,
+    marginTop: size.margin.top,
+    marginRight: size.margin.right,
+    marginBottom: size.margin.bottom,
+    marginLeft: size.margin.left,
+    flexShrink: '0',
+    flexGrow: '0',
+    pointerEvents: 'none',
+    transition: animate !== 'none' ? transitions.placeholder : null
+  };
+};
+const Placeholder = props => {
+  const animateOpenTimerRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const tryClearAnimateOpenTimer = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    if (!animateOpenTimerRef.current) {
+      return;
+    }
+    clearTimeout(animateOpenTimerRef.current);
+    animateOpenTimerRef.current = null;
+  }, []);
+  const {
+    animate,
+    onTransitionEnd,
+    onClose,
+    contextId
+  } = props;
+  const [isAnimatingOpenOnMount, setIsAnimatingOpenOnMount] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(props.animate === 'open');
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (!isAnimatingOpenOnMount) {
+      return noop;
+    }
+    if (animate !== 'open') {
+      tryClearAnimateOpenTimer();
+      setIsAnimatingOpenOnMount(false);
+      return noop;
+    }
+    if (animateOpenTimerRef.current) {
+      return noop;
+    }
+    animateOpenTimerRef.current = setTimeout(() => {
+      animateOpenTimerRef.current = null;
+      setIsAnimatingOpenOnMount(false);
+    });
+    return tryClearAnimateOpenTimer;
+  }, [animate, isAnimatingOpenOnMount, tryClearAnimateOpenTimer]);
+  const onSizeChangeEnd = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(event => {
+    if (event.propertyName !== 'height') {
+      return;
+    }
+    onTransitionEnd();
+    if (animate === 'close') {
+      onClose();
+    }
+  }, [animate, onClose, onTransitionEnd]);
+  const style = getStyle({
+    isAnimatingOpenOnMount,
+    animate: props.animate,
+    placeholder: props.placeholder
+  });
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(props.placeholder.tagName, {
+    style,
+    'data-rfd-placeholder-context-id': contextId,
+    onTransitionEnd: onSizeChangeEnd,
+    ref: props.innerRef
+  });
+};
+var Placeholder$1 = react__WEBPACK_IMPORTED_MODULE_0___default().memo(Placeholder);
+
+function isBoolean(value) {
+  return typeof value === 'boolean';
+}
+function runChecks(args, checks) {
+  checks.forEach(check => check(args));
+}
+const shared = [function required(_ref) {
+  let {
+    props
+  } = _ref;
+  !props.droppableId ?  true ? invariant(false, 'A Droppable requires a droppableId prop') : 0 : void 0;
+  !(typeof props.droppableId === 'string') ?  true ? invariant(false, `A Droppable requires a [string] droppableId. Provided: [${typeof props.droppableId}]`) : 0 : void 0;
+}, function boolean(_ref2) {
+  let {
+    props
+  } = _ref2;
+  !isBoolean(props.isDropDisabled) ?  true ? invariant(false, 'isDropDisabled must be a boolean') : 0 : void 0;
+  !isBoolean(props.isCombineEnabled) ?  true ? invariant(false, 'isCombineEnabled must be a boolean') : 0 : void 0;
+  !isBoolean(props.ignoreContainerClipping) ?  true ? invariant(false, 'ignoreContainerClipping must be a boolean') : 0 : void 0;
+}, function ref(_ref3) {
+  let {
+    getDroppableRef
+  } = _ref3;
+  checkIsValidInnerRef(getDroppableRef());
+}];
+const standard = [function placeholder(_ref4) {
+  let {
+    props,
+    getPlaceholderRef
+  } = _ref4;
+  if (!props.placeholder) {
+    return;
+  }
+  const ref = getPlaceholderRef();
+  if (ref) {
+    return;
+  }
+   true ? warning(`
+      Droppable setup issue [droppableId: "${props.droppableId}"]:
+      DroppableProvided > placeholder could not be found.
+
+      Please be sure to add the {provided.placeholder} React Node as a child of your Droppable.
+      More information: https://github.com/hello-pangea/dnd/blob/main/docs/api/droppable.md
+    `) : 0;
+}];
+const virtual = [function hasClone(_ref5) {
+  let {
+    props
+  } = _ref5;
+  !props.renderClone ?  true ? invariant(false, 'Must provide a clone render function (renderClone) for virtual lists') : 0 : void 0;
+}, function hasNoPlaceholder(_ref6) {
+  let {
+    getPlaceholderRef
+  } = _ref6;
+  !!getPlaceholderRef() ?  true ? invariant(false, 'Expected virtual list to not have a placeholder') : 0 : void 0;
+}];
+function useValidation(args) {
+  useDevSetupWarning(() => {
+    runChecks(args, shared);
+    if (args.props.mode === 'standard') {
+      runChecks(args, standard);
+    }
+    if (args.props.mode === 'virtual') {
+      runChecks(args, virtual);
+    }
+  });
+}
+
+class AnimateInOut extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor() {
+    super(...arguments);
+    this.state = {
+      isVisible: Boolean(this.props.on),
+      data: this.props.on,
+      animate: this.props.shouldAnimate && this.props.on ? 'open' : 'none'
+    };
+    this.onClose = () => {
+      if (this.state.animate !== 'close') {
+        return;
+      }
+      this.setState({
+        isVisible: false
+      });
+    };
+  }
+  static getDerivedStateFromProps(props, state) {
+    if (!props.shouldAnimate) {
+      return {
+        isVisible: Boolean(props.on),
+        data: props.on,
+        animate: 'none'
+      };
+    }
+    if (props.on) {
+      return {
+        isVisible: true,
+        data: props.on,
+        animate: 'open'
+      };
+    }
+    if (state.isVisible) {
+      return {
+        isVisible: true,
+        data: state.data,
+        animate: 'close'
+      };
+    }
+    return {
+      isVisible: false,
+      animate: 'close',
+      data: null
+    };
+  }
+  render() {
+    if (!this.state.isVisible) {
+      return null;
+    }
+    const provided = {
+      onClose: this.onClose,
+      data: this.state.data,
+      animate: this.state.animate
+    };
+    return this.props.children(provided);
+  }
+}
+
+const Droppable = props => {
+  const appContext = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(AppContext);
+  !appContext ?  true ? invariant(false, 'Could not find app context') : 0 : void 0;
+  const {
+    contextId,
+    isMovementAllowed
+  } = appContext;
+  const droppableRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const placeholderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  const {
+    children,
+    droppableId,
+    type,
+    mode,
+    direction,
+    ignoreContainerClipping,
+    isDropDisabled,
+    isCombineEnabled,
+    snapshot,
+    useClone,
+    updateViewportMaxScroll,
+    getContainerForClone
+  } = props;
+  const getDroppableRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => droppableRef.current, []);
+  const setDroppableRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function (value) {
+    if (value === void 0) {
+      value = null;
+    }
+    droppableRef.current = value;
+  }, []);
+  const getPlaceholderRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => placeholderRef.current, []);
+  const setPlaceholderRef = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(function (value) {
+    if (value === void 0) {
+      value = null;
+    }
+    placeholderRef.current = value;
+  }, []);
+  useValidation({
+    props,
+    getDroppableRef,
+    getPlaceholderRef
+  });
+  const onPlaceholderTransitionEnd = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useCallback)(() => {
+    if (isMovementAllowed()) {
+      updateViewportMaxScroll({
+        maxScroll: getMaxWindowScroll()
+      });
+    }
+  }, [isMovementAllowed, updateViewportMaxScroll]);
+  useDroppablePublisher({
+    droppableId,
+    type,
+    mode,
+    direction,
+    isDropDisabled,
+    isCombineEnabled,
+    ignoreContainerClipping,
+    getDroppableRef
+  });
+  const placeholder = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AnimateInOut, {
+    on: props.placeholder,
+    shouldAnimate: props.shouldAnimatePlaceholder
+  }, _ref => {
+    let {
+      onClose,
+      data,
+      animate
+    } = _ref;
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Placeholder$1, {
+      placeholder: data,
+      onClose: onClose,
+      innerRef: setPlaceholderRef,
+      animate: animate,
+      contextId: contextId,
+      onTransitionEnd: onPlaceholderTransitionEnd
+    });
+  }), [contextId, onPlaceholderTransitionEnd, props.placeholder, props.shouldAnimatePlaceholder, setPlaceholderRef]);
+  const provided = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    innerRef: setDroppableRef,
+    placeholder,
+    droppableProps: {
+      'data-rfd-droppable-id': droppableId,
+      'data-rfd-droppable-context-id': contextId
+    }
+  }), [contextId, droppableId, placeholder, setDroppableRef]);
+  const isUsingCloneFor = useClone ? useClone.dragging.draggableId : null;
+  const droppableContext = (0,use_memo_one__WEBPACK_IMPORTED_MODULE_8__.useMemo)(() => ({
+    droppableId,
+    type,
+    isUsingCloneFor
+  }), [droppableId, isUsingCloneFor, type]);
+  function getClone() {
+    if (!useClone) {
+      return null;
+    }
+    const {
+      dragging,
+      render
+    } = useClone;
+    const node = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PrivateDraggable, {
+      draggableId: dragging.draggableId,
+      index: dragging.source.index,
+      isClone: true,
+      isEnabled: true,
+      shouldRespectForcePress: false,
+      canDragInteractiveElements: true
+    }, (draggableProvided, draggableSnapshot) => render(draggableProvided, draggableSnapshot, dragging));
+    return react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal(node, getContainerForClone());
+  }
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(DroppableContext.Provider, {
+    value: droppableContext
+  }, children(provided, snapshot), getClone());
+};
+var Droppable$1 = Droppable;
+
+function getBody() {
+  !document.body ?  true ? invariant(false, 'document.body is not ready') : 0 : void 0;
+  return document.body;
+}
+const defaultProps = {
+  mode: 'standard',
+  type: 'DEFAULT',
+  direction: 'vertical',
+  isDropDisabled: false,
+  isCombineEnabled: false,
+  ignoreContainerClipping: false,
+  renderClone: null,
+  getContainerForClone: getBody
+};
+const attachDefaultPropsToOwnProps = ownProps => {
+  let mergedProps = {
+    ...ownProps
+  };
+  let defaultPropKey;
+  for (defaultPropKey in defaultProps) {
+    if (ownProps[defaultPropKey] === undefined) {
+      mergedProps = {
+        ...mergedProps,
+        [defaultPropKey]: defaultProps[defaultPropKey]
+      };
+    }
+  }
+  return mergedProps;
+};
+const isMatchingType = (type, critical) => type === critical.droppable.type;
+const getDraggable = (critical, dimensions) => dimensions.draggables[critical.draggable.id];
+const makeMapStateToProps = () => {
+  const idleWithAnimation = {
+    placeholder: null,
+    shouldAnimatePlaceholder: true,
+    snapshot: {
+      isDraggingOver: false,
+      draggingOverWith: null,
+      draggingFromThisWith: null,
+      isUsingPlaceholder: false
+    },
+    useClone: null
+  };
+  const idleWithoutAnimation = {
+    ...idleWithAnimation,
+    shouldAnimatePlaceholder: false
+  };
+  const getDraggableRubric = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])(descriptor => ({
+    draggableId: descriptor.id,
+    type: descriptor.type,
+    source: {
+      index: descriptor.index,
+      droppableId: descriptor.droppableId
+    }
+  }));
+  const getMapProps = (0,memoize_one__WEBPACK_IMPORTED_MODULE_5__["default"])((id, isEnabled, isDraggingOverForConsumer, isDraggingOverForImpact, dragging, renderClone) => {
+    const draggableId = dragging.descriptor.id;
+    const isHome = dragging.descriptor.droppableId === id;
+    if (isHome) {
+      const useClone = renderClone ? {
+        render: renderClone,
+        dragging: getDraggableRubric(dragging.descriptor)
+      } : null;
+      const snapshot = {
+        isDraggingOver: isDraggingOverForConsumer,
+        draggingOverWith: isDraggingOverForConsumer ? draggableId : null,
+        draggingFromThisWith: draggableId,
+        isUsingPlaceholder: true
+      };
+      return {
+        placeholder: dragging.placeholder,
+        shouldAnimatePlaceholder: false,
+        snapshot,
+        useClone
+      };
+    }
+    if (!isEnabled) {
+      return idleWithoutAnimation;
+    }
+    if (!isDraggingOverForImpact) {
+      return idleWithAnimation;
+    }
+    const snapshot = {
+      isDraggingOver: isDraggingOverForConsumer,
+      draggingOverWith: draggableId,
+      draggingFromThisWith: null,
+      isUsingPlaceholder: true
+    };
+    return {
+      placeholder: dragging.placeholder,
+      shouldAnimatePlaceholder: true,
+      snapshot,
+      useClone: null
+    };
+  });
+  const selector = (state, ownProps) => {
+    const ownPropsWithDefaultProps = attachDefaultPropsToOwnProps(ownProps);
+    const id = ownPropsWithDefaultProps.droppableId;
+    const type = ownPropsWithDefaultProps.type;
+    const isEnabled = !ownPropsWithDefaultProps.isDropDisabled;
+    const renderClone = ownPropsWithDefaultProps.renderClone;
+    if (isDragging(state)) {
+      const critical = state.critical;
+      if (!isMatchingType(type, critical)) {
+        return idleWithoutAnimation;
+      }
+      const dragging = getDraggable(critical, state.dimensions);
+      const isDraggingOver = whatIsDraggedOver(state.impact) === id;
+      return getMapProps(id, isEnabled, isDraggingOver, isDraggingOver, dragging, renderClone);
+    }
+    if (state.phase === 'DROP_ANIMATING') {
+      const completed = state.completed;
+      if (!isMatchingType(type, completed.critical)) {
+        return idleWithoutAnimation;
+      }
+      const dragging = getDraggable(completed.critical, state.dimensions);
+      return getMapProps(id, isEnabled, whatIsDraggedOverFromResult(completed.result) === id, whatIsDraggedOver(completed.impact) === id, dragging, renderClone);
+    }
+    if (state.phase === 'IDLE' && state.completed && !state.shouldFlush) {
+      const completed = state.completed;
+      if (!isMatchingType(type, completed.critical)) {
+        return idleWithoutAnimation;
+      }
+      const wasOver = whatIsDraggedOver(completed.impact) === id;
+      const wasCombining = Boolean(completed.impact.at && completed.impact.at.type === 'COMBINE');
+      const isHome = completed.critical.droppable.id === id;
+      if (wasOver) {
+        return wasCombining ? idleWithAnimation : idleWithoutAnimation;
+      }
+      if (isHome) {
+        return idleWithAnimation;
+      }
+      return idleWithoutAnimation;
+    }
+    return idleWithoutAnimation;
+  };
+  return selector;
+};
+const mapDispatchToProps = {
+  updateViewportMaxScroll: updateViewportMaxScroll
+};
+const ConnectedDroppable = (0,react_redux__WEBPACK_IMPORTED_MODULE_2__.connect)(makeMapStateToProps, mapDispatchToProps, (stateProps, dispatchProps, ownProps) => {
+  return {
+    ...attachDefaultPropsToOwnProps(ownProps),
+    ...stateProps,
+    ...dispatchProps
+  };
+}, {
+  context: StoreContext,
+  areStatePropsEqual: isStrictEqual
+})(Droppable$1);
+var ConnectedDroppable$1 = ConnectedDroppable;
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/@inertiajs/inertia-react/dist/index.js":
 /*!*************************************************************!*\
   !*** ./node_modules/@inertiajs/inertia-react/dist/index.js ***!
@@ -213,6 +7895,42 @@ var suppressOthers = function (originalTarget, parentNode, markerName) {
     return (supportsInert() ? inertOthers : hideOthers)(originalTarget, parentNode, markerName);
 };
 
+
+/***/ }),
+
+/***/ "./node_modules/attr-accept/dist/es/index.js":
+/*!***************************************************!*\
+  !*** ./node_modules/attr-accept/dist/es/index.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+exports["default"] = function (file, acceptedFiles) {
+  if (file && acceptedFiles) {
+    var acceptedFilesArray = Array.isArray(acceptedFiles) ? acceptedFiles : acceptedFiles.split(',');
+    var fileName = file.name || '';
+    var mimeType = (file.type || '').toLowerCase();
+    var baseMimeType = mimeType.replace(/\/.*$/, '');
+    return acceptedFilesArray.some(function (type) {
+      var validType = type.trim().toLowerCase();
+
+      if (validType.charAt(0) === '.') {
+        return fileName.toLowerCase().endsWith(validType);
+      } else if (validType.endsWith('/*')) {
+        // This is something like a image/* mime type
+        return baseMimeType === validType.replace(/\/.*$/, '');
+      }
+
+      return mimeType === validType;
+    });
+  }
+
+  return true;
+};
 
 /***/ }),
 
@@ -2490,7 +10208,6 @@ var SidebarItem = function SidebarItem(_ref) {
   var onClick = function onClick() {
     _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_2__.Inertia.get(href);
   };
-  console.log([href, base_url]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
     onClick: onClick,
     type: 'button',
@@ -2603,7 +10320,8 @@ __webpack_require__.r(__webpack_exports__);
 
 function ModeToggle() {
   var _useTheme = (0,_Providers_ThemeProvider__WEBPACK_IMPORTED_MODULE_3__.useTheme)(),
-    setTheme = _useTheme.setTheme;
+    setTheme = _useTheme.setTheme,
+    theme = _useTheme.theme;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_dropdown_menu__WEBPACK_IMPORTED_MODULE_2__.DropdownMenu, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_dropdown_menu__WEBPACK_IMPORTED_MODULE_2__.DropdownMenuTrigger, {
       className: "text-idcsi",
@@ -2613,9 +10331,9 @@ function ModeToggle() {
         size: "sm",
         className: "",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          className: "h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+          className: "h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 duration-500"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          className: "absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+          className: "absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 duration-500"
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
           className: "sr-only",
           children: "Toggle theme"
@@ -2642,6 +10360,214 @@ function ModeToggle() {
     })]
   });
 }
+
+/***/ }),
+
+/***/ "./resources/js/Components/MultipleFileDropZone.tsx":
+/*!**********************************************************!*\
+  !*** ./resources/js/Components/MultipleFileDropZone.tsx ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MultipleFileDropZone: () => (/* binding */ MultipleFileDropZone)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/upload-cloud.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/x.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dropzone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js");
+/* harmony import */ var tailwind_merge__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tailwind-merge */ "./node_modules/tailwind-merge/dist/bundle-mjs.mjs");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/loader-2.js");
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
+
+
+
+
+
+var variants = {
+  base: 'relative rounded-md flex justify-center items-center flex-col cursor-pointer min-h-[150px] min-w-[200px] border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
+  image: 'border-0 p-0 min-h-0 min-w-0 relative shadow-md bg-slate-200 dark:bg-slate-900 rounded-md',
+  active: 'border-2',
+  disabled: 'bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700',
+  accept: 'border border-blue-500 bg-blue-500 bg-opacity-10',
+  reject: 'border border-red-700 bg-red-700 bg-opacity-10'
+};
+var ERROR_MESSAGES = {
+  fileTooLarge: function fileTooLarge(maxSize) {
+    return "The file is too large. Max size is ".concat(formatFileSize(maxSize), ".");
+  },
+  fileInvalidType: function fileInvalidType() {
+    return 'Invalid file type.';
+  },
+  tooManyFiles: function tooManyFiles(maxFiles) {
+    return "You can only add ".concat(maxFiles, " file(s).");
+  },
+  fileNotSupported: function fileNotSupported() {
+    return 'The file is not supported.';
+  }
+};
+var MultipleFileDropZone = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_ref, ref) {
+  var dropzoneOptions = _ref.dropzoneOptions,
+    width = _ref.width,
+    height = _ref.height,
+    value = _ref.value,
+    className = _ref.className,
+    disabled = _ref.disabled,
+    onChange = _ref.onChange;
+  var _a;
+  var imageUrl = react__WEBPACK_IMPORTED_MODULE_1__.useMemo(function () {
+    if (typeof value === 'string') {
+      // in case a url is passed in, use it to display the image
+      return value;
+    } else if (value) {
+      // in case a file is passed in, create a base64 url to display the image
+      return URL.createObjectURL(value);
+    }
+    return null;
+  }, [value]);
+  // dropzone configuration
+  var _useDropzone = (0,react_dropzone__WEBPACK_IMPORTED_MODULE_2__.useDropzone)(Object.assign({
+      accept: {
+        "application/pdf": [],
+        ".application/vnd.ms-powerpoint": [],
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation": [],
+        "application/msword": [],
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [],
+        "application/vnd.ms-excel": [],
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [],
+        "image/*": []
+      },
+      multiple: true,
+      disabled: disabled,
+      onDrop: function onDrop(acceptedFiles) {
+        if (!acceptedFiles) return;
+        void (onChange === null || onChange === void 0 ? void 0 : onChange(acceptedFiles));
+      }
+    }, dropzoneOptions)),
+    getRootProps = _useDropzone.getRootProps,
+    getInputProps = _useDropzone.getInputProps,
+    acceptedFiles = _useDropzone.acceptedFiles,
+    fileRejections = _useDropzone.fileRejections,
+    isFocused = _useDropzone.isFocused,
+    isDragAccept = _useDropzone.isDragAccept,
+    isDragReject = _useDropzone.isDragReject;
+  // styling
+  var dropZoneClassName = react__WEBPACK_IMPORTED_MODULE_1__.useMemo(function () {
+    return (0,tailwind_merge__WEBPACK_IMPORTED_MODULE_3__.twMerge)(variants.base, isFocused && variants.active, disabled && variants.disabled, imageUrl && variants.image, (isDragReject !== null && isDragReject !== void 0 ? isDragReject : fileRejections[0]) && variants.reject, isDragAccept && variants.accept, className).trim();
+  }, [isFocused, imageUrl, fileRejections, isDragAccept, isDragReject, disabled, className]);
+  // error validation messages
+  var errorMessage = react__WEBPACK_IMPORTED_MODULE_1__.useMemo(function () {
+    var _a, _b, _c, _d, _e;
+    if (fileRejections[0]) {
+      var errors = fileRejections[0].errors;
+      if (((_a = errors[0]) === null || _a === void 0 ? void 0 : _a.code) === 'file-too-large') {
+        return ERROR_MESSAGES.fileTooLarge((_b = dropzoneOptions === null || dropzoneOptions === void 0 ? void 0 : dropzoneOptions.maxSize) !== null && _b !== void 0 ? _b : 0);
+      } else if (((_c = errors[0]) === null || _c === void 0 ? void 0 : _c.code) === 'file-invalid-type') {
+        return ERROR_MESSAGES.fileInvalidType();
+      } else if (((_d = errors[0]) === null || _d === void 0 ? void 0 : _d.code) === 'too-many-files') {
+        return ERROR_MESSAGES.tooManyFiles((_e = dropzoneOptions === null || dropzoneOptions === void 0 ? void 0 : dropzoneOptions.maxFiles) !== null && _e !== void 0 ? _e : 0);
+      } else {
+        return ERROR_MESSAGES.fileNotSupported();
+      }
+    }
+    return undefined;
+  }, [fileRejections, dropzoneOptions]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: 'relative',
+    children: [disabled && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: 'flex items-center justify-center absolute inset-y-0 w-full bg-background/80 z-50',
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        className: 'h-6 w-6 animate-spin'
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({}, getRootProps({
+      className: dropZoneClassName,
+      style: {
+        width: width,
+        height: height
+      }
+    }), {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", Object.assign({
+        ref: ref
+      }, getInputProps())), imageUrl ?
+      // Image Preview
+      (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+        className: "h-full w-full rounded-md object-cover",
+        src: imageUrl,
+        alt: (_a = acceptedFiles[0]) === null || _a === void 0 ? void 0 : _a.name
+      }) :
+      // Upload Icon
+      (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "flex flex-col items-center justify-center text-xs text-gray-400",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], {
+          className: "mb-2 h-7 w-7"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "text-gray-400",
+          children: "Click or Drag n' Drop Multiple Files"
+        })]
+      }), imageUrl && !disabled && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "group absolute right-0 top-0 -translate-y-1/4 translate-x-1/4 transform",
+        onClick: function onClick(e) {
+          e.stopPropagation();
+          void (onChange === null || onChange === void 0 ? void 0 : onChange(undefined));
+        },
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "flex h-5 w-5 items-center justify-center rounded-md border border-solid border-gray-500 bg-white transition-all duration-300 hover:h-6 hover:w-6 dark:border-gray-400 dark:bg-black",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            className: "text-gray-500 dark:text-gray-400",
+            width: 16,
+            height: 16
+          })
+        })
+      })]
+    })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "mt-1 text-xs text-red-500",
+      children: errorMessage
+    })]
+  });
+});
+MultipleFileDropZone.displayName = 'MultipleFileDropZone';
+var Button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", Object.assign({
+    className: (0,tailwind_merge__WEBPACK_IMPORTED_MODULE_3__.twMerge)(
+    // base
+    'focus-visible:ring-ring inline-flex cursor-pointer items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50',
+    // color
+    'border border-gray-400 text-gray-400 shadow hover:bg-gray-100 hover:text-gray-500 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700',
+    // size
+    'h-6 rounded-md px-2 text-xs', className),
+    ref: ref
+  }, props));
+});
+Button.displayName = 'Button';
+function formatFileSize(bytes) {
+  if (!bytes) {
+    return '0 Bytes';
+  }
+  bytes = Number(bytes);
+  if (bytes === 0) {
+    return '0 Bytes';
+  }
+  var k = 1024;
+  var dm = 2;
+  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  var i = Math.floor(Math.log(bytes) / Math.log(k));
+  return "".concat(parseFloat((bytes / Math.pow(k, i)).toFixed(dm)), " ").concat(sizes[i]);
+}
+
 
 /***/ }),
 
@@ -2703,6 +10629,710 @@ var NavBarRoutes = function NavBarRoutes() {
 
 /***/ }),
 
+/***/ "./resources/js/Components/SingeImageDropZone.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/Components/SingeImageDropZone.tsx ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SingleImageDropzone: () => (/* binding */ SingleImageDropzone)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/upload-cloud.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/x.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dropzone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js");
+/* harmony import */ var tailwind_merge__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tailwind-merge */ "./node_modules/tailwind-merge/dist/bundle-mjs.mjs");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/loader-2.js");
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
+
+
+
+
+
+var variants = {
+  base: 'relative rounded-md flex justify-center items-center flex-col cursor-pointer min-h-[150px] min-w-[200px] border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
+  image: 'border-0 p-0 min-h-0 min-w-0 relative shadow-md bg-slate-200 dark:bg-slate-900 rounded-md',
+  active: 'border-2',
+  disabled: 'bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700',
+  accept: 'border border-blue-500 bg-blue-500 bg-opacity-10',
+  reject: 'border border-red-700 bg-red-700 bg-opacity-10'
+};
+var ERROR_MESSAGES = {
+  fileTooLarge: function fileTooLarge(maxSize) {
+    return "The file is too large. Max size is ".concat(formatFileSize(maxSize), ".");
+  },
+  fileInvalidType: function fileInvalidType() {
+    return 'Invalid file type.';
+  },
+  tooManyFiles: function tooManyFiles(maxFiles) {
+    return "You can only add ".concat(maxFiles, " file(s).");
+  },
+  fileNotSupported: function fileNotSupported() {
+    return 'The file is not supported.';
+  }
+};
+var SingleImageDropzone = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_ref, ref) {
+  var dropzoneOptions = _ref.dropzoneOptions,
+    width = _ref.width,
+    height = _ref.height,
+    value = _ref.value,
+    className = _ref.className,
+    disabled = _ref.disabled,
+    onChange = _ref.onChange;
+  var _a;
+  var imageUrl = react__WEBPACK_IMPORTED_MODULE_1__.useMemo(function () {
+    if (typeof value === 'string') {
+      // in case a url is passed in, use it to display the image
+      return value;
+    } else if (value) {
+      // in case a file is passed in, create a base64 url to display the image
+      return URL.createObjectURL(value);
+    }
+    return null;
+  }, [value]);
+  // dropzone configuration
+  var _useDropzone = (0,react_dropzone__WEBPACK_IMPORTED_MODULE_2__.useDropzone)(Object.assign({
+      accept: {
+        'image/*': []
+      },
+      multiple: false,
+      disabled: disabled,
+      onDrop: function onDrop(acceptedFiles) {
+        var file = acceptedFiles[0];
+        if (file) {
+          void (onChange === null || onChange === void 0 ? void 0 : onChange(file));
+        }
+      }
+    }, dropzoneOptions)),
+    getRootProps = _useDropzone.getRootProps,
+    getInputProps = _useDropzone.getInputProps,
+    acceptedFiles = _useDropzone.acceptedFiles,
+    fileRejections = _useDropzone.fileRejections,
+    isFocused = _useDropzone.isFocused,
+    isDragAccept = _useDropzone.isDragAccept,
+    isDragReject = _useDropzone.isDragReject;
+  // styling
+  var dropZoneClassName = react__WEBPACK_IMPORTED_MODULE_1__.useMemo(function () {
+    return (0,tailwind_merge__WEBPACK_IMPORTED_MODULE_3__.twMerge)(variants.base, isFocused && variants.active, disabled && variants.disabled, imageUrl && variants.image, (isDragReject !== null && isDragReject !== void 0 ? isDragReject : fileRejections[0]) && variants.reject, isDragAccept && variants.accept, className).trim();
+  }, [isFocused, imageUrl, fileRejections, isDragAccept, isDragReject, disabled, className]);
+  // error validation messages
+  var errorMessage = react__WEBPACK_IMPORTED_MODULE_1__.useMemo(function () {
+    var _a, _b, _c, _d, _e;
+    if (fileRejections[0]) {
+      var errors = fileRejections[0].errors;
+      if (((_a = errors[0]) === null || _a === void 0 ? void 0 : _a.code) === 'file-too-large') {
+        return ERROR_MESSAGES.fileTooLarge((_b = dropzoneOptions === null || dropzoneOptions === void 0 ? void 0 : dropzoneOptions.maxSize) !== null && _b !== void 0 ? _b : 0);
+      } else if (((_c = errors[0]) === null || _c === void 0 ? void 0 : _c.code) === 'file-invalid-type') {
+        return ERROR_MESSAGES.fileInvalidType();
+      } else if (((_d = errors[0]) === null || _d === void 0 ? void 0 : _d.code) === 'too-many-files') {
+        return ERROR_MESSAGES.tooManyFiles((_e = dropzoneOptions === null || dropzoneOptions === void 0 ? void 0 : dropzoneOptions.maxFiles) !== null && _e !== void 0 ? _e : 0);
+      } else {
+        return ERROR_MESSAGES.fileNotSupported();
+      }
+    }
+    return undefined;
+  }, [fileRejections, dropzoneOptions]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: 'relative',
+    children: [disabled && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: 'flex items-center justify-center absolute inset-y-0 w-full bg-background/80 z-50',
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        className: 'h-6 w-6 animate-spin'
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({}, getRootProps({
+      className: dropZoneClassName,
+      style: {
+        width: width,
+        height: height
+      }
+    }), {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", Object.assign({
+        ref: ref
+      }, getInputProps())), imageUrl ?
+      // Image Preview
+      (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+        className: "h-full w-full rounded-md object-cover",
+        src: imageUrl,
+        alt: (_a = acceptedFiles[0]) === null || _a === void 0 ? void 0 : _a.name
+      }) :
+      // Upload Icon
+      (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "flex flex-col items-center justify-center text-xs text-gray-400",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], {
+          className: "mb-2 h-7 w-7"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "text-gray-400",
+          children: "Click or Drag n' Drop Image"
+        })]
+      }), imageUrl && !disabled && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "group absolute right-0 top-0 -translate-y-1/4 translate-x-1/4 transform",
+        onClick: function onClick(e) {
+          e.stopPropagation();
+          void (onChange === null || onChange === void 0 ? void 0 : onChange(undefined));
+        },
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "flex h-5 w-5 items-center justify-center rounded-md border border-solid border-gray-500 bg-white transition-all duration-300 hover:h-6 hover:w-6 dark:border-gray-400 dark:bg-black",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            className: "text-gray-500 dark:text-gray-400",
+            width: 16,
+            height: 16
+          })
+        })
+      })]
+    })), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "mt-1 text-xs text-red-500",
+      children: errorMessage
+    })]
+  });
+});
+SingleImageDropzone.displayName = 'SingleImageDropzone';
+var Button = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", Object.assign({
+    className: (0,tailwind_merge__WEBPACK_IMPORTED_MODULE_3__.twMerge)(
+    // base
+    'focus-visible:ring-ring inline-flex cursor-pointer items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50',
+    // color
+    'border border-gray-400 text-gray-400 shadow hover:bg-gray-100 hover:text-gray-500 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700',
+    // size
+    'h-6 rounded-md px-2 text-xs', className),
+    ref: ref
+  }, props));
+});
+Button.displayName = 'Button';
+function formatFileSize(bytes) {
+  if (!bytes) {
+    return '0 Bytes';
+  }
+  bytes = Number(bytes);
+  if (bytes === 0) {
+    return '0 Bytes';
+  }
+  var k = 1024;
+  var dm = 2;
+  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  var i = Math.floor(Math.log(bytes) / Math.log(k));
+  return "".concat(parseFloat((bytes / Math.pow(k, i)).toFixed(dm)), " ").concat(sizes[i]);
+}
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/TeacherCoursesComponents/AttachmentForm.tsx":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/Components/TeacherCoursesComponents/AttachmentForm.tsx ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
+/* harmony import */ var _ui_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ui/button */ "./resources/js/Components/ui/button.tsx");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/plus-circle.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/file.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/loader-2.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/x.js");
+/* harmony import */ var _MultipleFileDropZone__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../MultipleFileDropZone */ "./resources/js/Components/MultipleFileDropZone.tsx");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var AttachmentForm = function AttachmentForm(_ref) {
+  var course = _ref.course;
+  var id = course.id,
+    attachments = course.attachments;
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    editing = _useState2[0],
+    setEditing = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(),
+    _useState4 = _slicedToArray(_useState3, 2),
+    image = _useState4[0],
+    setImage = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false),
+    _useState6 = _slicedToArray(_useState5, 2),
+    loading = _useState6[0],
+    setLoading = _useState6[1];
+  var toggleEdit = function toggleEdit() {
+    return setEditing(function (current) {
+      return !current;
+    });
+  };
+  var onChange = function onChange(files) {
+    if (!files) return;
+    var loader = sonner__WEBPACK_IMPORTED_MODULE_3__.toast.loading('Uploading Files. Do Not Leave or Close This Page...');
+    _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_1__.Inertia.post(route('teacher.courses.attachments.store', {
+      course_id: id
+    }), {
+      files: files
+    }, {
+      onStart: function onStart() {
+        return setLoading(true);
+      },
+      onSuccess: function onSuccess() {
+        sonner__WEBPACK_IMPORTED_MODULE_3__.toast.success('Attachments Uploaded!');
+        setEditing(false);
+      },
+      onError: function onError(e) {
+        sonner__WEBPACK_IMPORTED_MODULE_3__.toast.error('Something   Went Wrong. Please Try again!');
+        console.error(e);
+      },
+      onFinish: function onFinish() {
+        setLoading(false);
+        sonner__WEBPACK_IMPORTED_MODULE_3__.toast.dismiss(loader);
+      },
+      preserveScroll: true
+    });
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: 'mt-5 border bg-secondary rounded-md p-3.5',
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: 'font-medium flex items-center justify-between',
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: 'flex flex-col space-y-0.5',
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+          children: "Upload Resources"
+        })
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_4__.Button, {
+        onClick: toggleEdit,
+        variant: 'ghost',
+        children: editing ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          children: "Cancel"
+        }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            className: 'h-4 w-4 mr-2'
+          }), "Add a Resource/Attachment"]
+        })
+      })]
+    }), editing && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      className: 'text-center text-muted-foreground italic text-xs font-light tracking-tight',
+      children: "Documents,Powerpoints,Spreadsheets,PDFs, and Images Only"
+    }), !editing && course.attachments.length < 1 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      className: 'text-sm mt-2 text-primary/80 italic',
+      children: "No Attachments Uploaded to this Course"
+    }), !editing && course.attachments.length > 0 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: 'flex flex-col space-y-1.5',
+      children: attachments.map(function (attachment) {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(AttachmentItem, {
+          attachment: attachment
+        }, attachment.id);
+      })
+    }), editing && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_MultipleFileDropZone__WEBPACK_IMPORTED_MODULE_5__.MultipleFileDropZone, {
+        onChange: onChange
+      })
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AttachmentForm);
+var AttachmentItem = function AttachmentItem(_ref2) {
+  var attachment = _ref2.attachment;
+  var course_id = attachment.course_id,
+    id = attachment.id;
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false),
+    _useState8 = _slicedToArray(_useState7, 2),
+    deleting = _useState8[0],
+    setDeleting = _useState8[1];
+  var onDelete = function onDelete() {
+    _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_1__.Inertia.post(route('teacher.courses.attachments.destroy', {
+      course_id: course_id,
+      id: id
+    }), {}, {
+      onStart: function onStart() {
+        return setDeleting(true);
+      },
+      onSuccess: function onSuccess() {
+        return sonner__WEBPACK_IMPORTED_MODULE_3__.toast.success('Attachment Removed!');
+      },
+      onError: function onError(e) {
+        sonner__WEBPACK_IMPORTED_MODULE_3__.toast.error('Something   Went Wrong. Please Try again!');
+        console.error(e);
+      },
+      onFinish: function onFinish() {
+        return setDeleting(false);
+      },
+      preserveScroll: true
+    });
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: 'flex items-center p-2.5 w-full bg-background border-border text-primary rounded-md',
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      className: 'h-4 w-4 mr-2 flex-shrink-0'
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      className: 'text-xs line-clamp-1',
+      children: attachment.name
+    }), deleting ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      className: 'h-4 w-4 animate-spin'
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_4__.Button, {
+      onClick: onDelete,
+      className: 'ml-auto',
+      variant: 'ghost',
+      size: 'sm',
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        className: 'w-4 h-4'
+      })
+    })]
+  });
+};
+
+/***/ }),
+
+/***/ "./resources/js/Components/TeacherCoursesComponents/CategoryForm.tsx":
+/*!***************************************************************************!*\
+  !*** ./resources/js/Components/TeacherCoursesComponents/CategoryForm.tsx ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
+/* harmony import */ var _ui_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ui/button */ "./resources/js/Components/ui/button.tsx");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/pencil.js");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+/* harmony import */ var _ui_ComboBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../ui/ComboBox */ "./resources/js/Components/ui/ComboBox.tsx");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+var CategoryForm = function CategoryForm(_ref) {
+  var course = _ref.course;
+  var categories = (0,_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.usePage)().props.categories;
+  var category_id = course.category_id,
+    id = course.id,
+    category = course.category;
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    editing = _useState2[0],
+    setEditing = _useState2[1];
+  var toggleEdit = function toggleEdit() {
+    return setEditing(function (current) {
+      return !current;
+    });
+  };
+  var _useForm = (0,_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.useForm)({
+      category_id: category_id || 0
+    }),
+    data = _useForm.data,
+    setData = _useForm.setData,
+    post = _useForm.post,
+    processing = _useForm.processing,
+    errors = _useForm.errors;
+  var onSubmit = function onSubmit(e) {
+    e.preventDefault();
+    if (data.category_id === 0) return;
+    post(route('teacher.courses.update', {
+      id: id
+    }), {
+      onSuccess: function onSuccess() {
+        sonner__WEBPACK_IMPORTED_MODULE_3__.toast.success('Course Category Updated!');
+        setEditing(false);
+      },
+      onError: function onError() {
+        return sonner__WEBPACK_IMPORTED_MODULE_3__.toast.error('Something   Went Wrong. Please Try again!');
+      }
+    });
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: 'mt-5 border bg-secondary rounded-md p-3.5',
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: 'font-medium flex items-center justify-between',
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+        children: ["Course Category ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: 'text-destructive text-[0.75rem] italic font-extralight',
+          children: "*required"
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_4__.Button, {
+        onClick: toggleEdit,
+        variant: 'ghost',
+        children: editing ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          children: "Cancel"
+        }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_7__["default"], {
+            className: 'w-4 h-4 mx-2'
+          }), "Edit Category"]
+        })
+      })]
+    }), !editing && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_5__.cn)('text-sm mt-2', !category_id && 'text-muted-foreground italic'),
+      children: (category === null || category === void 0 ? void 0 : category.category) || "No Category Set..."
+    }), editing && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("form", {
+      onSubmit: onSubmit,
+      className: 'flex flex-col space-y-3.5 mt-3.5',
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: 'flex   items-center    space-x-1.5',
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_ComboBox__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          value: data.category_id,
+          onChange: function onChange(val) {
+            return setData('category_id', val);
+          },
+          options: categories.map(function (_ref2) {
+            var id = _ref2.id,
+              category = _ref2.category;
+            return {
+              value: id,
+              label: category
+            };
+          })
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_4__.Button, {
+          size: 'sm',
+          disabled: processing,
+          type: 'submit',
+          children: "Save"
+        })]
+      })
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CategoryForm);
+
+/***/ }),
+
+/***/ "./resources/js/Components/TeacherCoursesComponents/ChapterForm.tsx":
+/*!**************************************************************************!*\
+  !*** ./resources/js/Components/TeacherCoursesComponents/ChapterForm.tsx ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _ui_button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ui/button */ "./resources/js/Components/ui/button.tsx");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/plus-circle.js");
+/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+/* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
+/* harmony import */ var _ui_input__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../ui/input */ "./resources/js/Components/ui/input.tsx");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+/* harmony import */ var _ChapterList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ChapterList */ "./resources/js/Components/TeacherCoursesComponents/ChapterList.tsx");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+
+var ChapterForm = function ChapterForm(_ref) {
+  var course = _ref.course;
+  var chapters = course.chapters,
+    id = course.id;
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    creating = _useState2[0],
+    setCreating = _useState2[1];
+  var toggleCreating = function toggleCreating() {
+    return setCreating(function (current) {
+      return !current;
+    });
+  };
+  var _useForm = (0,_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.useForm)({
+      title: ""
+    }),
+    data = _useForm.data,
+    setData = _useForm.setData,
+    processing = _useForm.processing,
+    post = _useForm.post,
+    errors = _useForm.errors;
+  var onSubmit = function onSubmit(e) {
+    e.preventDefault();
+    post(route('teacher.courses.chapters.store', {
+      course_id: id
+    }), {
+      onSuccess: function onSuccess() {
+        sonner__WEBPACK_IMPORTED_MODULE_4__.toast.success('Chapter Created!');
+        setCreating(false);
+      },
+      onError: function onError() {
+        return sonner__WEBPACK_IMPORTED_MODULE_4__.toast.error('Something   Went Wrong. Please Try again!');
+      }
+    });
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: 'mt-5 border bg-secondary rounded-md p-3.5',
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: 'font-medium flex items-center justify-between',
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+        children: ["Course Chapters ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: 'text-destructive text-[0.75rem] italic font-extralight',
+          children: "*required"
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_2__.Button, {
+        onClick: toggleCreating,
+        variant: 'ghost',
+        children: creating ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          children: "Cancel"
+        }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_8__["default"], {
+            className: 'w-4 h-4 mx-2'
+          }), "Add a Chapter"]
+        })
+      })]
+    }), creating && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("form", {
+      onSubmit: onSubmit,
+      className: 'flex flex-col space-y-3.5 mt-3.5',
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: 'flex flex-col  space-y-1.5',
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_input__WEBPACK_IMPORTED_MODULE_5__.Input, {
+          required: true,
+          value: data.title,
+          placeholder: 'e.g. Introduction to Microsoft Office',
+          onChange: function onChange(_ref2) {
+            var target = _ref2.target;
+            return setData('title', target.value);
+          },
+          disabled: processing,
+          autoFocus: true,
+          autoComplete: 'off'
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          size: 'sm',
+          className: 'ml-auto',
+          disabled: processing,
+          type: 'submit',
+          children: "Create"
+        })]
+      })
+    }), !creating && course.chapters.length < 1 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_6__.cn)('text-sm mt-2', course.chapters.length < 1 && 'italic text-primary/75'),
+      children: "No Chapters"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ChapterList__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      onEdit: function onEdit() {},
+      onReorder: function onReorder() {},
+      chapters: chapters
+    }), !creating && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      className: 'text-xs text-muted-foreground mt-3.5',
+      children: "Drag and drop to reorder the chapters"
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ChapterForm);
+
+/***/ }),
+
+/***/ "./resources/js/Components/TeacherCoursesComponents/ChapterList.tsx":
+/*!**************************************************************************!*\
+  !*** ./resources/js/Components/TeacherCoursesComponents/ChapterList.tsx ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/grip.js");
+/* harmony import */ var _ui_badge__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ui/badge */ "./resources/js/Components/ui/badge.tsx");
+
+
+
+
+
+var ChapterList = function ChapterList(_ref) {
+  var onEdit = _ref.onEdit,
+    onReorder = _ref.onReorder,
+    chapters = _ref.chapters;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__.DragDropContext, {
+    onDragEnd: function onDragEnd(e) {
+      return console.log(e);
+    },
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__.Droppable, {
+      droppableId: 'chapters',
+      children: function children(provided) {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({}, provided.droppableProps, {
+          ref: provided.innerRef,
+          children: chapters.map(function (chapter, index) {
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__.Draggable, {
+              draggableId: chapter.id.toString(),
+              index: index,
+              children: function children(provided) {
+                return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({}, provided.draggableProps, {
+                  ref: provided.innerRef,
+                  className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)('flex items-center gap-x-2 bg-neutral-200 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-primary rounded-md mb-3.5 text-sm', chapter.is_published === 1 && 'bg-sky-200 dark:bg-sky-900 border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300'),
+                  children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({}, provided.dragHandleProps, {
+                    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)('text-primary px-2 py-3 border-r border--r-primary hover:bg-secondary rounded-l-md transition duration-300', chapter.is_published === 1 && "border-r-sky-200 dark:border-r-sky-800 hover:bg-sky-200 dark:hover:bg-sky-800"),
+                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                      className: 'h-5 w-5'
+                    })
+                  })), chapter.title, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                    className: 'ml-auto pr-2 flex items-center gap-x-1.5',
+                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_badge__WEBPACK_IMPORTED_MODULE_2__.Badge, {
+                      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)('bg-secondary text-primary ', chapter.is_published === 1 && 'bg-sky-700 text-white'),
+                      children: chapter.is_published === 1 ? 'Published' : 'Draft'
+                    })
+                  })]
+                }));
+              }
+            }, chapter.id);
+          })
+        }));
+      }
+    })
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ChapterList);
+
+/***/ }),
+
 /***/ "./resources/js/Components/TeacherCoursesComponents/DescriptionForm.tsx":
 /*!******************************************************************************!*\
   !*** ./resources/js/Components/TeacherCoursesComponents/DescriptionForm.tsx ***!
@@ -2721,8 +11351,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
 /* harmony import */ var _ui_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ui/button */ "./resources/js/Components/ui/button.tsx");
 /* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/pencil.js");
-/* harmony import */ var _ui_input__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../ui/input */ "./resources/js/Components/ui/input.tsx");
-/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+/* harmony import */ var _ui_textarea__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../ui/textarea */ "./resources/js/Components/ui/textarea.tsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2776,7 +11406,12 @@ var DescriptionForm = function DescriptionForm(_ref) {
     className: 'mt-5 border bg-secondary rounded-md p-3.5',
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: 'font-medium flex items-center justify-between',
-      children: ["Course Description", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_4__.Button, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+        children: ["Course Description ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: 'text-destructive text-[0.75rem] italic font-extralight',
+          children: "*required"
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_4__.Button, {
         onClick: toggleEdit,
         variant: 'ghost',
         children: editing ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
@@ -2788,14 +11423,15 @@ var DescriptionForm = function DescriptionForm(_ref) {
         })
       })]
     }), !editing && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_6__.cn)('text-sm mt-2', !description && 'text-muted-foreground italic'),
+      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_5__.cn)('text-sm mt-2', !description && 'text-muted-foreground italic'),
       children: description || "No Description..."
     }), editing && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("form", {
       onSubmit: onSubmit,
       className: 'flex flex-col space-y-3.5 mt-3.5',
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: 'flex   items-center    space-x-1.5',
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_input__WEBPACK_IMPORTED_MODULE_5__.Input, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_textarea__WEBPACK_IMPORTED_MODULE_6__.Textarea, {
+          placeholder: 'e.g. This  course is about....',
           required: true,
           value: data.description,
           onChange: function onChange(_ref2) {
@@ -2819,6 +11455,137 @@ var DescriptionForm = function DescriptionForm(_ref) {
 
 /***/ }),
 
+/***/ "./resources/js/Components/TeacherCoursesComponents/ImageForm.tsx":
+/*!************************************************************************!*\
+  !*** ./resources/js/Components/TeacherCoursesComponents/ImageForm.tsx ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
+/* harmony import */ var _ui_button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ui/button */ "./resources/js/Components/ui/button.tsx");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/plus-circle.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/pencil.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/image.js");
+/* harmony import */ var _SingeImageDropZone__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../SingeImageDropZone */ "./resources/js/Components/SingeImageDropZone.tsx");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var ImageForm = function ImageForm(_ref) {
+  var course = _ref.course;
+  var id = course.id;
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    editing = _useState2[0],
+    setEditing = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(),
+    _useState4 = _slicedToArray(_useState3, 2),
+    image = _useState4[0],
+    setImage = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false),
+    _useState6 = _slicedToArray(_useState5, 2),
+    loading = _useState6[0],
+    setLoading = _useState6[1];
+  var toggleEdit = function toggleEdit() {
+    return setEditing(function (current) {
+      return !current;
+    });
+  };
+  var onChange = function onChange(file) {
+    if (!file) return;
+    _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_5__.Inertia.post(route('teacher.courses.update', {
+      id: id
+    }), {
+      image: file
+    }, {
+      onStart: function onStart() {
+        return setLoading(true);
+      },
+      onSuccess: function onSuccess() {
+        sonner__WEBPACK_IMPORTED_MODULE_2__.toast.success('Course Image Updated!');
+        setEditing(false);
+      },
+      onError: function onError(e) {
+        sonner__WEBPACK_IMPORTED_MODULE_2__.toast.error('Something   Went Wrong. Please Try again!');
+        console.error(e);
+      },
+      onFinish: function onFinish() {
+        return setLoading(false);
+      },
+      preserveScroll: true
+    });
+  };
+  var label = (0,react__WEBPACK_IMPORTED_MODULE_1__.useMemo)(function () {
+    return !course.image ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        className: 'h-4 w-4 mr-2'
+      }), "Add an Image"]
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        className: 'w-4 h-4 mx-2'
+      }), "Edit Image"]
+    });
+  }, [course.image, editing]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: 'mt-5 border bg-secondary rounded-md p-3.5',
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: 'font-medium flex items-center justify-between',
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+        children: ["Course Image", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: 'text-destructive text-[0.75rem] italic font-extralight',
+          children: "*required"
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_3__.Button, {
+        onClick: toggleEdit,
+        variant: 'ghost',
+        children: editing ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+          children: "Cancel"
+        }) : label
+      })]
+    }), !editing && (!course.image ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: 'flex items-center justify-center h-60 bg-muted-foreground/20 rounded-md',
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        className: 'h-10 w-10'
+      })
+    }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: 'relative aspect-video mt-2',
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("img", {
+        src: course.image,
+        alt: 'Image',
+        className: 'h-full w-full object-cover rounded-md'
+      })
+    })), editing && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_SingeImageDropZone__WEBPACK_IMPORTED_MODULE_4__.SingleImageDropzone, {
+        className: 'w-full',
+        disabled: loading,
+        value: image,
+        onChange: onChange
+      })
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ImageForm);
+
+/***/ }),
+
 /***/ "./resources/js/Components/TeacherCoursesComponents/TitleForm.tsx":
 /*!************************************************************************!*\
   !*** ./resources/js/Components/TeacherCoursesComponents/TitleForm.tsx ***!
@@ -2836,8 +11603,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ui_button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ui/button */ "./resources/js/Components/ui/button.tsx");
 /* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/pencil.js");
 /* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
-/* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
-/* harmony import */ var _ui_textarea__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../ui/textarea */ "./resources/js/Components/ui/textarea.tsx");
+/* harmony import */ var _ui_input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../ui/input */ "./resources/js/Components/ui/input.tsx");
+/* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2870,11 +11637,11 @@ var TitleForm = function TitleForm(_ref) {
       id: id
     }), {
       onSuccess: function onSuccess() {
-        sonner__WEBPACK_IMPORTED_MODULE_4__.toast.success('Course Updated!');
+        sonner__WEBPACK_IMPORTED_MODULE_5__.toast.success('Course Updated!');
         setEditing(false);
       },
       onError: function onError() {
-        return sonner__WEBPACK_IMPORTED_MODULE_4__.toast.error('Something   Went Wrong. Please Try again!');
+        return sonner__WEBPACK_IMPORTED_MODULE_5__.toast.error('Something   Went Wrong. Please Try again!');
       }
     });
   };
@@ -2890,7 +11657,12 @@ var TitleForm = function TitleForm(_ref) {
     className: 'mt-5 border bg-secondary rounded-md p-3.5',
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: 'font-medium flex items-center justify-between',
-      children: ["Course Title", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_2__.Button, {
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
+        children: ["Course Title ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: 'text-destructive text-[0.75rem] italic font-extralight',
+          children: "*required"
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_button__WEBPACK_IMPORTED_MODULE_2__.Button, {
         onClick: toggleEdit,
         variant: 'ghost',
         children: editing ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
@@ -2909,8 +11681,7 @@ var TitleForm = function TitleForm(_ref) {
       className: 'flex flex-col space-y-3.5 mt-3.5',
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: 'flex flex-col  space-y-1.5',
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_textarea__WEBPACK_IMPORTED_MODULE_5__.Textarea, {
-          placeholder: 'e.g. This  course is about....',
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_input__WEBPACK_IMPORTED_MODULE_4__.Input, {
           required: true,
           value: data.title,
           onChange: function onChange(_ref2) {
@@ -3005,6 +11776,93 @@ var UserButton = function UserButton() {
 
 /***/ }),
 
+/***/ "./resources/js/Components/ui/ComboBox.tsx":
+/*!*************************************************!*\
+  !*** ./resources/js/Components/ui/ComboBox.tsx ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/chevrons-up-down.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/check.js");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+/* harmony import */ var _Components_ui_button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/ui/button */ "./resources/js/Components/ui/button.tsx");
+/* harmony import */ var _Components_ui_command__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/ui/command */ "./resources/js/Components/ui/command.tsx");
+/* harmony import */ var _Components_ui_popover__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/ui/popover */ "./resources/js/Components/ui/popover.tsx");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+var ComboBox = function ComboBox(_ref) {
+  var options = _ref.options,
+    value = _ref.value,
+    onChange = _ref.onChange;
+  var _a;
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_1__.useState(false),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    open = _React$useState2[0],
+    setOpen = _React$useState2[1];
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_popover__WEBPACK_IMPORTED_MODULE_5__.Popover, {
+    open: open,
+    onOpenChange: setOpen,
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_popover__WEBPACK_IMPORTED_MODULE_5__.PopoverTrigger, {
+      asChild: true,
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_button__WEBPACK_IMPORTED_MODULE_3__.Button, {
+        variant: "outline",
+        role: "combobox",
+        "aria-expanded": open,
+        className: " w-full justify-between",
+        children: [value ? (_a = options.find(function (option) {
+          return option.value === value;
+        })) === null || _a === void 0 ? void 0 : _a.label : "Select option...", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          className: "ml-2 h-4 w-4 shrink-0 opacity-50"
+        })]
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_popover__WEBPACK_IMPORTED_MODULE_5__.PopoverContent, {
+      className: "w-full p-0",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_command__WEBPACK_IMPORTED_MODULE_4__.Command, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_command__WEBPACK_IMPORTED_MODULE_4__.CommandInput, {
+          placeholder: "Search option..."
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_command__WEBPACK_IMPORTED_MODULE_4__.CommandEmpty, {
+          children: "No option found."
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_command__WEBPACK_IMPORTED_MODULE_4__.CommandGroup, {
+          children: options.map(function (option) {
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_command__WEBPACK_IMPORTED_MODULE_4__.CommandItem, {
+              value: option.value.toString(),
+              onSelect: function onSelect() {
+                onChange(option.value);
+                setOpen(false);
+              },
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_7__["default"], {
+                className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("mr-2 h-4 w-4", value === option.value ? "opacity-100" : "opacity-0")
+              }), option.label]
+            }, option.value);
+          })
+        })]
+      })
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ComboBox);
+
+/***/ }),
+
 /***/ "./resources/js/Components/ui/avatar.tsx":
 /*!***********************************************!*\
   !*** ./resources/js/Components/ui/avatar.tsx ***!
@@ -3062,6 +11920,59 @@ var AvatarFallback = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(
   }, props));
 });
 AvatarFallback.displayName = _radix_ui_react_avatar__WEBPACK_IMPORTED_MODULE_3__.Fallback.displayName;
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/ui/badge.tsx":
+/*!**********************************************!*\
+  !*** ./resources/js/Components/ui/badge.tsx ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Badge: () => (/* binding */ Badge),
+/* harmony export */   badgeVariants: () => (/* binding */ badgeVariants)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var class_variance_authority__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! class-variance-authority */ "./node_modules/class-variance-authority/dist/index.mjs");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
+
+
+var badgeVariants = (0,class_variance_authority__WEBPACK_IMPORTED_MODULE_1__.cva)("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", {
+  variants: {
+    variant: {
+      "default": "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+      secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+      outline: "text-foreground"
+    }
+  },
+  defaultVariants: {
+    variant: "default"
+  }
+});
+function Badge(_a) {
+  var className = _a.className,
+    variant = _a.variant,
+    props = __rest(_a, ["className", "variant"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)(badgeVariants({
+      variant: variant
+    }), className)
+  }, props));
+}
 
 
 /***/ }),
@@ -3226,6 +12137,250 @@ var CardFooter = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(func
   }, props));
 });
 CardFooter.displayName = "CardFooter";
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/ui/command.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/Components/ui/command.tsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Command: () => (/* binding */ Command),
+/* harmony export */   CommandDialog: () => (/* binding */ CommandDialog),
+/* harmony export */   CommandEmpty: () => (/* binding */ CommandEmpty),
+/* harmony export */   CommandGroup: () => (/* binding */ CommandGroup),
+/* harmony export */   CommandInput: () => (/* binding */ CommandInput),
+/* harmony export */   CommandItem: () => (/* binding */ CommandItem),
+/* harmony export */   CommandList: () => (/* binding */ CommandList),
+/* harmony export */   CommandSeparator: () => (/* binding */ CommandSeparator),
+/* harmony export */   CommandShortcut: () => (/* binding */ CommandShortcut)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var cmdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! cmdk */ "./node_modules/cmdk/dist/index.mjs");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/search.js");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+/* harmony import */ var _Components_ui_dialog__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/ui/dialog */ "./resources/js/Components/ui/dialog.tsx");
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
+
+
+
+
+
+var Command = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(cmdk__WEBPACK_IMPORTED_MODULE_4__.Command, Object.assign({
+    ref: ref,
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground", className)
+  }, props));
+});
+Command.displayName = cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.displayName;
+var CommandDialog = function CommandDialog(_a) {
+  var children = _a.children,
+    props = __rest(_a, ["children"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_dialog__WEBPACK_IMPORTED_MODULE_3__.Dialog, Object.assign({}, props, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_dialog__WEBPACK_IMPORTED_MODULE_3__.DialogContent, {
+      className: "overflow-hidden p-0 shadow-lg",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(Command, {
+        className: "[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5",
+        children: children
+      })
+    })
+  }));
+};
+var CommandInput = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: "flex items-center border-b px-3",
+    "cmdk-input-wrapper": "",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      className: "mr-2 h-4 w-4 shrink-0 opacity-50"
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Input, Object.assign({
+      ref: ref,
+      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50", className)
+    }, props))]
+  });
+});
+CommandInput.displayName = cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Input.displayName;
+var CommandList = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.List, Object.assign({
+    ref: ref,
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("max-h-[300px] overflow-y-auto overflow-x-hidden", className)
+  }, props));
+});
+CommandList.displayName = cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.List.displayName;
+var CommandEmpty = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (props, ref) {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Empty, Object.assign({
+    ref: ref,
+    className: "py-6 text-center text-sm"
+  }, props));
+});
+CommandEmpty.displayName = cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Empty.displayName;
+var CommandGroup = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Group, Object.assign({
+    ref: ref,
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground", className)
+  }, props));
+});
+CommandGroup.displayName = cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Group.displayName;
+var CommandSeparator = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Separator, Object.assign({
+    ref: ref,
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("-mx-1 h-px bg-border", className)
+  }, props));
+});
+CommandSeparator.displayName = cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Separator.displayName;
+var CommandItem = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Item, Object.assign({
+    ref: ref,
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", className)
+  }, props));
+});
+CommandItem.displayName = cmdk__WEBPACK_IMPORTED_MODULE_4__.Command.Item.displayName;
+var CommandShortcut = function CommandShortcut(_a) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", Object.assign({
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("ml-auto text-xs tracking-widest text-muted-foreground", className)
+  }, props));
+};
+CommandShortcut.displayName = "CommandShortcut";
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/ui/dialog.tsx":
+/*!***********************************************!*\
+  !*** ./resources/js/Components/ui/dialog.tsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Dialog: () => (/* binding */ Dialog),
+/* harmony export */   DialogClose: () => (/* binding */ DialogClose),
+/* harmony export */   DialogContent: () => (/* binding */ DialogContent),
+/* harmony export */   DialogDescription: () => (/* binding */ DialogDescription),
+/* harmony export */   DialogFooter: () => (/* binding */ DialogFooter),
+/* harmony export */   DialogHeader: () => (/* binding */ DialogHeader),
+/* harmony export */   DialogOverlay: () => (/* binding */ DialogOverlay),
+/* harmony export */   DialogPortal: () => (/* binding */ DialogPortal),
+/* harmony export */   DialogTitle: () => (/* binding */ DialogTitle),
+/* harmony export */   DialogTrigger: () => (/* binding */ DialogTrigger)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-dialog */ "./node_modules/@radix-ui/react-dialog/dist/index.mjs");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/x.js");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
+
+
+
+
+var Dialog = _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Root;
+var DialogTrigger = _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Trigger;
+var DialogPortal = _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Portal;
+var DialogClose = _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Close;
+var DialogOverlay = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Overlay, Object.assign({
+    ref: ref,
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", className)
+  }, props));
+});
+DialogOverlay.displayName = _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Overlay.displayName;
+var DialogContent = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    children = _a.children,
+    props = __rest(_a, ["className", "children"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(DialogPortal, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(DialogOverlay, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Content, Object.assign({
+      ref: ref,
+      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg", className)
+    }, props, {
+      children: [children, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Close, {
+        className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          className: "h-4 w-4"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: "sr-only",
+          children: "Close"
+        })]
+      })]
+    }))]
+  });
+});
+DialogContent.displayName = _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Content.displayName;
+var DialogHeader = function DialogHeader(_a) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("flex flex-col space-y-1.5 text-center sm:text-left", className)
+  }, props));
+};
+DialogHeader.displayName = "DialogHeader";
+var DialogFooter = function DialogFooter(_a) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)
+  }, props));
+};
+DialogFooter.displayName = "DialogFooter";
+var DialogTitle = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Title, Object.assign({
+    ref: ref,
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("text-lg font-semibold leading-none tracking-tight", className)
+  }, props));
+});
+DialogTitle.displayName = _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Title.displayName;
+var DialogDescription = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    props = __rest(_a, ["className"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Description, Object.assign({
+    ref: ref,
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("text-sm text-muted-foreground", className)
+  }, props));
+});
+DialogDescription.displayName = _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_3__.Description.displayName;
 
 
 /***/ }),
@@ -3486,6 +12641,59 @@ Label.displayName = _radix_ui_react_label__WEBPACK_IMPORTED_MODULE_4__.Root.disp
 
 /***/ }),
 
+/***/ "./resources/js/Components/ui/popover.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/Components/ui/popover.tsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Popover: () => (/* binding */ Popover),
+/* harmony export */   PopoverContent: () => (/* binding */ PopoverContent),
+/* harmony export */   PopoverTrigger: () => (/* binding */ PopoverTrigger)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _radix_ui_react_popover__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-popover */ "./node_modules/@radix-ui/react-popover/dist/index.mjs");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
+
+
+
+var Popover = _radix_ui_react_popover__WEBPACK_IMPORTED_MODULE_3__.Root;
+var PopoverTrigger = _radix_ui_react_popover__WEBPACK_IMPORTED_MODULE_3__.Trigger;
+var PopoverContent = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(function (_a, ref) {
+  var className = _a.className,
+    _a$align = _a.align,
+    align = _a$align === void 0 ? "center" : _a$align,
+    _a$sideOffset = _a.sideOffset,
+    sideOffset = _a$sideOffset === void 0 ? 4 : _a$sideOffset,
+    props = __rest(_a, ["className", "align", "sideOffset"]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_popover__WEBPACK_IMPORTED_MODULE_3__.Portal, {
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_popover__WEBPACK_IMPORTED_MODULE_3__.Content, Object.assign({
+      ref: ref,
+      align: align,
+      sideOffset: sideOffset,
+      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2", className)
+    }, props))
+  });
+});
+PopoverContent.displayName = _radix_ui_react_popover__WEBPACK_IMPORTED_MODULE_3__.Content.displayName;
+
+
+/***/ }),
+
 /***/ "./resources/js/Components/ui/sheet.tsx":
 /*!**********************************************!*\
   !*** ./resources/js/Components/ui/sheet.tsx ***!
@@ -3648,7 +12856,7 @@ var Textarea = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.forwardRef(functi
   var className = _a.className,
     props = __rest(_a, ["className"]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("textarea", Object.assign({
-    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50", className),
+    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)("flex min-h-[80px] w-full rounded-md border border-input focus:!border-input bg-background px-3 py-2 text-sm  placeholder:text-muted-foreground focus:!outline-0  disabled:cursor-not-allowed disabled:opacity-50", className),
     ref: ref
   }, props));
 });
@@ -4040,10 +13248,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var _Components_IconBadge__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/IconBadge */ "./resources/js/Components/IconBadge.tsx");
-/* harmony import */ var _Components_TeacherCoursesComponents_DescriptionForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/TeacherCoursesComponents/DescriptionForm */ "./resources/js/Components/TeacherCoursesComponents/DescriptionForm.tsx");
-/* harmony import */ var _Components_TeacherCoursesComponents_TitleForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/TeacherCoursesComponents/TitleForm */ "./resources/js/Components/TeacherCoursesComponents/TitleForm.tsx");
-/* harmony import */ var _Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Layouts/DashboardLayout */ "./resources/js/Layouts/DashboardLayout.tsx");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/layout-dashboard.js");
+/* harmony import */ var _Components_TeacherCoursesComponents_AttachmentForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/TeacherCoursesComponents/AttachmentForm */ "./resources/js/Components/TeacherCoursesComponents/AttachmentForm.tsx");
+/* harmony import */ var _Components_TeacherCoursesComponents_CategoryForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/TeacherCoursesComponents/CategoryForm */ "./resources/js/Components/TeacherCoursesComponents/CategoryForm.tsx");
+/* harmony import */ var _Components_TeacherCoursesComponents_ChapterForm__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/TeacherCoursesComponents/ChapterForm */ "./resources/js/Components/TeacherCoursesComponents/ChapterForm.tsx");
+/* harmony import */ var _Components_TeacherCoursesComponents_DescriptionForm__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/TeacherCoursesComponents/DescriptionForm */ "./resources/js/Components/TeacherCoursesComponents/DescriptionForm.tsx");
+/* harmony import */ var _Components_TeacherCoursesComponents_ImageForm__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/TeacherCoursesComponents/ImageForm */ "./resources/js/Components/TeacherCoursesComponents/ImageForm.tsx");
+/* harmony import */ var _Components_TeacherCoursesComponents_TitleForm__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/TeacherCoursesComponents/TitleForm */ "./resources/js/Components/TeacherCoursesComponents/TitleForm.tsx");
+/* harmony import */ var _Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Layouts/DashboardLayout */ "./resources/js/Layouts/DashboardLayout.tsx");
+/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/layout-dashboard.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/list-checks.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/file.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_10__);
+
+
+
+
+
+
 
 
 
@@ -4052,40 +13275,86 @@ __webpack_require__.r(__webpack_exports__);
 
 var TeacherCoursesShow = function TeacherCoursesShow(_ref) {
   var course = _ref.course;
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: 'p-6',
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: 'flex items-center justify-between',
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: 'flex flex-col gap-y-1.5',
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
-            className: 'text-2xl font-medium',
-            children: "Course Setup"
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-            className: 'text-sm text-muted-foreground',
-            children: "Complete All Fields  (1/5)"
-          })]
-        })
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: 'grid grid-cols-1 md:grid-cols-2 gap-5 mt-16',
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: 'flex items-center gap-x-1.5',
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_IconBadge__WEBPACK_IMPORTED_MODULE_1__["default"], {
-              Icon: lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"]
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
-              className: 'text-xl',
-              children: "Customize your course"
+  var completedFields = (0,react__WEBPACK_IMPORTED_MODULE_10__.useMemo)(function () {
+    var _a, _b;
+    var completedFields = 1;
+    if (course.description && ((_a = course.description) === null || _a === void 0 ? void 0 : _a.length) > 0) completedFields = completedFields + 1;
+    if (course.image && ((_b = course.image) === null || _b === void 0 ? void 0 : _b.length) > 0) completedFields = completedFields + 1;
+    if (course.category_id && course.category) completedFields = completedFields + 1;
+    if (course.chapters.some(function (chapter) {
+      return chapter.is_published === 1;
+    })) completedFields = completedFields + 1;
+    return completedFields;
+  }, [course]);
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_9__.Head, {
+      title: course.title
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: 'p-5',
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: 'flex items-center justify-between',
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: 'flex flex-col gap-y-1.5',
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
+              className: 'text-2xl font-medium',
+              children: "Course Setup"
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+              className: 'text-sm text-muted-foreground',
+              children: ["Complete All Required Parts (", completedFields.toString(), "/5)"]
             })]
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_TeacherCoursesComponents_TitleForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            course: course
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_TeacherCoursesComponents_DescriptionForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
-            course: course
+          })
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: 'grid grid-cols-1 md:grid-cols-2 gap-5 mt-16',
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: 'flex items-center gap-x-1.5',
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_IconBadge__WEBPACK_IMPORTED_MODULE_1__["default"], {
+                Icon: lucide_react__WEBPACK_IMPORTED_MODULE_11__["default"]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+                className: 'text-xl',
+                children: "Customize your course"
+              })]
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_TeacherCoursesComponents_TitleForm__WEBPACK_IMPORTED_MODULE_7__["default"], {
+              course: course
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_TeacherCoursesComponents_DescriptionForm__WEBPACK_IMPORTED_MODULE_5__["default"], {
+              course: course
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_TeacherCoursesComponents_ImageForm__WEBPACK_IMPORTED_MODULE_6__["default"], {
+              course: course
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_TeacherCoursesComponents_CategoryForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              course: course
+            })]
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: 'flex flex-col space-y-5',
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: 'flex items-center gap-x-2',
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_IconBadge__WEBPACK_IMPORTED_MODULE_1__["default"], {
+                  Icon: lucide_react__WEBPACK_IMPORTED_MODULE_12__["default"]
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+                  className: 'text-xl',
+                  children: "Course Chapters"
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_TeacherCoursesComponents_ChapterForm__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                course: course
+              })]
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: 'flex items-center gap-x-2',
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_IconBadge__WEBPACK_IMPORTED_MODULE_1__["default"], {
+                  Icon: lucide_react__WEBPACK_IMPORTED_MODULE_13__["default"]
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+                  className: 'text-xl',
+                  children: "Resources & Attachments"
+                })]
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_TeacherCoursesComponents_AttachmentForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
+                course: course
+              })]
+            })]
           })]
-        })
-      })]
-    })
+        })]
+      })
+    })]
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TeacherCoursesShow);
@@ -4373,6 +13642,2700 @@ if ($defineProperty) {
 
 /***/ }),
 
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/primitive/dist/index.module.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/primitive/dist/index.module.js ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   composeEventHandlers: () => (/* binding */ $e42e1063c40fb3ef$export$b9ecd428b558ff10)
+/* harmony export */ });
+function $e42e1063c40fb3ef$export$b9ecd428b558ff10(originalEventHandler, ourEventHandler, { checkForDefaultPrevented: checkForDefaultPrevented = true  } = {}) {
+    return function handleEvent(event) {
+        originalEventHandler === null || originalEventHandler === void 0 || originalEventHandler(event);
+        if (checkForDefaultPrevented === false || !event.defaultPrevented) return ourEventHandler === null || ourEventHandler === void 0 ? void 0 : ourEventHandler(event);
+    };
+}
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-compose-refs/dist/index.module.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-compose-refs/dist/index.module.js ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   composeRefs: () => (/* binding */ $6ed0406888f73fc4$export$43e446d32b3d21af),
+/* harmony export */   useComposedRefs: () => (/* binding */ $6ed0406888f73fc4$export$c7b2cbe3552a0d05)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+/**
+ * Set a given ref to a given value
+ * This utility takes care of different types of refs: callback refs and RefObject(s)
+ */ function $6ed0406888f73fc4$var$setRef(ref, value) {
+    if (typeof ref === 'function') ref(value);
+    else if (ref !== null && ref !== undefined) ref.current = value;
+}
+/**
+ * A utility to compose multiple refs together
+ * Accepts callback refs and RefObject(s)
+ */ function $6ed0406888f73fc4$export$43e446d32b3d21af(...refs) {
+    return (node)=>refs.forEach((ref)=>$6ed0406888f73fc4$var$setRef(ref, node)
+        )
+    ;
+}
+/**
+ * A custom hook that composes multiple refs
+ * Accepts callback refs and RefObject(s)
+ */ function $6ed0406888f73fc4$export$c7b2cbe3552a0d05(...refs) {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)($6ed0406888f73fc4$export$43e446d32b3d21af(...refs), refs);
+}
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-context/dist/index.module.js":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-context/dist/index.module.js ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createContext: () => (/* binding */ $c512c27ab02ef895$export$fd42f52fd3ae1109),
+/* harmony export */   createContextScope: () => (/* binding */ $c512c27ab02ef895$export$50c7b4e9d9f19c1)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+function $c512c27ab02ef895$export$fd42f52fd3ae1109(rootComponentName, defaultContext) {
+    const Context = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)(defaultContext);
+    function Provider(props) {
+        const { children: children , ...context } = props; // Only re-memoize when prop values change
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const value = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>context
+        , Object.values(context));
+        return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Context.Provider, {
+            value: value
+        }, children);
+    }
+    function useContext(consumerName) {
+        const context = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(Context);
+        if (context) return context;
+        if (defaultContext !== undefined) return defaultContext; // if a defaultContext wasn't specified, it's a required context.
+        throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+    }
+    Provider.displayName = rootComponentName + 'Provider';
+    return [
+        Provider,
+        useContext
+    ];
+}
+/* -------------------------------------------------------------------------------------------------
+ * createContextScope
+ * -----------------------------------------------------------------------------------------------*/ function $c512c27ab02ef895$export$50c7b4e9d9f19c1(scopeName, createContextScopeDeps = []) {
+    let defaultContexts = [];
+    /* -----------------------------------------------------------------------------------------------
+   * createContext
+   * ---------------------------------------------------------------------------------------------*/ function $c512c27ab02ef895$export$fd42f52fd3ae1109(rootComponentName, defaultContext) {
+        const BaseContext = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)(defaultContext);
+        const index = defaultContexts.length;
+        defaultContexts = [
+            ...defaultContexts,
+            defaultContext
+        ];
+        function Provider(props) {
+            const { scope: scope , children: children , ...context } = props;
+            const Context = (scope === null || scope === void 0 ? void 0 : scope[scopeName][index]) || BaseContext; // Only re-memoize when prop values change
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            const value = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>context
+            , Object.values(context));
+            return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Context.Provider, {
+                value: value
+            }, children);
+        }
+        function useContext(consumerName, scope) {
+            const Context = (scope === null || scope === void 0 ? void 0 : scope[scopeName][index]) || BaseContext;
+            const context = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(Context);
+            if (context) return context;
+            if (defaultContext !== undefined) return defaultContext; // if a defaultContext wasn't specified, it's a required context.
+            throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+        }
+        Provider.displayName = rootComponentName + 'Provider';
+        return [
+            Provider,
+            useContext
+        ];
+    }
+    /* -----------------------------------------------------------------------------------------------
+   * createScope
+   * ---------------------------------------------------------------------------------------------*/ const createScope = ()=>{
+        const scopeContexts = defaultContexts.map((defaultContext)=>{
+            return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)(defaultContext);
+        });
+        return function useScope(scope) {
+            const contexts = (scope === null || scope === void 0 ? void 0 : scope[scopeName]) || scopeContexts;
+            return (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({
+                    [`__scope${scopeName}`]: {
+                        ...scope,
+                        [scopeName]: contexts
+                    }
+                })
+            , [
+                scope,
+                contexts
+            ]);
+        };
+    };
+    createScope.scopeName = scopeName;
+    return [
+        $c512c27ab02ef895$export$fd42f52fd3ae1109,
+        $c512c27ab02ef895$var$composeContextScopes(createScope, ...createContextScopeDeps)
+    ];
+}
+/* -------------------------------------------------------------------------------------------------
+ * composeContextScopes
+ * -----------------------------------------------------------------------------------------------*/ function $c512c27ab02ef895$var$composeContextScopes(...scopes) {
+    const baseScope = scopes[0];
+    if (scopes.length === 1) return baseScope;
+    const createScope1 = ()=>{
+        const scopeHooks = scopes.map((createScope)=>({
+                useScope: createScope(),
+                scopeName: createScope.scopeName
+            })
+        );
+        return function useComposedScopes(overrideScopes) {
+            const nextScopes1 = scopeHooks.reduce((nextScopes, { useScope: useScope , scopeName: scopeName  })=>{
+                // We are calling a hook inside a callback which React warns against to avoid inconsistent
+                // renders, however, scoping doesn't have render side effects so we ignore the rule.
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const scopeProps = useScope(overrideScopes);
+                const currentScope = scopeProps[`__scope${scopeName}`];
+                return {
+                    ...nextScopes,
+                    ...currentScope
+                };
+            }, {});
+            return (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>({
+                    [`__scope${baseScope.scopeName}`]: nextScopes1
+                })
+            , [
+                nextScopes1
+            ]);
+        };
+    };
+    createScope1.scopeName = baseScope.scopeName;
+    return createScope1;
+}
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-dialog/dist/index.module.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-dialog/dist/index.module.js ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Close: () => (/* binding */ $5d3850c4d0b4e6c7$export$f39c2d165cd861fe),
+/* harmony export */   Content: () => (/* binding */ $5d3850c4d0b4e6c7$export$7c6e2c02157bb7d2),
+/* harmony export */   Description: () => (/* binding */ $5d3850c4d0b4e6c7$export$393edc798c47379d),
+/* harmony export */   Dialog: () => (/* binding */ $5d3850c4d0b4e6c7$export$3ddf2d174ce01153),
+/* harmony export */   DialogClose: () => (/* binding */ $5d3850c4d0b4e6c7$export$fba2fb7cd781b7ac),
+/* harmony export */   DialogContent: () => (/* binding */ $5d3850c4d0b4e6c7$export$b6d9565de1e068cf),
+/* harmony export */   DialogDescription: () => (/* binding */ $5d3850c4d0b4e6c7$export$94e94c2ec2c954d5),
+/* harmony export */   DialogOverlay: () => (/* binding */ $5d3850c4d0b4e6c7$export$bd1d06c79be19e17),
+/* harmony export */   DialogPortal: () => (/* binding */ $5d3850c4d0b4e6c7$export$dad7c95542bacce0),
+/* harmony export */   DialogTitle: () => (/* binding */ $5d3850c4d0b4e6c7$export$16f7638e4a34b909),
+/* harmony export */   DialogTrigger: () => (/* binding */ $5d3850c4d0b4e6c7$export$2e1e1122cf0cba88),
+/* harmony export */   Overlay: () => (/* binding */ $5d3850c4d0b4e6c7$export$c6fdb837b070b4ff),
+/* harmony export */   Portal: () => (/* binding */ $5d3850c4d0b4e6c7$export$602eac185826482c),
+/* harmony export */   Root: () => (/* binding */ $5d3850c4d0b4e6c7$export$be92b6f5f03c0fe9),
+/* harmony export */   Title: () => (/* binding */ $5d3850c4d0b4e6c7$export$f99233281efd08a0),
+/* harmony export */   Trigger: () => (/* binding */ $5d3850c4d0b4e6c7$export$41fb9f06171c75f4),
+/* harmony export */   WarningProvider: () => (/* binding */ $5d3850c4d0b4e6c7$export$69b62a49393917d6),
+/* harmony export */   createDialogScope: () => (/* binding */ $5d3850c4d0b4e6c7$export$cc702773b8ea3e41)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _radix_ui_primitive__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @radix-ui/primitive */ "./node_modules/cmdk/node_modules/@radix-ui/primitive/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @radix-ui/react-compose-refs */ "./node_modules/cmdk/node_modules/@radix-ui/react-compose-refs/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_context__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-context */ "./node_modules/cmdk/node_modules/@radix-ui/react-context/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_id__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @radix-ui/react-id */ "./node_modules/cmdk/node_modules/@radix-ui/react-id/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_use_controllable_state__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-use-controllable-state */ "./node_modules/cmdk/node_modules/@radix-ui/react-use-controllable-state/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_dismissable_layer__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @radix-ui/react-dismissable-layer */ "./node_modules/cmdk/node_modules/@radix-ui/react-dismissable-layer/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_focus_scope__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @radix-ui/react-focus-scope */ "./node_modules/cmdk/node_modules/@radix-ui/react-focus-scope/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_portal__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @radix-ui/react-portal */ "./node_modules/cmdk/node_modules/@radix-ui/react-portal/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_presence__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @radix-ui/react-presence */ "./node_modules/cmdk/node_modules/@radix-ui/react-presence/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @radix-ui/react-primitive */ "./node_modules/cmdk/node_modules/@radix-ui/react-primitive/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_focus_guards__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @radix-ui/react-focus-guards */ "./node_modules/cmdk/node_modules/@radix-ui/react-focus-guards/dist/index.module.js");
+/* harmony import */ var react_remove_scroll__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-remove-scroll */ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/Combination.js");
+/* harmony import */ var aria_hidden__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! aria-hidden */ "./node_modules/aria-hidden/dist/es2015/index.js");
+/* harmony import */ var _radix_ui_react_slot__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @radix-ui/react-slot */ "./node_modules/cmdk/node_modules/@radix-ui/react-slot/dist/index.module.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* -------------------------------------------------------------------------------------------------
+ * Dialog
+ * -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$DIALOG_NAME = 'Dialog';
+const [$5d3850c4d0b4e6c7$var$createDialogContext, $5d3850c4d0b4e6c7$export$cc702773b8ea3e41] = (0,_radix_ui_react_context__WEBPACK_IMPORTED_MODULE_2__.createContextScope)($5d3850c4d0b4e6c7$var$DIALOG_NAME);
+const [$5d3850c4d0b4e6c7$var$DialogProvider, $5d3850c4d0b4e6c7$var$useDialogContext] = $5d3850c4d0b4e6c7$var$createDialogContext($5d3850c4d0b4e6c7$var$DIALOG_NAME);
+const $5d3850c4d0b4e6c7$export$3ddf2d174ce01153 = (props)=>{
+    const { __scopeDialog: __scopeDialog , children: children , open: openProp , defaultOpen: defaultOpen , onOpenChange: onOpenChange , modal: modal = true  } = props;
+    const triggerRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const contentRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const [open = false, setOpen] = (0,_radix_ui_react_use_controllable_state__WEBPACK_IMPORTED_MODULE_3__.useControllableState)({
+        prop: openProp,
+        defaultProp: defaultOpen,
+        onChange: onOpenChange
+    });
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($5d3850c4d0b4e6c7$var$DialogProvider, {
+        scope: __scopeDialog,
+        triggerRef: triggerRef,
+        contentRef: contentRef,
+        contentId: (0,_radix_ui_react_id__WEBPACK_IMPORTED_MODULE_4__.useId)(),
+        titleId: (0,_radix_ui_react_id__WEBPACK_IMPORTED_MODULE_4__.useId)(),
+        descriptionId: (0,_radix_ui_react_id__WEBPACK_IMPORTED_MODULE_4__.useId)(),
+        open: open,
+        onOpenChange: setOpen,
+        onOpenToggle: (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(()=>setOpen((prevOpen)=>!prevOpen
+            )
+        , [
+            setOpen
+        ]),
+        modal: modal
+    }, children);
+};
+/*#__PURE__*/ Object.assign($5d3850c4d0b4e6c7$export$3ddf2d174ce01153, {
+    displayName: $5d3850c4d0b4e6c7$var$DIALOG_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * DialogTrigger
+ * -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$TRIGGER_NAME = 'DialogTrigger';
+const $5d3850c4d0b4e6c7$export$2e1e1122cf0cba88 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopeDialog: __scopeDialog , ...triggerProps } = props;
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$TRIGGER_NAME, __scopeDialog);
+    const composedTriggerRef = (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_5__.useComposedRefs)(forwardedRef, context.triggerRef);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_6__.Primitive.button, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        type: "button",
+        "aria-haspopup": "dialog",
+        "aria-expanded": context.open,
+        "aria-controls": context.contentId,
+        "data-state": $5d3850c4d0b4e6c7$var$getState(context.open)
+    }, triggerProps, {
+        ref: composedTriggerRef,
+        onClick: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_7__.composeEventHandlers)(props.onClick, context.onOpenToggle)
+    }));
+});
+/*#__PURE__*/ Object.assign($5d3850c4d0b4e6c7$export$2e1e1122cf0cba88, {
+    displayName: $5d3850c4d0b4e6c7$var$TRIGGER_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * DialogPortal
+ * -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$PORTAL_NAME = 'DialogPortal';
+const [$5d3850c4d0b4e6c7$var$PortalProvider, $5d3850c4d0b4e6c7$var$usePortalContext] = $5d3850c4d0b4e6c7$var$createDialogContext($5d3850c4d0b4e6c7$var$PORTAL_NAME, {
+    forceMount: undefined
+});
+const $5d3850c4d0b4e6c7$export$dad7c95542bacce0 = (props)=>{
+    const { __scopeDialog: __scopeDialog , forceMount: forceMount , children: children , container: container  } = props;
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$PORTAL_NAME, __scopeDialog);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($5d3850c4d0b4e6c7$var$PortalProvider, {
+        scope: __scopeDialog,
+        forceMount: forceMount
+    }, react__WEBPACK_IMPORTED_MODULE_1__.Children.map(children, (child)=>/*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_presence__WEBPACK_IMPORTED_MODULE_8__.Presence, {
+            present: forceMount || context.open
+        }, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_portal__WEBPACK_IMPORTED_MODULE_9__.Portal, {
+            asChild: true,
+            container: container
+        }, child))
+    ));
+};
+/*#__PURE__*/ Object.assign($5d3850c4d0b4e6c7$export$dad7c95542bacce0, {
+    displayName: $5d3850c4d0b4e6c7$var$PORTAL_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * DialogOverlay
+ * -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$OVERLAY_NAME = 'DialogOverlay';
+const $5d3850c4d0b4e6c7$export$bd1d06c79be19e17 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const portalContext = $5d3850c4d0b4e6c7$var$usePortalContext($5d3850c4d0b4e6c7$var$OVERLAY_NAME, props.__scopeDialog);
+    const { forceMount: forceMount = portalContext.forceMount , ...overlayProps } = props;
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$OVERLAY_NAME, props.__scopeDialog);
+    return context.modal ? /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_presence__WEBPACK_IMPORTED_MODULE_8__.Presence, {
+        present: forceMount || context.open
+    }, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($5d3850c4d0b4e6c7$var$DialogOverlayImpl, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, overlayProps, {
+        ref: forwardedRef
+    }))) : null;
+});
+/*#__PURE__*/ Object.assign($5d3850c4d0b4e6c7$export$bd1d06c79be19e17, {
+    displayName: $5d3850c4d0b4e6c7$var$OVERLAY_NAME
+});
+const $5d3850c4d0b4e6c7$var$DialogOverlayImpl = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopeDialog: __scopeDialog , ...overlayProps } = props;
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$OVERLAY_NAME, __scopeDialog);
+    return(/*#__PURE__*/ // Make sure `Content` is scrollable even when it doesn't live inside `RemoveScroll`
+    // ie. when `Overlay` and `Content` are siblings
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_remove_scroll__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        as: _radix_ui_react_slot__WEBPACK_IMPORTED_MODULE_11__.Slot,
+        allowPinchZoom: true,
+        shards: [
+            context.contentRef
+        ]
+    }, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_6__.Primitive.div, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        "data-state": $5d3850c4d0b4e6c7$var$getState(context.open)
+    }, overlayProps, {
+        ref: forwardedRef // We re-enable pointer-events prevented by `Dialog.Content` to allow scrolling the overlay.
+        ,
+        style: {
+            pointerEvents: 'auto',
+            ...overlayProps.style
+        }
+    }))));
+});
+/* -------------------------------------------------------------------------------------------------
+ * DialogContent
+ * -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$CONTENT_NAME = 'DialogContent';
+const $5d3850c4d0b4e6c7$export$b6d9565de1e068cf = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const portalContext = $5d3850c4d0b4e6c7$var$usePortalContext($5d3850c4d0b4e6c7$var$CONTENT_NAME, props.__scopeDialog);
+    const { forceMount: forceMount = portalContext.forceMount , ...contentProps } = props;
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$CONTENT_NAME, props.__scopeDialog);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_presence__WEBPACK_IMPORTED_MODULE_8__.Presence, {
+        present: forceMount || context.open
+    }, context.modal ? /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($5d3850c4d0b4e6c7$var$DialogContentModal, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, contentProps, {
+        ref: forwardedRef
+    })) : /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($5d3850c4d0b4e6c7$var$DialogContentNonModal, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, contentProps, {
+        ref: forwardedRef
+    })));
+});
+/*#__PURE__*/ Object.assign($5d3850c4d0b4e6c7$export$b6d9565de1e068cf, {
+    displayName: $5d3850c4d0b4e6c7$var$CONTENT_NAME
+});
+/* -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$DialogContentModal = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$CONTENT_NAME, props.__scopeDialog);
+    const contentRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const composedRefs = (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_5__.useComposedRefs)(forwardedRef, context.contentRef, contentRef); // aria-hide everything except the content (better supported equivalent to setting aria-modal)
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        const content = contentRef.current;
+        if (content) return (0,aria_hidden__WEBPACK_IMPORTED_MODULE_12__.hideOthers)(content);
+    }, []);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($5d3850c4d0b4e6c7$var$DialogContentImpl, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, props, {
+        ref: composedRefs // we make sure focus isn't trapped once `DialogContent` has been closed
+        ,
+        trapFocus: context.open,
+        disableOutsidePointerEvents: true,
+        onCloseAutoFocus: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_7__.composeEventHandlers)(props.onCloseAutoFocus, (event)=>{
+            var _context$triggerRef$c;
+            event.preventDefault();
+            (_context$triggerRef$c = context.triggerRef.current) === null || _context$triggerRef$c === void 0 || _context$triggerRef$c.focus();
+        }),
+        onPointerDownOutside: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_7__.composeEventHandlers)(props.onPointerDownOutside, (event)=>{
+            const originalEvent = event.detail.originalEvent;
+            const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;
+            const isRightClick = originalEvent.button === 2 || ctrlLeftClick; // If the event is a right-click, we shouldn't close because
+            // it is effectively as if we right-clicked the `Overlay`.
+            if (isRightClick) event.preventDefault();
+        }) // When focus is trapped, a `focusout` event may still happen.
+        ,
+        onFocusOutside: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_7__.composeEventHandlers)(props.onFocusOutside, (event)=>event.preventDefault()
+        )
+    }));
+});
+/* -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$DialogContentNonModal = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$CONTENT_NAME, props.__scopeDialog);
+    const hasInteractedOutsideRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(false);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($5d3850c4d0b4e6c7$var$DialogContentImpl, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, props, {
+        ref: forwardedRef,
+        trapFocus: false,
+        disableOutsidePointerEvents: false,
+        onCloseAutoFocus: (event)=>{
+            var _props$onCloseAutoFoc;
+            (_props$onCloseAutoFoc = props.onCloseAutoFocus) === null || _props$onCloseAutoFoc === void 0 || _props$onCloseAutoFoc.call(props, event);
+            if (!event.defaultPrevented) {
+                var _context$triggerRef$c2;
+                if (!hasInteractedOutsideRef.current) (_context$triggerRef$c2 = context.triggerRef.current) === null || _context$triggerRef$c2 === void 0 || _context$triggerRef$c2.focus(); // Always prevent auto focus because we either focus manually or want user agent focus
+                event.preventDefault();
+            }
+            hasInteractedOutsideRef.current = false;
+        },
+        onInteractOutside: (event)=>{
+            var _props$onInteractOuts, _context$triggerRef$c3;
+            (_props$onInteractOuts = props.onInteractOutside) === null || _props$onInteractOuts === void 0 || _props$onInteractOuts.call(props, event);
+            if (!event.defaultPrevented) hasInteractedOutsideRef.current = true; // Prevent dismissing when clicking the trigger.
+            // As the trigger is already setup to close, without doing so would
+            // cause it to close and immediately open.
+            //
+            // We use `onInteractOutside` as some browsers also
+            // focus on pointer down, creating the same issue.
+            const target = event.target;
+            const targetIsTrigger = (_context$triggerRef$c3 = context.triggerRef.current) === null || _context$triggerRef$c3 === void 0 ? void 0 : _context$triggerRef$c3.contains(target);
+            if (targetIsTrigger) event.preventDefault();
+        }
+    }));
+});
+/* -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$DialogContentImpl = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopeDialog: __scopeDialog , trapFocus: trapFocus , onOpenAutoFocus: onOpenAutoFocus , onCloseAutoFocus: onCloseAutoFocus , ...contentProps } = props;
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$CONTENT_NAME, __scopeDialog);
+    const contentRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const composedRefs = (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_5__.useComposedRefs)(forwardedRef, contentRef); // Make sure the whole tree has focus guards as our `Dialog` will be
+    // the last element in the DOM (beacuse of the `Portal`)
+    (0,_radix_ui_react_focus_guards__WEBPACK_IMPORTED_MODULE_13__.useFocusGuards)();
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_focus_scope__WEBPACK_IMPORTED_MODULE_14__.FocusScope, {
+        asChild: true,
+        loop: true,
+        trapped: trapFocus,
+        onMountAutoFocus: onOpenAutoFocus,
+        onUnmountAutoFocus: onCloseAutoFocus
+    }, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_dismissable_layer__WEBPACK_IMPORTED_MODULE_15__.DismissableLayer, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        role: "dialog",
+        id: context.contentId,
+        "aria-describedby": context.descriptionId,
+        "aria-labelledby": context.titleId,
+        "data-state": $5d3850c4d0b4e6c7$var$getState(context.open)
+    }, contentProps, {
+        ref: composedRefs,
+        onDismiss: ()=>context.onOpenChange(false)
+    }))), false);
+});
+/* -------------------------------------------------------------------------------------------------
+ * DialogTitle
+ * -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$TITLE_NAME = 'DialogTitle';
+const $5d3850c4d0b4e6c7$export$16f7638e4a34b909 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopeDialog: __scopeDialog , ...titleProps } = props;
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$TITLE_NAME, __scopeDialog);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_6__.Primitive.h2, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        id: context.titleId
+    }, titleProps, {
+        ref: forwardedRef
+    }));
+});
+/*#__PURE__*/ Object.assign($5d3850c4d0b4e6c7$export$16f7638e4a34b909, {
+    displayName: $5d3850c4d0b4e6c7$var$TITLE_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * DialogDescription
+ * -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$DESCRIPTION_NAME = 'DialogDescription';
+const $5d3850c4d0b4e6c7$export$94e94c2ec2c954d5 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopeDialog: __scopeDialog , ...descriptionProps } = props;
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$DESCRIPTION_NAME, __scopeDialog);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_6__.Primitive.p, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        id: context.descriptionId
+    }, descriptionProps, {
+        ref: forwardedRef
+    }));
+});
+/*#__PURE__*/ Object.assign($5d3850c4d0b4e6c7$export$94e94c2ec2c954d5, {
+    displayName: $5d3850c4d0b4e6c7$var$DESCRIPTION_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * DialogClose
+ * -----------------------------------------------------------------------------------------------*/ const $5d3850c4d0b4e6c7$var$CLOSE_NAME = 'DialogClose';
+const $5d3850c4d0b4e6c7$export$fba2fb7cd781b7ac = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopeDialog: __scopeDialog , ...closeProps } = props;
+    const context = $5d3850c4d0b4e6c7$var$useDialogContext($5d3850c4d0b4e6c7$var$CLOSE_NAME, __scopeDialog);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_6__.Primitive.button, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        type: "button"
+    }, closeProps, {
+        ref: forwardedRef,
+        onClick: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_7__.composeEventHandlers)(props.onClick, ()=>context.onOpenChange(false)
+        )
+    }));
+});
+/*#__PURE__*/ Object.assign($5d3850c4d0b4e6c7$export$fba2fb7cd781b7ac, {
+    displayName: $5d3850c4d0b4e6c7$var$CLOSE_NAME
+});
+/* -----------------------------------------------------------------------------------------------*/ function $5d3850c4d0b4e6c7$var$getState(open) {
+    return open ? 'open' : 'closed';
+}
+const $5d3850c4d0b4e6c7$var$TITLE_WARNING_NAME = 'DialogTitleWarning';
+const [$5d3850c4d0b4e6c7$export$69b62a49393917d6, $5d3850c4d0b4e6c7$var$useWarningContext] = (0,_radix_ui_react_context__WEBPACK_IMPORTED_MODULE_2__.createContext)($5d3850c4d0b4e6c7$var$TITLE_WARNING_NAME, {
+    contentName: $5d3850c4d0b4e6c7$var$CONTENT_NAME,
+    titleName: $5d3850c4d0b4e6c7$var$TITLE_NAME,
+    docsSlug: 'dialog'
+});
+const $5d3850c4d0b4e6c7$var$TitleWarning = ({ titleId: titleId  })=>{
+    const titleWarningContext = $5d3850c4d0b4e6c7$var$useWarningContext($5d3850c4d0b4e6c7$var$TITLE_WARNING_NAME);
+    const MESSAGE = `\`${titleWarningContext.contentName}\` requires a \`${titleWarningContext.titleName}\` for the component to be accessible for screen reader users.
+
+If you want to hide the \`${titleWarningContext.titleName}\`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/${titleWarningContext.docsSlug}`;
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        if (titleId) {
+            const hasTitle = document.getElementById(titleId);
+            if (!hasTitle) throw new Error(MESSAGE);
+        }
+    }, [
+        MESSAGE,
+        titleId
+    ]);
+    return null;
+};
+const $5d3850c4d0b4e6c7$var$DESCRIPTION_WARNING_NAME = 'DialogDescriptionWarning';
+const $5d3850c4d0b4e6c7$var$DescriptionWarning = ({ contentRef: contentRef , descriptionId: descriptionId  })=>{
+    const descriptionWarningContext = $5d3850c4d0b4e6c7$var$useWarningContext($5d3850c4d0b4e6c7$var$DESCRIPTION_WARNING_NAME);
+    const MESSAGE = `Warning: Missing \`Description\` or \`aria-describedby={undefined}\` for {${descriptionWarningContext.contentName}}.`;
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        var _contentRef$current;
+        const describedById = (_contentRef$current = contentRef.current) === null || _contentRef$current === void 0 ? void 0 : _contentRef$current.getAttribute('aria-describedby'); // if we have an id and the user hasn't set aria-describedby={undefined}
+        if (descriptionId && describedById) {
+            const hasDescription = document.getElementById(descriptionId);
+            if (!hasDescription) console.warn(MESSAGE);
+        }
+    }, [
+        MESSAGE,
+        contentRef,
+        descriptionId
+    ]);
+    return null;
+};
+const $5d3850c4d0b4e6c7$export$be92b6f5f03c0fe9 = $5d3850c4d0b4e6c7$export$3ddf2d174ce01153;
+const $5d3850c4d0b4e6c7$export$41fb9f06171c75f4 = $5d3850c4d0b4e6c7$export$2e1e1122cf0cba88;
+const $5d3850c4d0b4e6c7$export$602eac185826482c = $5d3850c4d0b4e6c7$export$dad7c95542bacce0;
+const $5d3850c4d0b4e6c7$export$c6fdb837b070b4ff = $5d3850c4d0b4e6c7$export$bd1d06c79be19e17;
+const $5d3850c4d0b4e6c7$export$7c6e2c02157bb7d2 = $5d3850c4d0b4e6c7$export$b6d9565de1e068cf;
+const $5d3850c4d0b4e6c7$export$f99233281efd08a0 = $5d3850c4d0b4e6c7$export$16f7638e4a34b909;
+const $5d3850c4d0b4e6c7$export$393edc798c47379d = $5d3850c4d0b4e6c7$export$94e94c2ec2c954d5;
+const $5d3850c4d0b4e6c7$export$f39c2d165cd861fe = $5d3850c4d0b4e6c7$export$fba2fb7cd781b7ac;
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-dismissable-layer/dist/index.module.js":
+/*!***********************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-dismissable-layer/dist/index.module.js ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Branch: () => (/* binding */ $5cb92bef7577960e$export$aecb2ddcb55c95be),
+/* harmony export */   DismissableLayer: () => (/* binding */ $5cb92bef7577960e$export$177fb62ff3ec1f22),
+/* harmony export */   DismissableLayerBranch: () => (/* binding */ $5cb92bef7577960e$export$4d5eb2109db14228),
+/* harmony export */   Root: () => (/* binding */ $5cb92bef7577960e$export$be92b6f5f03c0fe9)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _radix_ui_primitive__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @radix-ui/primitive */ "./node_modules/cmdk/node_modules/@radix-ui/primitive/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @radix-ui/react-primitive */ "./node_modules/cmdk/node_modules/@radix-ui/react-primitive/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-compose-refs */ "./node_modules/cmdk/node_modules/@radix-ui/react-compose-refs/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @radix-ui/react-use-callback-ref */ "./node_modules/cmdk/node_modules/@radix-ui/react-use-callback-ref/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_use_escape_keydown__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-use-escape-keydown */ "./node_modules/cmdk/node_modules/@radix-ui/react-use-escape-keydown/dist/index.module.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* -------------------------------------------------------------------------------------------------
+ * DismissableLayer
+ * -----------------------------------------------------------------------------------------------*/ const $5cb92bef7577960e$var$DISMISSABLE_LAYER_NAME = 'DismissableLayer';
+const $5cb92bef7577960e$var$CONTEXT_UPDATE = 'dismissableLayer.update';
+const $5cb92bef7577960e$var$POINTER_DOWN_OUTSIDE = 'dismissableLayer.pointerDownOutside';
+const $5cb92bef7577960e$var$FOCUS_OUTSIDE = 'dismissableLayer.focusOutside';
+let $5cb92bef7577960e$var$originalBodyPointerEvents;
+const $5cb92bef7577960e$var$DismissableLayerContext = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createContext)({
+    layers: new Set(),
+    layersWithOutsidePointerEventsDisabled: new Set(),
+    branches: new Set()
+});
+const $5cb92bef7577960e$export$177fb62ff3ec1f22 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { disableOutsidePointerEvents: disableOutsidePointerEvents = false , onEscapeKeyDown: onEscapeKeyDown , onPointerDownOutside: onPointerDownOutside , onFocusOutside: onFocusOutside , onInteractOutside: onInteractOutside , onDismiss: onDismiss , ...layerProps } = props;
+    const context = (0,react__WEBPACK_IMPORTED_MODULE_1__.useContext)($5cb92bef7577960e$var$DismissableLayerContext);
+    const [node1, setNode] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+    const [, force] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)({});
+    const composedRefs = (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_2__.useComposedRefs)(forwardedRef, (node)=>setNode(node)
+    );
+    const layers = Array.from(context.layers);
+    const [highestLayerWithOutsidePointerEventsDisabled] = [
+        ...context.layersWithOutsidePointerEventsDisabled
+    ].slice(-1); // prettier-ignore
+    const highestLayerWithOutsidePointerEventsDisabledIndex = layers.indexOf(highestLayerWithOutsidePointerEventsDisabled); // prettier-ignore
+    const index = node1 ? layers.indexOf(node1) : -1;
+    const isBodyPointerEventsDisabled = context.layersWithOutsidePointerEventsDisabled.size > 0;
+    const isPointerEventsEnabled = index >= highestLayerWithOutsidePointerEventsDisabledIndex;
+    const pointerDownOutside = $5cb92bef7577960e$var$usePointerDownOutside((event)=>{
+        const target = event.target;
+        const isPointerDownOnBranch = [
+            ...context.branches
+        ].some((branch)=>branch.contains(target)
+        );
+        if (!isPointerEventsEnabled || isPointerDownOnBranch) return;
+        onPointerDownOutside === null || onPointerDownOutside === void 0 || onPointerDownOutside(event);
+        onInteractOutside === null || onInteractOutside === void 0 || onInteractOutside(event);
+        if (!event.defaultPrevented) onDismiss === null || onDismiss === void 0 || onDismiss();
+    });
+    const focusOutside = $5cb92bef7577960e$var$useFocusOutside((event)=>{
+        const target = event.target;
+        const isFocusInBranch = [
+            ...context.branches
+        ].some((branch)=>branch.contains(target)
+        );
+        if (isFocusInBranch) return;
+        onFocusOutside === null || onFocusOutside === void 0 || onFocusOutside(event);
+        onInteractOutside === null || onInteractOutside === void 0 || onInteractOutside(event);
+        if (!event.defaultPrevented) onDismiss === null || onDismiss === void 0 || onDismiss();
+    });
+    (0,_radix_ui_react_use_escape_keydown__WEBPACK_IMPORTED_MODULE_3__.useEscapeKeydown)((event)=>{
+        const isHighestLayer = index === context.layers.size - 1;
+        if (!isHighestLayer) return;
+        onEscapeKeyDown === null || onEscapeKeyDown === void 0 || onEscapeKeyDown(event);
+        if (!event.defaultPrevented && onDismiss) {
+            event.preventDefault();
+            onDismiss();
+        }
+    });
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        if (!node1) return;
+        if (disableOutsidePointerEvents) {
+            if (context.layersWithOutsidePointerEventsDisabled.size === 0) {
+                $5cb92bef7577960e$var$originalBodyPointerEvents = document.body.style.pointerEvents;
+                document.body.style.pointerEvents = 'none';
+            }
+            context.layersWithOutsidePointerEventsDisabled.add(node1);
+        }
+        context.layers.add(node1);
+        $5cb92bef7577960e$var$dispatchUpdate();
+        return ()=>{
+            if (disableOutsidePointerEvents && context.layersWithOutsidePointerEventsDisabled.size === 1) document.body.style.pointerEvents = $5cb92bef7577960e$var$originalBodyPointerEvents;
+        };
+    }, [
+        node1,
+        disableOutsidePointerEvents,
+        context
+    ]);
+    /**
+   * We purposefully prevent combining this effect with the `disableOutsidePointerEvents` effect
+   * because a change to `disableOutsidePointerEvents` would remove this layer from the stack
+   * and add it to the end again so the layering order wouldn't be _creation order_.
+   * We only want them to be removed from context stacks when unmounted.
+   */ (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        return ()=>{
+            if (!node1) return;
+            context.layers.delete(node1);
+            context.layersWithOutsidePointerEventsDisabled.delete(node1);
+            $5cb92bef7577960e$var$dispatchUpdate();
+        };
+    }, [
+        node1,
+        context
+    ]);
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        const handleUpdate = ()=>force({})
+        ;
+        document.addEventListener($5cb92bef7577960e$var$CONTEXT_UPDATE, handleUpdate);
+        return ()=>document.removeEventListener($5cb92bef7577960e$var$CONTEXT_UPDATE, handleUpdate)
+        ;
+    }, []);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_4__.Primitive.div, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, layerProps, {
+        ref: composedRefs,
+        style: {
+            pointerEvents: isBodyPointerEventsDisabled ? isPointerEventsEnabled ? 'auto' : 'none' : undefined,
+            ...props.style
+        },
+        onFocusCapture: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_5__.composeEventHandlers)(props.onFocusCapture, focusOutside.onFocusCapture),
+        onBlurCapture: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_5__.composeEventHandlers)(props.onBlurCapture, focusOutside.onBlurCapture),
+        onPointerDownCapture: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_5__.composeEventHandlers)(props.onPointerDownCapture, pointerDownOutside.onPointerDownCapture)
+    }));
+});
+/*#__PURE__*/ Object.assign($5cb92bef7577960e$export$177fb62ff3ec1f22, {
+    displayName: $5cb92bef7577960e$var$DISMISSABLE_LAYER_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * DismissableLayerBranch
+ * -----------------------------------------------------------------------------------------------*/ const $5cb92bef7577960e$var$BRANCH_NAME = 'DismissableLayerBranch';
+const $5cb92bef7577960e$export$4d5eb2109db14228 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const context = (0,react__WEBPACK_IMPORTED_MODULE_1__.useContext)($5cb92bef7577960e$var$DismissableLayerContext);
+    const ref = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const composedRefs = (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_2__.useComposedRefs)(forwardedRef, ref);
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        const node = ref.current;
+        if (node) {
+            context.branches.add(node);
+            return ()=>{
+                context.branches.delete(node);
+            };
+        }
+    }, [
+        context.branches
+    ]);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_4__.Primitive.div, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, props, {
+        ref: composedRefs
+    }));
+});
+/*#__PURE__*/ Object.assign($5cb92bef7577960e$export$4d5eb2109db14228, {
+    displayName: $5cb92bef7577960e$var$BRANCH_NAME
+});
+/* -----------------------------------------------------------------------------------------------*/ /**
+ * Listens for `pointerdown` outside a react subtree. We use `pointerdown` rather than `pointerup`
+ * to mimic layer dismissing behaviour present in OS.
+ * Returns props to pass to the node we want to check for outside events.
+ */ function $5cb92bef7577960e$var$usePointerDownOutside(onPointerDownOutside) {
+    const handlePointerDownOutside = (0,_radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_6__.useCallbackRef)(onPointerDownOutside);
+    const isPointerInsideReactTreeRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(false);
+    const handleClickRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(()=>{});
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        const handlePointerDown = (event)=>{
+            if (event.target && !isPointerInsideReactTreeRef.current) {
+                const eventDetail = {
+                    originalEvent: event
+                };
+                function handleAndDispatchPointerDownOutsideEvent() {
+                    $5cb92bef7577960e$var$handleAndDispatchCustomEvent($5cb92bef7577960e$var$POINTER_DOWN_OUTSIDE, handlePointerDownOutside, eventDetail, {
+                        discrete: true
+                    });
+                }
+                /**
+         * On touch devices, we need to wait for a click event because browsers implement
+         * a ~350ms delay between the time the user stops touching the display and when the
+         * browser executres events. We need to ensure we don't reactivate pointer-events within
+         * this timeframe otherwise the browser may execute events that should have been prevented.
+         *
+         * Additionally, this also lets us deal automatically with cancellations when a click event
+         * isn't raised because the page was considered scrolled/drag-scrolled, long-pressed, etc.
+         *
+         * This is why we also continuously remove the previous listener, because we cannot be
+         * certain that it was raised, and therefore cleaned-up.
+         */ if (event.pointerType === 'touch') {
+                    document.removeEventListener('click', handleClickRef.current);
+                    handleClickRef.current = handleAndDispatchPointerDownOutsideEvent;
+                    document.addEventListener('click', handleClickRef.current, {
+                        once: true
+                    });
+                } else handleAndDispatchPointerDownOutsideEvent();
+            }
+            isPointerInsideReactTreeRef.current = false;
+        };
+        /**
+     * if this hook executes in a component that mounts via a `pointerdown` event, the event
+     * would bubble up to the document and trigger a `pointerDownOutside` event. We avoid
+     * this by delaying the event listener registration on the document.
+     * This is not React specific, but rather how the DOM works, ie:
+     * ```
+     * button.addEventListener('pointerdown', () => {
+     *   console.log('I will log');
+     *   document.addEventListener('pointerdown', () => {
+     *     console.log('I will also log');
+     *   })
+     * });
+     */ const timerId = window.setTimeout(()=>{
+            document.addEventListener('pointerdown', handlePointerDown);
+        }, 0);
+        return ()=>{
+            window.clearTimeout(timerId);
+            document.removeEventListener('pointerdown', handlePointerDown);
+            document.removeEventListener('click', handleClickRef.current);
+        };
+    }, [
+        handlePointerDownOutside
+    ]);
+    return {
+        // ensures we check React component tree (not just DOM tree)
+        onPointerDownCapture: ()=>isPointerInsideReactTreeRef.current = true
+    };
+}
+/**
+ * Listens for when focus happens outside a react subtree.
+ * Returns props to pass to the root (node) of the subtree we want to check.
+ */ function $5cb92bef7577960e$var$useFocusOutside(onFocusOutside) {
+    const handleFocusOutside = (0,_radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_6__.useCallbackRef)(onFocusOutside);
+    const isFocusInsideReactTreeRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(false);
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        const handleFocus = (event)=>{
+            if (event.target && !isFocusInsideReactTreeRef.current) {
+                const eventDetail = {
+                    originalEvent: event
+                };
+                $5cb92bef7577960e$var$handleAndDispatchCustomEvent($5cb92bef7577960e$var$FOCUS_OUTSIDE, handleFocusOutside, eventDetail, {
+                    discrete: false
+                });
+            }
+        };
+        document.addEventListener('focusin', handleFocus);
+        return ()=>document.removeEventListener('focusin', handleFocus)
+        ;
+    }, [
+        handleFocusOutside
+    ]);
+    return {
+        onFocusCapture: ()=>isFocusInsideReactTreeRef.current = true
+        ,
+        onBlurCapture: ()=>isFocusInsideReactTreeRef.current = false
+    };
+}
+function $5cb92bef7577960e$var$dispatchUpdate() {
+    const event = new CustomEvent($5cb92bef7577960e$var$CONTEXT_UPDATE);
+    document.dispatchEvent(event);
+}
+function $5cb92bef7577960e$var$handleAndDispatchCustomEvent(name, handler, detail, { discrete: discrete  }) {
+    const target = detail.originalEvent.target;
+    const event = new CustomEvent(name, {
+        bubbles: false,
+        cancelable: true,
+        detail: detail
+    });
+    if (handler) target.addEventListener(name, handler, {
+        once: true
+    });
+    if (discrete) (0,_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_4__.dispatchDiscreteCustomEvent)(target, event);
+    else target.dispatchEvent(event);
+}
+const $5cb92bef7577960e$export$be92b6f5f03c0fe9 = $5cb92bef7577960e$export$177fb62ff3ec1f22;
+const $5cb92bef7577960e$export$aecb2ddcb55c95be = $5cb92bef7577960e$export$4d5eb2109db14228;
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-focus-guards/dist/index.module.js":
+/*!******************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-focus-guards/dist/index.module.js ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FocusGuards: () => (/* binding */ $3db38b7d1fb3fe6a$export$ac5b58043b79449b),
+/* harmony export */   Root: () => (/* binding */ $3db38b7d1fb3fe6a$export$be92b6f5f03c0fe9),
+/* harmony export */   useFocusGuards: () => (/* binding */ $3db38b7d1fb3fe6a$export$b7ece24a22aeda8c)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+/** Number of components which have requested interest to have focus guards */ let $3db38b7d1fb3fe6a$var$count = 0;
+function $3db38b7d1fb3fe6a$export$ac5b58043b79449b(props) {
+    $3db38b7d1fb3fe6a$export$b7ece24a22aeda8c();
+    return props.children;
+}
+/**
+ * Injects a pair of focus guards at the edges of the whole DOM tree
+ * to ensure `focusin` & `focusout` events can be caught consistently.
+ */ function $3db38b7d1fb3fe6a$export$b7ece24a22aeda8c() {
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(()=>{
+        var _edgeGuards$, _edgeGuards$2;
+        const edgeGuards = document.querySelectorAll('[data-radix-focus-guard]');
+        document.body.insertAdjacentElement('afterbegin', (_edgeGuards$ = edgeGuards[0]) !== null && _edgeGuards$ !== void 0 ? _edgeGuards$ : $3db38b7d1fb3fe6a$var$createFocusGuard());
+        document.body.insertAdjacentElement('beforeend', (_edgeGuards$2 = edgeGuards[1]) !== null && _edgeGuards$2 !== void 0 ? _edgeGuards$2 : $3db38b7d1fb3fe6a$var$createFocusGuard());
+        $3db38b7d1fb3fe6a$var$count++;
+        return ()=>{
+            if ($3db38b7d1fb3fe6a$var$count === 1) document.querySelectorAll('[data-radix-focus-guard]').forEach((node)=>node.remove()
+            );
+            $3db38b7d1fb3fe6a$var$count--;
+        };
+    }, []);
+}
+function $3db38b7d1fb3fe6a$var$createFocusGuard() {
+    const element = document.createElement('span');
+    element.setAttribute('data-radix-focus-guard', '');
+    element.tabIndex = 0;
+    element.style.cssText = 'outline: none; opacity: 0; position: fixed; pointer-events: none';
+    return element;
+}
+const $3db38b7d1fb3fe6a$export$be92b6f5f03c0fe9 = $3db38b7d1fb3fe6a$export$ac5b58043b79449b;
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-focus-scope/dist/index.module.js":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-focus-scope/dist/index.module.js ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FocusScope: () => (/* binding */ $d3863c46a17e8a28$export$20e40289641fbbb6),
+/* harmony export */   Root: () => (/* binding */ $d3863c46a17e8a28$export$be92b6f5f03c0fe9)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-compose-refs */ "./node_modules/cmdk/node_modules/@radix-ui/react-compose-refs/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @radix-ui/react-primitive */ "./node_modules/cmdk/node_modules/@radix-ui/react-primitive/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-use-callback-ref */ "./node_modules/cmdk/node_modules/@radix-ui/react-use-callback-ref/dist/index.module.js");
+
+
+
+
+
+
+
+
+
+
+
+const $d3863c46a17e8a28$var$AUTOFOCUS_ON_MOUNT = 'focusScope.autoFocusOnMount';
+const $d3863c46a17e8a28$var$AUTOFOCUS_ON_UNMOUNT = 'focusScope.autoFocusOnUnmount';
+const $d3863c46a17e8a28$var$EVENT_OPTIONS = {
+    bubbles: false,
+    cancelable: true
+};
+/* -------------------------------------------------------------------------------------------------
+ * FocusScope
+ * -----------------------------------------------------------------------------------------------*/ const $d3863c46a17e8a28$var$FOCUS_SCOPE_NAME = 'FocusScope';
+const $d3863c46a17e8a28$export$20e40289641fbbb6 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { loop: loop = false , trapped: trapped = false , onMountAutoFocus: onMountAutoFocusProp , onUnmountAutoFocus: onUnmountAutoFocusProp , ...scopeProps } = props;
+    const [container1, setContainer] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+    const onMountAutoFocus = (0,_radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_2__.useCallbackRef)(onMountAutoFocusProp);
+    const onUnmountAutoFocus = (0,_radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_2__.useCallbackRef)(onUnmountAutoFocusProp);
+    const lastFocusedElementRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const composedRefs = (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_3__.useComposedRefs)(forwardedRef, (node)=>setContainer(node)
+    );
+    const focusScope = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)({
+        paused: false,
+        pause () {
+            this.paused = true;
+        },
+        resume () {
+            this.paused = false;
+        }
+    }).current; // Takes care of trapping focus if focus is moved outside programmatically for example
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        if (trapped) {
+            function handleFocusIn(event) {
+                if (focusScope.paused || !container1) return;
+                const target = event.target;
+                if (container1.contains(target)) lastFocusedElementRef.current = target;
+                else $d3863c46a17e8a28$var$focus(lastFocusedElementRef.current, {
+                    select: true
+                });
+            }
+            function handleFocusOut(event) {
+                if (focusScope.paused || !container1) return;
+                if (!container1.contains(event.relatedTarget)) $d3863c46a17e8a28$var$focus(lastFocusedElementRef.current, {
+                    select: true
+                });
+            }
+            document.addEventListener('focusin', handleFocusIn);
+            document.addEventListener('focusout', handleFocusOut);
+            return ()=>{
+                document.removeEventListener('focusin', handleFocusIn);
+                document.removeEventListener('focusout', handleFocusOut);
+            };
+        }
+    }, [
+        trapped,
+        container1,
+        focusScope.paused
+    ]);
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        if (container1) {
+            $d3863c46a17e8a28$var$focusScopesStack.add(focusScope);
+            const previouslyFocusedElement = document.activeElement;
+            const hasFocusedCandidate = container1.contains(previouslyFocusedElement);
+            if (!hasFocusedCandidate) {
+                const mountEvent = new CustomEvent($d3863c46a17e8a28$var$AUTOFOCUS_ON_MOUNT, $d3863c46a17e8a28$var$EVENT_OPTIONS);
+                container1.addEventListener($d3863c46a17e8a28$var$AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
+                container1.dispatchEvent(mountEvent);
+                if (!mountEvent.defaultPrevented) {
+                    $d3863c46a17e8a28$var$focusFirst($d3863c46a17e8a28$var$removeLinks($d3863c46a17e8a28$var$getTabbableCandidates(container1)), {
+                        select: true
+                    });
+                    if (document.activeElement === previouslyFocusedElement) $d3863c46a17e8a28$var$focus(container1);
+                }
+            }
+            return ()=>{
+                container1.removeEventListener($d3863c46a17e8a28$var$AUTOFOCUS_ON_MOUNT, onMountAutoFocus); // We hit a react bug (fixed in v17) with focusing in unmount.
+                // We need to delay the focus a little to get around it for now.
+                // See: https://github.com/facebook/react/issues/17894
+                setTimeout(()=>{
+                    const unmountEvent = new CustomEvent($d3863c46a17e8a28$var$AUTOFOCUS_ON_UNMOUNT, $d3863c46a17e8a28$var$EVENT_OPTIONS);
+                    container1.addEventListener($d3863c46a17e8a28$var$AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
+                    container1.dispatchEvent(unmountEvent);
+                    if (!unmountEvent.defaultPrevented) $d3863c46a17e8a28$var$focus(previouslyFocusedElement !== null && previouslyFocusedElement !== void 0 ? previouslyFocusedElement : document.body, {
+                        select: true
+                    });
+                     // we need to remove the listener after we `dispatchEvent`
+                    container1.removeEventListener($d3863c46a17e8a28$var$AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
+                    $d3863c46a17e8a28$var$focusScopesStack.remove(focusScope);
+                }, 0);
+            };
+        }
+    }, [
+        container1,
+        onMountAutoFocus,
+        onUnmountAutoFocus,
+        focusScope
+    ]); // Takes care of looping focus (when tabbing whilst at the edges)
+    const handleKeyDown = (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)((event)=>{
+        if (!loop && !trapped) return;
+        if (focusScope.paused) return;
+        const isTabKey = event.key === 'Tab' && !event.altKey && !event.ctrlKey && !event.metaKey;
+        const focusedElement = document.activeElement;
+        if (isTabKey && focusedElement) {
+            const container = event.currentTarget;
+            const [first, last] = $d3863c46a17e8a28$var$getTabbableEdges(container);
+            const hasTabbableElementsInside = first && last; // we can only wrap focus if we have tabbable edges
+            if (!hasTabbableElementsInside) {
+                if (focusedElement === container) event.preventDefault();
+            } else {
+                if (!event.shiftKey && focusedElement === last) {
+                    event.preventDefault();
+                    if (loop) $d3863c46a17e8a28$var$focus(first, {
+                        select: true
+                    });
+                } else if (event.shiftKey && focusedElement === first) {
+                    event.preventDefault();
+                    if (loop) $d3863c46a17e8a28$var$focus(last, {
+                        select: true
+                    });
+                }
+            }
+        }
+    }, [
+        loop,
+        trapped,
+        focusScope.paused
+    ]);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_4__.Primitive.div, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        tabIndex: -1
+    }, scopeProps, {
+        ref: composedRefs,
+        onKeyDown: handleKeyDown
+    }));
+});
+/*#__PURE__*/ Object.assign($d3863c46a17e8a28$export$20e40289641fbbb6, {
+    displayName: $d3863c46a17e8a28$var$FOCUS_SCOPE_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * Utils
+ * -----------------------------------------------------------------------------------------------*/ /**
+ * Attempts focusing the first element in a list of candidates.
+ * Stops when focus has actually moved.
+ */ function $d3863c46a17e8a28$var$focusFirst(candidates, { select: select = false  } = {}) {
+    const previouslyFocusedElement = document.activeElement;
+    for (const candidate of candidates){
+        $d3863c46a17e8a28$var$focus(candidate, {
+            select: select
+        });
+        if (document.activeElement !== previouslyFocusedElement) return;
+    }
+}
+/**
+ * Returns the first and last tabbable elements inside a container.
+ */ function $d3863c46a17e8a28$var$getTabbableEdges(container) {
+    const candidates = $d3863c46a17e8a28$var$getTabbableCandidates(container);
+    const first = $d3863c46a17e8a28$var$findVisible(candidates, container);
+    const last = $d3863c46a17e8a28$var$findVisible(candidates.reverse(), container);
+    return [
+        first,
+        last
+    ];
+}
+/**
+ * Returns a list of potential tabbable candidates.
+ *
+ * NOTE: This is only a close approximation. For example it doesn't take into account cases like when
+ * elements are not visible. This cannot be worked out easily by just reading a property, but rather
+ * necessitate runtime knowledge (computed styles, etc). We deal with these cases separately.
+ *
+ * See: https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker
+ * Credit: https://github.com/discord/focus-layers/blob/master/src/util/wrapFocus.tsx#L1
+ */ function $d3863c46a17e8a28$var$getTabbableCandidates(container) {
+    const nodes = [];
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, {
+        acceptNode: (node)=>{
+            const isHiddenInput = node.tagName === 'INPUT' && node.type === 'hidden';
+            if (node.disabled || node.hidden || isHiddenInput) return NodeFilter.FILTER_SKIP; // `.tabIndex` is not the same as the `tabindex` attribute. It works on the
+            // runtime's understanding of tabbability, so this automatically accounts
+            // for any kind of element that could be tabbed to.
+            return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+        }
+    });
+    while(walker.nextNode())nodes.push(walker.currentNode); // we do not take into account the order of nodes with positive `tabIndex` as it
+    // hinders accessibility to have tab order different from visual order.
+    return nodes;
+}
+/**
+ * Returns the first visible element in a list.
+ * NOTE: Only checks visibility up to the `container`.
+ */ function $d3863c46a17e8a28$var$findVisible(elements, container) {
+    for (const element of elements){
+        // we stop checking if it's hidden at the `container` level (excluding)
+        if (!$d3863c46a17e8a28$var$isHidden(element, {
+            upTo: container
+        })) return element;
+    }
+}
+function $d3863c46a17e8a28$var$isHidden(node, { upTo: upTo  }) {
+    if (getComputedStyle(node).visibility === 'hidden') return true;
+    while(node){
+        // we stop at `upTo` (excluding it)
+        if (upTo !== undefined && node === upTo) return false;
+        if (getComputedStyle(node).display === 'none') return true;
+        node = node.parentElement;
+    }
+    return false;
+}
+function $d3863c46a17e8a28$var$isSelectableInput(element) {
+    return element instanceof HTMLInputElement && 'select' in element;
+}
+function $d3863c46a17e8a28$var$focus(element, { select: select = false  } = {}) {
+    // only focus if that element is focusable
+    if (element && element.focus) {
+        const previouslyFocusedElement = document.activeElement; // NOTE: we prevent scrolling on focus, to minimize jarring transitions for users
+        element.focus({
+            preventScroll: true
+        }); // only select if its not the same element, it supports selection and we need to select
+        if (element !== previouslyFocusedElement && $d3863c46a17e8a28$var$isSelectableInput(element) && select) element.select();
+    }
+}
+/* -------------------------------------------------------------------------------------------------
+ * FocusScope stack
+ * -----------------------------------------------------------------------------------------------*/ const $d3863c46a17e8a28$var$focusScopesStack = $d3863c46a17e8a28$var$createFocusScopesStack();
+function $d3863c46a17e8a28$var$createFocusScopesStack() {
+    /** A stack of focus scopes, with the active one at the top */ let stack = [];
+    return {
+        add (focusScope) {
+            // pause the currently active focus scope (at the top of the stack)
+            const activeFocusScope = stack[0];
+            if (focusScope !== activeFocusScope) activeFocusScope === null || activeFocusScope === void 0 || activeFocusScope.pause();
+             // remove in case it already exists (because we'll re-add it at the top of the stack)
+            stack = $d3863c46a17e8a28$var$arrayRemove(stack, focusScope);
+            stack.unshift(focusScope);
+        },
+        remove (focusScope) {
+            var _stack$;
+            stack = $d3863c46a17e8a28$var$arrayRemove(stack, focusScope);
+            (_stack$ = stack[0]) === null || _stack$ === void 0 || _stack$.resume();
+        }
+    };
+}
+function $d3863c46a17e8a28$var$arrayRemove(array, item) {
+    const updatedArray = [
+        ...array
+    ];
+    const index = updatedArray.indexOf(item);
+    if (index !== -1) updatedArray.splice(index, 1);
+    return updatedArray;
+}
+function $d3863c46a17e8a28$var$removeLinks(items) {
+    return items.filter((item)=>item.tagName !== 'A'
+    );
+}
+const $d3863c46a17e8a28$export$be92b6f5f03c0fe9 = $d3863c46a17e8a28$export$20e40289641fbbb6;
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-id/dist/index.module.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-id/dist/index.module.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useId: () => (/* binding */ $1746a345f3d73bb7$export$f680877a34711e37)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _radix_ui_react_use_layout_effect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @radix-ui/react-use-layout-effect */ "./node_modules/cmdk/node_modules/@radix-ui/react-use-layout-effect/dist/index.module.js");
+
+
+
+
+
+const $1746a345f3d73bb7$var$useReactId = react__WEBPACK_IMPORTED_MODULE_0__['useId'.toString()] || (()=>undefined
+);
+let $1746a345f3d73bb7$var$count = 0;
+function $1746a345f3d73bb7$export$f680877a34711e37(deterministicId) {
+    const [id, setId] = react__WEBPACK_IMPORTED_MODULE_0__.useState($1746a345f3d73bb7$var$useReactId()); // React versions older than 18 will have client-side ids only.
+    (0,_radix_ui_react_use_layout_effect__WEBPACK_IMPORTED_MODULE_1__.useLayoutEffect)(()=>{
+        if (!deterministicId) setId((reactId)=>reactId !== null && reactId !== void 0 ? reactId : String($1746a345f3d73bb7$var$count++)
+        );
+    }, [
+        deterministicId
+    ]);
+    return deterministicId || (id ? `radix-${id}` : '');
+}
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-portal/dist/index.module.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-portal/dist/index.module.js ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Portal: () => (/* binding */ $f1701beae083dbae$export$602eac185826482c),
+/* harmony export */   Root: () => (/* binding */ $f1701beae083dbae$export$be92b6f5f03c0fe9)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var _radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-primitive */ "./node_modules/cmdk/node_modules/@radix-ui/react-primitive/dist/index.module.js");
+
+
+
+
+
+
+
+
+
+/* -------------------------------------------------------------------------------------------------
+ * Portal
+ * -----------------------------------------------------------------------------------------------*/ const $f1701beae083dbae$var$PORTAL_NAME = 'Portal';
+const $f1701beae083dbae$export$602eac185826482c = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    var _globalThis$document;
+    const { container: container = globalThis === null || globalThis === void 0 ? void 0 : (_globalThis$document = globalThis.document) === null || _globalThis$document === void 0 ? void 0 : _globalThis$document.body , ...portalProps } = props;
+    return container ? /*#__PURE__*/ react_dom__WEBPACK_IMPORTED_MODULE_2__.createPortal(/*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_3__.Primitive.div, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, portalProps, {
+        ref: forwardedRef
+    })), container) : null;
+});
+/*#__PURE__*/ Object.assign($f1701beae083dbae$export$602eac185826482c, {
+    displayName: $f1701beae083dbae$var$PORTAL_NAME
+});
+/* -----------------------------------------------------------------------------------------------*/ const $f1701beae083dbae$export$be92b6f5f03c0fe9 = $f1701beae083dbae$export$602eac185826482c;
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-presence/dist/index.module.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-presence/dist/index.module.js ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Presence: () => (/* binding */ $921a889cee6df7e8$export$99c2b779aa4e8b8b)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var _radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-compose-refs */ "./node_modules/cmdk/node_modules/@radix-ui/react-compose-refs/dist/index.module.js");
+/* harmony import */ var _radix_ui_react_use_layout_effect__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-use-layout-effect */ "./node_modules/cmdk/node_modules/@radix-ui/react-use-layout-effect/dist/index.module.js");
+
+
+
+
+
+
+
+
+
+
+function $fe963b355347cc68$export$3e6543de14f8614f(initialState, machine) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.useReducer)((state, event)=>{
+        const nextState = machine[state][event];
+        return nextState !== null && nextState !== void 0 ? nextState : state;
+    }, initialState);
+}
+
+
+const $921a889cee6df7e8$export$99c2b779aa4e8b8b = (props)=>{
+    const { present: present , children: children  } = props;
+    const presence = $921a889cee6df7e8$var$usePresence(present);
+    const child = typeof children === 'function' ? children({
+        present: presence.isPresent
+    }) : react__WEBPACK_IMPORTED_MODULE_0__.Children.only(children);
+    const ref = (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_2__.useComposedRefs)(presence.ref, child.ref);
+    const forceMount = typeof children === 'function';
+    return forceMount || presence.isPresent ? /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_0__.cloneElement)(child, {
+        ref: ref
+    }) : null;
+};
+$921a889cee6df7e8$export$99c2b779aa4e8b8b.displayName = 'Presence';
+/* -------------------------------------------------------------------------------------------------
+ * usePresence
+ * -----------------------------------------------------------------------------------------------*/ function $921a889cee6df7e8$var$usePresence(present) {
+    const [node1, setNode] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)();
+    const stylesRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)({});
+    const prevPresentRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(present);
+    const prevAnimationNameRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)('none');
+    const initialState = present ? 'mounted' : 'unmounted';
+    const [state, send] = $fe963b355347cc68$export$3e6543de14f8614f(initialState, {
+        mounted: {
+            UNMOUNT: 'unmounted',
+            ANIMATION_OUT: 'unmountSuspended'
+        },
+        unmountSuspended: {
+            MOUNT: 'mounted',
+            ANIMATION_END: 'unmounted'
+        },
+        unmounted: {
+            MOUNT: 'mounted'
+        }
+    });
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(()=>{
+        const currentAnimationName = $921a889cee6df7e8$var$getAnimationName(stylesRef.current);
+        prevAnimationNameRef.current = state === 'mounted' ? currentAnimationName : 'none';
+    }, [
+        state
+    ]);
+    (0,_radix_ui_react_use_layout_effect__WEBPACK_IMPORTED_MODULE_3__.useLayoutEffect)(()=>{
+        const styles = stylesRef.current;
+        const wasPresent = prevPresentRef.current;
+        const hasPresentChanged = wasPresent !== present;
+        if (hasPresentChanged) {
+            const prevAnimationName = prevAnimationNameRef.current;
+            const currentAnimationName = $921a889cee6df7e8$var$getAnimationName(styles);
+            if (present) send('MOUNT');
+            else if (currentAnimationName === 'none' || (styles === null || styles === void 0 ? void 0 : styles.display) === 'none') // If there is no exit animation or the element is hidden, animations won't run
+            // so we unmount instantly
+            send('UNMOUNT');
+            else {
+                /**
+         * When `present` changes to `false`, we check changes to animation-name to
+         * determine whether an animation has started. We chose this approach (reading
+         * computed styles) because there is no `animationrun` event and `animationstart`
+         * fires after `animation-delay` has expired which would be too late.
+         */ const isAnimating = prevAnimationName !== currentAnimationName;
+                if (wasPresent && isAnimating) send('ANIMATION_OUT');
+                else send('UNMOUNT');
+            }
+            prevPresentRef.current = present;
+        }
+    }, [
+        present,
+        send
+    ]);
+    (0,_radix_ui_react_use_layout_effect__WEBPACK_IMPORTED_MODULE_3__.useLayoutEffect)(()=>{
+        if (node1) {
+            /**
+       * Triggering an ANIMATION_OUT during an ANIMATION_IN will fire an `animationcancel`
+       * event for ANIMATION_IN after we have entered `unmountSuspended` state. So, we
+       * make sure we only trigger ANIMATION_END for the currently active animation.
+       */ const handleAnimationEnd = (event)=>{
+                const currentAnimationName = $921a889cee6df7e8$var$getAnimationName(stylesRef.current);
+                const isCurrentAnimation = currentAnimationName.includes(event.animationName);
+                if (event.target === node1 && isCurrentAnimation) // With React 18 concurrency this update is applied
+                // a frame after the animation ends, creating a flash of visible content.
+                // By manually flushing we ensure they sync within a frame, removing the flash.
+                (0,react_dom__WEBPACK_IMPORTED_MODULE_1__.flushSync)(()=>send('ANIMATION_END')
+                );
+            };
+            const handleAnimationStart = (event)=>{
+                if (event.target === node1) // if animation occurred, store its name as the previous animation.
+                prevAnimationNameRef.current = $921a889cee6df7e8$var$getAnimationName(stylesRef.current);
+            };
+            node1.addEventListener('animationstart', handleAnimationStart);
+            node1.addEventListener('animationcancel', handleAnimationEnd);
+            node1.addEventListener('animationend', handleAnimationEnd);
+            return ()=>{
+                node1.removeEventListener('animationstart', handleAnimationStart);
+                node1.removeEventListener('animationcancel', handleAnimationEnd);
+                node1.removeEventListener('animationend', handleAnimationEnd);
+            };
+        } else // Transition to the unmounted state if the node is removed prematurely.
+        // We avoid doing so during cleanup as the node may change but still exist.
+        send('ANIMATION_END');
+    }, [
+        node1,
+        send
+    ]);
+    return {
+        isPresent: [
+            'mounted',
+            'unmountSuspended'
+        ].includes(state),
+        ref: (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((node)=>{
+            if (node) stylesRef.current = getComputedStyle(node);
+            setNode(node);
+        }, [])
+    };
+}
+/* -----------------------------------------------------------------------------------------------*/ function $921a889cee6df7e8$var$getAnimationName(styles) {
+    return (styles === null || styles === void 0 ? void 0 : styles.animationName) || 'none';
+}
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-primitive/dist/index.module.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-primitive/dist/index.module.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Primitive: () => (/* binding */ $8927f6f2acc4f386$export$250ffa63cdc0d034),
+/* harmony export */   Root: () => (/* binding */ $8927f6f2acc4f386$export$be92b6f5f03c0fe9),
+/* harmony export */   dispatchDiscreteCustomEvent: () => (/* binding */ $8927f6f2acc4f386$export$6d1a0317bde7de7f)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var _radix_ui_react_slot__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-slot */ "./node_modules/cmdk/node_modules/@radix-ui/react-slot/dist/index.module.js");
+
+
+
+
+
+
+
+
+
+const $8927f6f2acc4f386$var$NODES = [
+    'a',
+    'button',
+    'div',
+    'h2',
+    'h3',
+    'img',
+    'li',
+    'nav',
+    'ol',
+    'p',
+    'span',
+    'svg',
+    'ul'
+]; // Temporary while we await merge of this fix:
+// https://github.com/DefinitelyTyped/DefinitelyTyped/pull/55396
+// prettier-ignore
+/* -------------------------------------------------------------------------------------------------
+ * Primitive
+ * -----------------------------------------------------------------------------------------------*/ const $8927f6f2acc4f386$export$250ffa63cdc0d034 = $8927f6f2acc4f386$var$NODES.reduce((primitive, node)=>{
+    const Node = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+        const { asChild: asChild , ...primitiveProps } = props;
+        const Comp = asChild ? _radix_ui_react_slot__WEBPACK_IMPORTED_MODULE_3__.Slot : node;
+        (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+            window[Symbol.for('radix-ui')] = true;
+        }, []);
+        return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(Comp, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, primitiveProps, {
+            ref: forwardedRef
+        }));
+    });
+    Node.displayName = `Primitive.${node}`;
+    return {
+        ...primitive,
+        [node]: Node
+    };
+}, {});
+/* -------------------------------------------------------------------------------------------------
+ * Utils
+ * -----------------------------------------------------------------------------------------------*/ /**
+ * Flush custom event dispatch
+ * https://github.com/radix-ui/primitives/pull/1378
+ *
+ * React batches *all* event handlers since version 18, this introduces certain considerations when using custom event types.
+ *
+ * Internally, React prioritises events in the following order:
+ *  - discrete
+ *  - continuous
+ *  - default
+ *
+ * https://github.com/facebook/react/blob/a8a4742f1c54493df00da648a3f9d26e3db9c8b5/packages/react-dom/src/events/ReactDOMEventListener.js#L294-L350
+ *
+ * `discrete` is an  important distinction as updates within these events are applied immediately.
+ * React however, is not able to infer the priority of custom event types due to how they are detected internally.
+ * Because of this, it's possible for updates from custom events to be unexpectedly batched when
+ * dispatched by another `discrete` event.
+ *
+ * In order to ensure that updates from custom events are applied predictably, we need to manually flush the batch.
+ * This utility should be used when dispatching a custom event from within another `discrete` event, this utility
+ * is not nessesary when dispatching known event types, or if dispatching a custom type inside a non-discrete event.
+ * For example:
+ *
+ * dispatching a known click 👎
+ * target.dispatchEvent(new Event(‘click’))
+ *
+ * dispatching a custom type within a non-discrete event 👎
+ * onScroll={(event) => event.target.dispatchEvent(new CustomEvent(‘customType’))}
+ *
+ * dispatching a custom type within a `discrete` event 👍
+ * onPointerDown={(event) => dispatchDiscreteCustomEvent(event.target, new CustomEvent(‘customType’))}
+ *
+ * Note: though React classifies `focus`, `focusin` and `focusout` events as `discrete`, it's  not recommended to use
+ * this utility with them. This is because it's possible for those handlers to be called implicitly during render
+ * e.g. when focus is within a component as it is unmounted, or when managing focus on mount.
+ */ function $8927f6f2acc4f386$export$6d1a0317bde7de7f(target, event) {
+    if (target) (0,react_dom__WEBPACK_IMPORTED_MODULE_2__.flushSync)(()=>target.dispatchEvent(event)
+    );
+}
+/* -----------------------------------------------------------------------------------------------*/ const $8927f6f2acc4f386$export$be92b6f5f03c0fe9 = $8927f6f2acc4f386$export$250ffa63cdc0d034;
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-slot/dist/index.module.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-slot/dist/index.module.js ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Root: () => (/* binding */ $5e63c961fc1ce211$export$be92b6f5f03c0fe9),
+/* harmony export */   Slot: () => (/* binding */ $5e63c961fc1ce211$export$8c6ed5c666ac1360),
+/* harmony export */   Slottable: () => (/* binding */ $5e63c961fc1ce211$export$d9f1ccf0bdb05d45)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-compose-refs */ "./node_modules/cmdk/node_modules/@radix-ui/react-compose-refs/dist/index.module.js");
+
+
+
+
+
+
+
+/* -------------------------------------------------------------------------------------------------
+ * Slot
+ * -----------------------------------------------------------------------------------------------*/ const $5e63c961fc1ce211$export$8c6ed5c666ac1360 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { children: children , ...slotProps } = props;
+    const childrenArray = react__WEBPACK_IMPORTED_MODULE_1__.Children.toArray(children);
+    const slottable = childrenArray.find($5e63c961fc1ce211$var$isSlottable);
+    if (slottable) {
+        // the new element to render is the one passed as a child of `Slottable`
+        const newElement = slottable.props.children;
+        const newChildren = childrenArray.map((child)=>{
+            if (child === slottable) {
+                // because the new element will be the one rendered, we are only interested
+                // in grabbing its children (`newElement.props.children`)
+                if (react__WEBPACK_IMPORTED_MODULE_1__.Children.count(newElement) > 1) return react__WEBPACK_IMPORTED_MODULE_1__.Children.only(null);
+                return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.isValidElement)(newElement) ? newElement.props.children : null;
+            } else return child;
+        });
+        return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($5e63c961fc1ce211$var$SlotClone, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, slotProps, {
+            ref: forwardedRef
+        }), /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.isValidElement)(newElement) ? /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.cloneElement)(newElement, undefined, newChildren) : null);
+    }
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($5e63c961fc1ce211$var$SlotClone, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, slotProps, {
+        ref: forwardedRef
+    }), children);
+});
+$5e63c961fc1ce211$export$8c6ed5c666ac1360.displayName = 'Slot';
+/* -------------------------------------------------------------------------------------------------
+ * SlotClone
+ * -----------------------------------------------------------------------------------------------*/ const $5e63c961fc1ce211$var$SlotClone = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { children: children , ...slotProps } = props;
+    if (/*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.isValidElement)(children)) return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.cloneElement)(children, {
+        ...$5e63c961fc1ce211$var$mergeProps(slotProps, children.props),
+        ref: (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_2__.composeRefs)(forwardedRef, children.ref)
+    });
+    return react__WEBPACK_IMPORTED_MODULE_1__.Children.count(children) > 1 ? react__WEBPACK_IMPORTED_MODULE_1__.Children.only(null) : null;
+});
+$5e63c961fc1ce211$var$SlotClone.displayName = 'SlotClone';
+/* -------------------------------------------------------------------------------------------------
+ * Slottable
+ * -----------------------------------------------------------------------------------------------*/ const $5e63c961fc1ce211$export$d9f1ccf0bdb05d45 = ({ children: children  })=>{
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, children);
+};
+/* ---------------------------------------------------------------------------------------------- */ function $5e63c961fc1ce211$var$isSlottable(child) {
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.isValidElement)(child) && child.type === $5e63c961fc1ce211$export$d9f1ccf0bdb05d45;
+}
+function $5e63c961fc1ce211$var$mergeProps(slotProps, childProps) {
+    // all child props should override
+    const overrideProps = {
+        ...childProps
+    };
+    for(const propName in childProps){
+        const slotPropValue = slotProps[propName];
+        const childPropValue = childProps[propName];
+        const isHandler = /^on[A-Z]/.test(propName); // if it's a handler, modify the override by composing the base handler
+        if (isHandler) overrideProps[propName] = (...args)=>{
+            childPropValue === null || childPropValue === void 0 || childPropValue(...args);
+            slotPropValue === null || slotPropValue === void 0 || slotPropValue(...args);
+        };
+        else if (propName === 'style') overrideProps[propName] = {
+            ...slotPropValue,
+            ...childPropValue
+        };
+        else if (propName === 'className') overrideProps[propName] = [
+            slotPropValue,
+            childPropValue
+        ].filter(Boolean).join(' ');
+    }
+    return {
+        ...slotProps,
+        ...overrideProps
+    };
+}
+const $5e63c961fc1ce211$export$be92b6f5f03c0fe9 = $5e63c961fc1ce211$export$8c6ed5c666ac1360;
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-use-callback-ref/dist/index.module.js":
+/*!**********************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-use-callback-ref/dist/index.module.js ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useCallbackRef: () => (/* binding */ $b1b2314f5f9a1d84$export$25bec8c6f54ee79a)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+/**
+ * A custom hook that converts a callback to a ref to avoid triggering re-renders when passed as a
+ * prop or avoid re-executing effects when passed as a dependency
+ */ function $b1b2314f5f9a1d84$export$25bec8c6f54ee79a(callback) {
+    const callbackRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(callback);
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(()=>{
+        callbackRef.current = callback;
+    }); // https://github.com/facebook/react/issues/19240
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(()=>(...args)=>{
+            var _callbackRef$current;
+            return (_callbackRef$current = callbackRef.current) === null || _callbackRef$current === void 0 ? void 0 : _callbackRef$current.call(callbackRef, ...args);
+        }
+    , []);
+}
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-use-controllable-state/dist/index.module.js":
+/*!****************************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-use-controllable-state/dist/index.module.js ***!
+  \****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useControllableState: () => (/* binding */ $71cd76cc60e0454e$export$6f32135080cb4c3)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @radix-ui/react-use-callback-ref */ "./node_modules/cmdk/node_modules/@radix-ui/react-use-callback-ref/dist/index.module.js");
+
+
+
+
+
+function $71cd76cc60e0454e$export$6f32135080cb4c3({ prop: prop , defaultProp: defaultProp , onChange: onChange = ()=>{}  }) {
+    const [uncontrolledProp, setUncontrolledProp] = $71cd76cc60e0454e$var$useUncontrolledState({
+        defaultProp: defaultProp,
+        onChange: onChange
+    });
+    const isControlled = prop !== undefined;
+    const value1 = isControlled ? prop : uncontrolledProp;
+    const handleChange = (0,_radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_1__.useCallbackRef)(onChange);
+    const setValue = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((nextValue)=>{
+        if (isControlled) {
+            const setter = nextValue;
+            const value = typeof nextValue === 'function' ? setter(prop) : nextValue;
+            if (value !== prop) handleChange(value);
+        } else setUncontrolledProp(nextValue);
+    }, [
+        isControlled,
+        prop,
+        setUncontrolledProp,
+        handleChange
+    ]);
+    return [
+        value1,
+        setValue
+    ];
+}
+function $71cd76cc60e0454e$var$useUncontrolledState({ defaultProp: defaultProp , onChange: onChange  }) {
+    const uncontrolledState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(defaultProp);
+    const [value] = uncontrolledState;
+    const prevValueRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(value);
+    const handleChange = (0,_radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_1__.useCallbackRef)(onChange);
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(()=>{
+        if (prevValueRef.current !== value) {
+            handleChange(value);
+            prevValueRef.current = value;
+        }
+    }, [
+        value,
+        prevValueRef,
+        handleChange
+    ]);
+    return uncontrolledState;
+}
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-use-escape-keydown/dist/index.module.js":
+/*!************************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-use-escape-keydown/dist/index.module.js ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useEscapeKeydown: () => (/* binding */ $addc16e1bbe58fd0$export$3a72a57244d6e765)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @radix-ui/react-use-callback-ref */ "./node_modules/cmdk/node_modules/@radix-ui/react-use-callback-ref/dist/index.module.js");
+
+
+
+
+
+/**
+ * Listens for when the escape key is down
+ */ function $addc16e1bbe58fd0$export$3a72a57244d6e765(onEscapeKeyDownProp) {
+    const onEscapeKeyDown = (0,_radix_ui_react_use_callback_ref__WEBPACK_IMPORTED_MODULE_1__.useCallbackRef)(onEscapeKeyDownProp);
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(()=>{
+        const handleKeyDown = (event)=>{
+            if (event.key === 'Escape') onEscapeKeyDown(event);
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return ()=>document.removeEventListener('keydown', handleKeyDown)
+        ;
+    }, [
+        onEscapeKeyDown
+    ]);
+}
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/@radix-ui/react-use-layout-effect/dist/index.module.js":
+/*!***********************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/@radix-ui/react-use-layout-effect/dist/index.module.js ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useLayoutEffect: () => (/* binding */ $9f79659886946c16$export$e5c5a5f917a5871c)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+/**
+ * On the server, React emits a warning when calling `useLayoutEffect`.
+ * This is because neither `useLayoutEffect` nor `useEffect` run on the server.
+ * We use this safe version which suppresses the warning by replacing it with a noop on the server.
+ *
+ * See: https://reactjs.org/docs/hooks-reference.html#uselayouteffect
+ */ const $9f79659886946c16$export$e5c5a5f917a5871c = Boolean(globalThis === null || globalThis === void 0 ? void 0 : globalThis.document) ? react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect : ()=>{};
+
+
+
+
+
+//# sourceMappingURL=index.module.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/Combination.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/Combination.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _UI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UI */ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/UI.js");
+/* harmony import */ var _sidecar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sidecar */ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/sidecar.js");
+
+
+
+
+var ReactRemoveScroll = react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(function (props, ref) { return (react__WEBPACK_IMPORTED_MODULE_0__.createElement(_UI__WEBPACK_IMPORTED_MODULE_2__.RemoveScroll, (0,tslib__WEBPACK_IMPORTED_MODULE_3__.__assign)({}, props, { ref: ref, sideCar: _sidecar__WEBPACK_IMPORTED_MODULE_1__["default"] }))); });
+ReactRemoveScroll.classNames = _UI__WEBPACK_IMPORTED_MODULE_2__.RemoveScroll.classNames;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ReactRemoveScroll);
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/SideEffect.js":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/SideEffect.js ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RemoveScrollSideCar: () => (/* binding */ RemoveScrollSideCar),
+/* harmony export */   getDeltaXY: () => (/* binding */ getDeltaXY),
+/* harmony export */   getTouchXY: () => (/* binding */ getTouchXY)
+/* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_remove_scroll_bar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-remove-scroll-bar */ "./node_modules/react-remove-scroll-bar/dist/es2015/index.js");
+/* harmony import */ var react_style_singleton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-style-singleton */ "./node_modules/react-style-singleton/dist/es2015/index.js");
+/* harmony import */ var _aggresiveCapture__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./aggresiveCapture */ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/aggresiveCapture.js");
+/* harmony import */ var _handleScroll__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./handleScroll */ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/handleScroll.js");
+
+
+
+
+
+
+var getTouchXY = function (event) {
+    return 'changedTouches' in event ? [event.changedTouches[0].clientX, event.changedTouches[0].clientY] : [0, 0];
+};
+var getDeltaXY = function (event) { return [event.deltaX, event.deltaY]; };
+var extractRef = function (ref) {
+    return ref && 'current' in ref ? ref.current : ref;
+};
+var deltaCompare = function (x, y) { return x[0] === y[0] && x[1] === y[1]; };
+var generateStyle = function (id) { return "\n  .block-interactivity-".concat(id, " {pointer-events: none;}\n  .allow-interactivity-").concat(id, " {pointer-events: all;}\n"); };
+var idCounter = 0;
+var lockStack = [];
+function RemoveScrollSideCar(props) {
+    var shouldPreventQueue = react__WEBPACK_IMPORTED_MODULE_0__.useRef([]);
+    var touchStartRef = react__WEBPACK_IMPORTED_MODULE_0__.useRef([0, 0]);
+    var activeAxis = react__WEBPACK_IMPORTED_MODULE_0__.useRef();
+    var id = react__WEBPACK_IMPORTED_MODULE_0__.useState(idCounter++)[0];
+    var Style = react__WEBPACK_IMPORTED_MODULE_0__.useState(function () { return (0,react_style_singleton__WEBPACK_IMPORTED_MODULE_2__.styleSingleton)(); })[0];
+    var lastProps = react__WEBPACK_IMPORTED_MODULE_0__.useRef(props);
+    react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
+        lastProps.current = props;
+    }, [props]);
+    react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
+        if (props.inert) {
+            document.body.classList.add("block-interactivity-".concat(id));
+            var allow_1 = (0,tslib__WEBPACK_IMPORTED_MODULE_3__.__spreadArray)([props.lockRef.current], (props.shards || []).map(extractRef), true).filter(Boolean);
+            allow_1.forEach(function (el) { return el.classList.add("allow-interactivity-".concat(id)); });
+            return function () {
+                document.body.classList.remove("block-interactivity-".concat(id));
+                allow_1.forEach(function (el) { return el.classList.remove("allow-interactivity-".concat(id)); });
+            };
+        }
+        return;
+    }, [props.inert, props.lockRef.current, props.shards]);
+    var shouldCancelEvent = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (event, parent) {
+        if ('touches' in event && event.touches.length === 2) {
+            return !lastProps.current.allowPinchZoom;
+        }
+        var touch = getTouchXY(event);
+        var touchStart = touchStartRef.current;
+        var deltaX = 'deltaX' in event ? event.deltaX : touchStart[0] - touch[0];
+        var deltaY = 'deltaY' in event ? event.deltaY : touchStart[1] - touch[1];
+        var currentAxis;
+        var target = event.target;
+        var moveDirection = Math.abs(deltaX) > Math.abs(deltaY) ? 'h' : 'v';
+        // allow horizontal touch move on Range inputs. They will not cause any scroll
+        if ('touches' in event && moveDirection === 'h' && target.type === 'range') {
+            return false;
+        }
+        var canBeScrolledInMainDirection = (0,_handleScroll__WEBPACK_IMPORTED_MODULE_4__.locationCouldBeScrolled)(moveDirection, target);
+        if (!canBeScrolledInMainDirection) {
+            return true;
+        }
+        if (canBeScrolledInMainDirection) {
+            currentAxis = moveDirection;
+        }
+        else {
+            currentAxis = moveDirection === 'v' ? 'h' : 'v';
+            canBeScrolledInMainDirection = (0,_handleScroll__WEBPACK_IMPORTED_MODULE_4__.locationCouldBeScrolled)(moveDirection, target);
+            // other axis might be not scrollable
+        }
+        if (!canBeScrolledInMainDirection) {
+            return false;
+        }
+        if (!activeAxis.current && 'changedTouches' in event && (deltaX || deltaY)) {
+            activeAxis.current = currentAxis;
+        }
+        if (!currentAxis) {
+            return true;
+        }
+        var cancelingAxis = activeAxis.current || currentAxis;
+        return (0,_handleScroll__WEBPACK_IMPORTED_MODULE_4__.handleScroll)(cancelingAxis, parent, event, cancelingAxis === 'h' ? deltaX : deltaY, true);
+    }, []);
+    var shouldPrevent = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (_event) {
+        var event = _event;
+        if (!lockStack.length || lockStack[lockStack.length - 1] !== Style) {
+            // not the last active
+            return;
+        }
+        var delta = 'deltaY' in event ? getDeltaXY(event) : getTouchXY(event);
+        var sourceEvent = shouldPreventQueue.current.filter(function (e) { return e.name === event.type && e.target === event.target && deltaCompare(e.delta, delta); })[0];
+        // self event, and should be canceled
+        if (sourceEvent && sourceEvent.should) {
+            event.preventDefault();
+            return;
+        }
+        // outside or shard event
+        if (!sourceEvent) {
+            var shardNodes = (lastProps.current.shards || [])
+                .map(extractRef)
+                .filter(Boolean)
+                .filter(function (node) { return node.contains(event.target); });
+            var shouldStop = shardNodes.length > 0 ? shouldCancelEvent(event, shardNodes[0]) : !lastProps.current.noIsolation;
+            if (shouldStop) {
+                event.preventDefault();
+            }
+        }
+    }, []);
+    var shouldCancel = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (name, delta, target, should) {
+        var event = { name: name, delta: delta, target: target, should: should };
+        shouldPreventQueue.current.push(event);
+        setTimeout(function () {
+            shouldPreventQueue.current = shouldPreventQueue.current.filter(function (e) { return e !== event; });
+        }, 1);
+    }, []);
+    var scrollTouchStart = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (event) {
+        touchStartRef.current = getTouchXY(event);
+        activeAxis.current = undefined;
+    }, []);
+    var scrollWheel = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (event) {
+        shouldCancel(event.type, getDeltaXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
+    }, []);
+    var scrollTouchMove = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (event) {
+        shouldCancel(event.type, getTouchXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
+    }, []);
+    react__WEBPACK_IMPORTED_MODULE_0__.useEffect(function () {
+        lockStack.push(Style);
+        props.setCallbacks({
+            onScrollCapture: scrollWheel,
+            onWheelCapture: scrollWheel,
+            onTouchMoveCapture: scrollTouchMove,
+        });
+        document.addEventListener('wheel', shouldPrevent, _aggresiveCapture__WEBPACK_IMPORTED_MODULE_5__.nonPassive);
+        document.addEventListener('touchmove', shouldPrevent, _aggresiveCapture__WEBPACK_IMPORTED_MODULE_5__.nonPassive);
+        document.addEventListener('touchstart', scrollTouchStart, _aggresiveCapture__WEBPACK_IMPORTED_MODULE_5__.nonPassive);
+        return function () {
+            lockStack = lockStack.filter(function (inst) { return inst !== Style; });
+            document.removeEventListener('wheel', shouldPrevent, _aggresiveCapture__WEBPACK_IMPORTED_MODULE_5__.nonPassive);
+            document.removeEventListener('touchmove', shouldPrevent, _aggresiveCapture__WEBPACK_IMPORTED_MODULE_5__.nonPassive);
+            document.removeEventListener('touchstart', scrollTouchStart, _aggresiveCapture__WEBPACK_IMPORTED_MODULE_5__.nonPassive);
+        };
+    }, []);
+    var removeScrollBar = props.removeScrollBar, inert = props.inert;
+    return (react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null,
+        inert ? react__WEBPACK_IMPORTED_MODULE_0__.createElement(Style, { styles: generateStyle(id) }) : null,
+        removeScrollBar ? react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_remove_scroll_bar__WEBPACK_IMPORTED_MODULE_1__.RemoveScrollBar, { gapMode: "margin" }) : null));
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/UI.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/UI.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RemoveScroll: () => (/* binding */ RemoveScroll)
+/* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_remove_scroll_bar_constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-remove-scroll-bar/constants */ "./node_modules/react-remove-scroll-bar/dist/es2015/constants.js");
+/* harmony import */ var use_callback_ref__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! use-callback-ref */ "./node_modules/use-callback-ref/dist/es2015/useMergeRef.js");
+/* harmony import */ var _medium__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./medium */ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/medium.js");
+
+
+
+
+
+var nothing = function () {
+    return;
+};
+/**
+ * Removes scrollbar from the page and contain the scroll within the Lock
+ */
+var RemoveScroll = react__WEBPACK_IMPORTED_MODULE_0__.forwardRef(function (props, parentRef) {
+    var ref = react__WEBPACK_IMPORTED_MODULE_0__.useRef(null);
+    var _a = react__WEBPACK_IMPORTED_MODULE_0__.useState({
+        onScrollCapture: nothing,
+        onWheelCapture: nothing,
+        onTouchMoveCapture: nothing,
+    }), callbacks = _a[0], setCallbacks = _a[1];
+    var forwardProps = props.forwardProps, children = props.children, className = props.className, removeScrollBar = props.removeScrollBar, enabled = props.enabled, shards = props.shards, sideCar = props.sideCar, noIsolation = props.noIsolation, inert = props.inert, allowPinchZoom = props.allowPinchZoom, _b = props.as, Container = _b === void 0 ? 'div' : _b, rest = (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__rest)(props, ["forwardProps", "children", "className", "removeScrollBar", "enabled", "shards", "sideCar", "noIsolation", "inert", "allowPinchZoom", "as"]);
+    var SideCar = sideCar;
+    var containerRef = (0,use_callback_ref__WEBPACK_IMPORTED_MODULE_3__.useMergeRefs)([ref, parentRef]);
+    var containerProps = (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)({}, rest), callbacks);
+    return (react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null,
+        enabled && (react__WEBPACK_IMPORTED_MODULE_0__.createElement(SideCar, { sideCar: _medium__WEBPACK_IMPORTED_MODULE_4__.effectCar, removeScrollBar: removeScrollBar, shards: shards, noIsolation: noIsolation, inert: inert, setCallbacks: setCallbacks, allowPinchZoom: !!allowPinchZoom, lockRef: ref })),
+        forwardProps ? (react__WEBPACK_IMPORTED_MODULE_0__.cloneElement(react__WEBPACK_IMPORTED_MODULE_0__.Children.only(children), (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)({}, containerProps), { ref: containerRef }))) : (react__WEBPACK_IMPORTED_MODULE_0__.createElement(Container, (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)({}, containerProps, { className: className, ref: containerRef }), children))));
+});
+RemoveScroll.defaultProps = {
+    enabled: true,
+    removeScrollBar: true,
+    inert: false,
+};
+RemoveScroll.classNames = {
+    fullWidth: react_remove_scroll_bar_constants__WEBPACK_IMPORTED_MODULE_1__.fullWidthClassName,
+    zeroRight: react_remove_scroll_bar_constants__WEBPACK_IMPORTED_MODULE_1__.zeroRightClassName,
+};
+
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/aggresiveCapture.js":
+/*!********************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/aggresiveCapture.js ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   nonPassive: () => (/* binding */ nonPassive)
+/* harmony export */ });
+var passiveSupported = false;
+if (typeof window !== 'undefined') {
+    try {
+        var options = Object.defineProperty({}, 'passive', {
+            get: function () {
+                passiveSupported = true;
+                return true;
+            },
+        });
+        // @ts-ignore
+        window.addEventListener('test', options, options);
+        // @ts-ignore
+        window.removeEventListener('test', options, options);
+    }
+    catch (err) {
+        passiveSupported = false;
+    }
+}
+var nonPassive = passiveSupported ? { passive: false } : false;
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/handleScroll.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/handleScroll.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   handleScroll: () => (/* binding */ handleScroll),
+/* harmony export */   locationCouldBeScrolled: () => (/* binding */ locationCouldBeScrolled)
+/* harmony export */ });
+var elementCouldBeVScrolled = function (node) {
+    var styles = window.getComputedStyle(node);
+    return (styles.overflowY !== 'hidden' && // not-not-scrollable
+        !(styles.overflowY === styles.overflowX && styles.overflowY === 'visible') // scrollable
+    );
+};
+var elementCouldBeHScrolled = function (node) {
+    var styles = window.getComputedStyle(node);
+    return (styles.overflowX !== 'hidden' && // not-not-scrollable
+        !(styles.overflowY === styles.overflowX && styles.overflowX === 'visible') // scrollable
+    );
+};
+var locationCouldBeScrolled = function (axis, node) {
+    var current = node;
+    do {
+        // Skip over shadow root
+        if (typeof ShadowRoot !== 'undefined' && current instanceof ShadowRoot) {
+            current = current.host;
+        }
+        var isScrollable = elementCouldBeScrolled(axis, current);
+        if (isScrollable) {
+            var _a = getScrollVariables(axis, current), s = _a[1], d = _a[2];
+            if (s > d) {
+                return true;
+            }
+        }
+        current = current.parentNode;
+    } while (current && current !== document.body);
+    return false;
+};
+var getVScrollVariables = function (_a) {
+    var scrollTop = _a.scrollTop, scrollHeight = _a.scrollHeight, clientHeight = _a.clientHeight;
+    return [
+        scrollTop,
+        scrollHeight,
+        clientHeight,
+    ];
+};
+var getHScrollVariables = function (_a) {
+    var scrollLeft = _a.scrollLeft, scrollWidth = _a.scrollWidth, clientWidth = _a.clientWidth;
+    return [
+        scrollLeft,
+        scrollWidth,
+        clientWidth,
+    ];
+};
+var elementCouldBeScrolled = function (axis, node) {
+    return axis === 'v' ? elementCouldBeVScrolled(node) : elementCouldBeHScrolled(node);
+};
+var getScrollVariables = function (axis, node) {
+    return axis === 'v' ? getVScrollVariables(node) : getHScrollVariables(node);
+};
+var getDirectionFactor = function (axis, direction) {
+    /**
+     * If the element's direction is rtl (right-to-left), then scrollLeft is 0 when the scrollbar is at its rightmost position,
+     * and then increasingly negative as you scroll towards the end of the content.
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollLeft
+     */
+    return axis === 'h' && direction === 'rtl' ? -1 : 1;
+};
+var handleScroll = function (axis, endTarget, event, sourceDelta, noOverscroll) {
+    var directionFactor = getDirectionFactor(axis, window.getComputedStyle(endTarget).direction);
+    var delta = directionFactor * sourceDelta;
+    // find scrollable target
+    var target = event.target;
+    var targetInLock = endTarget.contains(target);
+    var shouldCancelScroll = false;
+    var isDeltaPositive = delta > 0;
+    var availableScroll = 0;
+    var availableScrollTop = 0;
+    do {
+        var _a = getScrollVariables(axis, target), position = _a[0], scroll_1 = _a[1], capacity = _a[2];
+        var elementScroll = scroll_1 - capacity - directionFactor * position;
+        if (position || elementScroll) {
+            if (elementCouldBeScrolled(axis, target)) {
+                availableScroll += elementScroll;
+                availableScrollTop += position;
+            }
+        }
+        target = target.parentNode;
+    } while (
+    // portaled content
+    (!targetInLock && target !== document.body) ||
+        // self content
+        (targetInLock && (endTarget.contains(target) || endTarget === target)));
+    if (isDeltaPositive && ((noOverscroll && availableScroll === 0) || (!noOverscroll && delta > availableScroll))) {
+        shouldCancelScroll = true;
+    }
+    else if (!isDeltaPositive &&
+        ((noOverscroll && availableScrollTop === 0) || (!noOverscroll && -delta > availableScrollTop))) {
+        shouldCancelScroll = true;
+    }
+    return shouldCancelScroll;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/medium.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/medium.js ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   effectCar: () => (/* binding */ effectCar)
+/* harmony export */ });
+/* harmony import */ var use_sidecar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! use-sidecar */ "./node_modules/use-sidecar/dist/es2015/medium.js");
+
+var effectCar = (0,use_sidecar__WEBPACK_IMPORTED_MODULE_0__.createSidecarMedium)();
+
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/sidecar.js":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/sidecar.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var use_sidecar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! use-sidecar */ "./node_modules/use-sidecar/dist/es2015/exports.js");
+/* harmony import */ var _SideEffect__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SideEffect */ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/SideEffect.js");
+/* harmony import */ var _medium__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./medium */ "./node_modules/cmdk/node_modules/react-remove-scroll/dist/es2015/medium.js");
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,use_sidecar__WEBPACK_IMPORTED_MODULE_0__.exportSidecar)(_medium__WEBPACK_IMPORTED_MODULE_1__.effectCar, _SideEffect__WEBPACK_IMPORTED_MODULE_2__.RemoveScrollSideCar));
+
+
+/***/ }),
+
+/***/ "./node_modules/command-score/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/command-score/index.js ***!
+  \*********************************************/
+/***/ ((module) => {
+
+// The scores are arranged so that a continuous match of characters will
+// result in a total score of 1.
+//
+// The best case, this character is a match, and either this is the start
+// of the string, or the previous character was also a match.
+var SCORE_CONTINUE_MATCH = 1,
+
+    // A new match at the start of a word scores better than a new match
+    // elsewhere as it's more likely that the user will type the starts
+    // of fragments.
+    // (Our notion of word includes CamelCase and hypen-separated, etc.)
+    SCORE_WORD_JUMP = 0.9,
+
+    // Any other match isn't ideal, but we include it for completeness.
+    SCORE_CHARACTER_JUMP = 0.3,
+
+    // If the user transposed two letters, it should be signficantly penalized.
+    //
+    // i.e. "ouch" is more likely than "curtain" when "uc" is typed.
+    SCORE_TRANSPOSITION = 0.1,
+
+    // If the user jumped to half-way through a subsequent word, it should be
+    // very significantly penalized.
+    //
+    // i.e. "loes" is very unlikely to match "loch ness".
+    // NOTE: this is set to 0 for superhuman right now, but we may want to revisit.
+    SCORE_LONG_JUMP = 0,
+
+    // The goodness of a match should decay slightly with each missing
+    // character.
+    //
+    // i.e. "bad" is more likely than "bard" when "bd" is typed.
+    //
+    // This will not change the order of suggestions based on SCORE_* until
+    // 100 characters are inserted between matches.
+    PENALTY_SKIPPED = 0.999,
+
+    // The goodness of an exact-case match should be higher than a
+    // case-insensitive match by a small amount.
+    //
+    // i.e. "HTML" is more likely than "haml" when "HM" is typed.
+    //
+    // This will not change the order of suggestions based on SCORE_* until
+    // 1000 characters are inserted between matches.
+    PENALTY_CASE_MISMATCH = 0.9999,
+
+    // If the word has more characters than the user typed, it should
+    // be penalised slightly.
+    //
+    // i.e. "html" is more likely than "html5" if I type "html".
+    //
+    // However, it may well be the case that there's a sensible secondary
+    // ordering (like alphabetical) that it makes sense to rely on when
+    // there are many prefix matches, so we don't make the penalty increase
+    // with the number of tokens.
+    PENALTY_NOT_COMPLETE = 0.99;
+
+var IS_GAP_REGEXP = /[\\\/\-_+.# \t"@\[\(\{&]/,
+    COUNT_GAPS_REGEXP = /[\\\/\-_+.# \t"@\[\(\{&]/g;
+
+function commandScoreInner(string, abbreviation, lowerString, lowerAbbreviation, stringIndex, abbreviationIndex) {
+
+    if (abbreviationIndex === abbreviation.length) {
+        if (stringIndex === string.length) {
+            return SCORE_CONTINUE_MATCH;
+
+        }
+        return PENALTY_NOT_COMPLETE;
+    }
+
+    var abbreviationChar = lowerAbbreviation.charAt(abbreviationIndex);
+    var index = lowerString.indexOf(abbreviationChar, stringIndex);
+    var highScore = 0;
+
+    var score, transposedScore, wordBreaks;
+
+    while (index >= 0) {
+
+        score = commandScoreInner(string, abbreviation, lowerString, lowerAbbreviation, index + 1, abbreviationIndex + 1);
+        if (score > highScore) {
+            if (index === stringIndex) {
+                score *= SCORE_CONTINUE_MATCH;
+            } else if (IS_GAP_REGEXP.test(string.charAt(index - 1))) {
+                score *= SCORE_WORD_JUMP;
+                wordBreaks = string.slice(stringIndex, index - 1).match(COUNT_GAPS_REGEXP);
+                if (wordBreaks && stringIndex > 0) {
+                    score *= Math.pow(PENALTY_SKIPPED, wordBreaks.length);
+                }
+            } else if (IS_GAP_REGEXP.test(string.slice(stringIndex, index - 1))) {
+                score *= SCORE_LONG_JUMP;
+                if (stringIndex > 0) {
+                    score *= Math.pow(PENALTY_SKIPPED, index - stringIndex);
+                }
+            } else {
+                score *= SCORE_CHARACTER_JUMP;
+                if (stringIndex > 0) {
+                    score *= Math.pow(PENALTY_SKIPPED, index - stringIndex);
+                }
+            }
+
+            if (string.charAt(index) !== abbreviation.charAt(abbreviationIndex)) {
+                score *= PENALTY_CASE_MISMATCH;
+            }
+
+        }
+
+        if (score < SCORE_TRANSPOSITION &&
+                lowerString.charAt(index - 1) === lowerAbbreviation.charAt(abbreviationIndex + 1) &&
+                lowerString.charAt(index - 1) !== lowerAbbreviation.charAt(abbreviationIndex)) {
+            transposedScore = commandScoreInner(string, abbreviation, lowerString, lowerAbbreviation, index + 1, abbreviationIndex + 2);
+
+            if (transposedScore * SCORE_TRANSPOSITION > score) {
+                score = transposedScore * SCORE_TRANSPOSITION;
+            }
+        }
+
+        if (score > highScore) {
+            highScore = score;
+        }
+
+        index = lowerString.indexOf(abbreviationChar, index + 1);
+    }
+
+    return highScore;
+}
+
+function commandScore(string, abbreviation) {
+    /* NOTE:
+     * in the original, we used to do the lower-casing on each recursive call, but this meant that toLowerCase()
+     * was the dominating cost in the algorithm, passing both is a little ugly, but considerably faster.
+     */
+    return commandScoreInner(string, abbreviation, string.toLowerCase(), abbreviation.toLowerCase(), 0, 0);
+}
+
+module.exports = commandScore;
+
+
+/***/ }),
+
+/***/ "./node_modules/css-box-model/dist/css-box-model.esm.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/css-box-model/dist/css-box-model.esm.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   calculateBox: () => (/* binding */ calculateBox),
+/* harmony export */   createBox: () => (/* binding */ createBox),
+/* harmony export */   expand: () => (/* binding */ expand),
+/* harmony export */   getBox: () => (/* binding */ getBox),
+/* harmony export */   getRect: () => (/* binding */ getRect),
+/* harmony export */   offset: () => (/* binding */ offset),
+/* harmony export */   shrink: () => (/* binding */ shrink),
+/* harmony export */   withScroll: () => (/* binding */ withScroll)
+/* harmony export */ });
+/* harmony import */ var tiny_invariant__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tiny-invariant */ "./node_modules/tiny-invariant/dist/esm/tiny-invariant.js");
+
+
+var getRect = function getRect(_ref) {
+  var top = _ref.top,
+      right = _ref.right,
+      bottom = _ref.bottom,
+      left = _ref.left;
+  var width = right - left;
+  var height = bottom - top;
+  var rect = {
+    top: top,
+    right: right,
+    bottom: bottom,
+    left: left,
+    width: width,
+    height: height,
+    x: left,
+    y: top,
+    center: {
+      x: (right + left) / 2,
+      y: (bottom + top) / 2
+    }
+  };
+  return rect;
+};
+var expand = function expand(target, expandBy) {
+  return {
+    top: target.top - expandBy.top,
+    left: target.left - expandBy.left,
+    bottom: target.bottom + expandBy.bottom,
+    right: target.right + expandBy.right
+  };
+};
+var shrink = function shrink(target, shrinkBy) {
+  return {
+    top: target.top + shrinkBy.top,
+    left: target.left + shrinkBy.left,
+    bottom: target.bottom - shrinkBy.bottom,
+    right: target.right - shrinkBy.right
+  };
+};
+
+var shift = function shift(target, shiftBy) {
+  return {
+    top: target.top + shiftBy.y,
+    left: target.left + shiftBy.x,
+    bottom: target.bottom + shiftBy.y,
+    right: target.right + shiftBy.x
+  };
+};
+
+var noSpacing = {
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0
+};
+var createBox = function createBox(_ref2) {
+  var borderBox = _ref2.borderBox,
+      _ref2$margin = _ref2.margin,
+      margin = _ref2$margin === void 0 ? noSpacing : _ref2$margin,
+      _ref2$border = _ref2.border,
+      border = _ref2$border === void 0 ? noSpacing : _ref2$border,
+      _ref2$padding = _ref2.padding,
+      padding = _ref2$padding === void 0 ? noSpacing : _ref2$padding;
+  var marginBox = getRect(expand(borderBox, margin));
+  var paddingBox = getRect(shrink(borderBox, border));
+  var contentBox = getRect(shrink(paddingBox, padding));
+  return {
+    marginBox: marginBox,
+    borderBox: getRect(borderBox),
+    paddingBox: paddingBox,
+    contentBox: contentBox,
+    margin: margin,
+    border: border,
+    padding: padding
+  };
+};
+
+var parse = function parse(raw) {
+  var value = raw.slice(0, -2);
+  var suffix = raw.slice(-2);
+
+  if (suffix !== 'px') {
+    return 0;
+  }
+
+  var result = Number(value);
+  !!isNaN(result) ?  true ? (0,tiny_invariant__WEBPACK_IMPORTED_MODULE_0__["default"])(false, "Could not parse value [raw: " + raw + ", without suffix: " + value + "]") : 0 : void 0;
+  return result;
+};
+
+var getWindowScroll = function getWindowScroll() {
+  return {
+    x: window.pageXOffset,
+    y: window.pageYOffset
+  };
+};
+
+var offset = function offset(original, change) {
+  var borderBox = original.borderBox,
+      border = original.border,
+      margin = original.margin,
+      padding = original.padding;
+  var shifted = shift(borderBox, change);
+  return createBox({
+    borderBox: shifted,
+    border: border,
+    margin: margin,
+    padding: padding
+  });
+};
+var withScroll = function withScroll(original, scroll) {
+  if (scroll === void 0) {
+    scroll = getWindowScroll();
+  }
+
+  return offset(original, scroll);
+};
+var calculateBox = function calculateBox(borderBox, styles) {
+  var margin = {
+    top: parse(styles.marginTop),
+    right: parse(styles.marginRight),
+    bottom: parse(styles.marginBottom),
+    left: parse(styles.marginLeft)
+  };
+  var padding = {
+    top: parse(styles.paddingTop),
+    right: parse(styles.paddingRight),
+    bottom: parse(styles.paddingBottom),
+    left: parse(styles.paddingLeft)
+  };
+  var border = {
+    top: parse(styles.borderTopWidth),
+    right: parse(styles.borderRightWidth),
+    bottom: parse(styles.borderBottomWidth),
+    left: parse(styles.borderLeftWidth)
+  };
+  return createBox({
+    borderBox: borderBox,
+    margin: margin,
+    padding: padding,
+    border: border
+  });
+};
+var getBox = function getBox(el) {
+  var borderBox = el.getBoundingClientRect();
+  var styles = window.getComputedStyle(el);
+  return calculateBox(borderBox, styles);
+};
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/deepmerge/dist/cjs.js":
 /*!********************************************!*\
   !*** ./node_modules/deepmerge/dist/cjs.js ***!
@@ -4514,6 +16477,372 @@ var deepmerge_1 = deepmerge;
 
 module.exports = deepmerge_1;
 
+
+/***/ }),
+
+/***/ "./node_modules/file-selector/dist/es5/file-selector.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/file-selector/dist/es5/file-selector.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fromEvent: () => (/* binding */ fromEvent)
+/* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.mjs");
+/* harmony import */ var _file__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./file */ "./node_modules/file-selector/dist/es5/file.js");
+
+
+var FILES_TO_IGNORE = [
+    // Thumbnail cache files for macOS and Windows
+    '.DS_Store',
+    'Thumbs.db' // Windows
+];
+/**
+ * Convert a DragEvent's DataTrasfer object to a list of File objects
+ * NOTE: If some of the items are folders,
+ * everything will be flattened and placed in the same list but the paths will be kept as a {path} property.
+ *
+ * EXPERIMENTAL: A list of https://developer.mozilla.org/en-US/docs/Web/API/FileSystemHandle objects can also be passed as an arg
+ * and a list of File objects will be returned.
+ *
+ * @param evt
+ */
+function fromEvent(evt) {
+    return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__awaiter)(this, void 0, void 0, function () {
+        return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__generator)(this, function (_a) {
+            if (isObject(evt) && isDataTransfer(evt.dataTransfer)) {
+                return [2 /*return*/, getDataTransferFiles(evt.dataTransfer, evt.type)];
+            }
+            else if (isChangeEvt(evt)) {
+                return [2 /*return*/, getInputFiles(evt)];
+            }
+            else if (Array.isArray(evt) && evt.every(function (item) { return 'getFile' in item && typeof item.getFile === 'function'; })) {
+                return [2 /*return*/, getFsHandleFiles(evt)];
+            }
+            return [2 /*return*/, []];
+        });
+    });
+}
+function isDataTransfer(value) {
+    return isObject(value);
+}
+function isChangeEvt(value) {
+    return isObject(value) && isObject(value.target);
+}
+function isObject(v) {
+    return typeof v === 'object' && v !== null;
+}
+function getInputFiles(evt) {
+    return fromList(evt.target.files).map(function (file) { return (0,_file__WEBPACK_IMPORTED_MODULE_0__.toFileWithPath)(file); });
+}
+// Ee expect each handle to be https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle
+function getFsHandleFiles(handles) {
+    return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__awaiter)(this, void 0, void 0, function () {
+        var files;
+        return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__generator)(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, Promise.all(handles.map(function (h) { return h.getFile(); }))];
+                case 1:
+                    files = _a.sent();
+                    return [2 /*return*/, files.map(function (file) { return (0,_file__WEBPACK_IMPORTED_MODULE_0__.toFileWithPath)(file); })];
+            }
+        });
+    });
+}
+function getDataTransferFiles(dt, type) {
+    return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__awaiter)(this, void 0, void 0, function () {
+        var items, files;
+        return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__generator)(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!dt.items) return [3 /*break*/, 2];
+                    items = fromList(dt.items)
+                        .filter(function (item) { return item.kind === 'file'; });
+                    // According to https://html.spec.whatwg.org/multipage/dnd.html#dndevents,
+                    // only 'dragstart' and 'drop' has access to the data (source node)
+                    if (type !== 'drop') {
+                        return [2 /*return*/, items];
+                    }
+                    return [4 /*yield*/, Promise.all(items.map(toFilePromises))];
+                case 1:
+                    files = _a.sent();
+                    return [2 /*return*/, noIgnoredFiles(flatten(files))];
+                case 2: return [2 /*return*/, noIgnoredFiles(fromList(dt.files)
+                        .map(function (file) { return (0,_file__WEBPACK_IMPORTED_MODULE_0__.toFileWithPath)(file); }))];
+            }
+        });
+    });
+}
+function noIgnoredFiles(files) {
+    return files.filter(function (file) { return FILES_TO_IGNORE.indexOf(file.name) === -1; });
+}
+// IE11 does not support Array.from()
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Browser_compatibility
+// https://developer.mozilla.org/en-US/docs/Web/API/FileList
+// https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItemList
+function fromList(items) {
+    if (items === null) {
+        return [];
+    }
+    var files = [];
+    // tslint:disable: prefer-for-of
+    for (var i = 0; i < items.length; i++) {
+        var file = items[i];
+        files.push(file);
+    }
+    return files;
+}
+// https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem
+function toFilePromises(item) {
+    if (typeof item.webkitGetAsEntry !== 'function') {
+        return fromDataTransferItem(item);
+    }
+    var entry = item.webkitGetAsEntry();
+    // Safari supports dropping an image node from a different window and can be retrieved using
+    // the DataTransferItem.getAsFile() API
+    // NOTE: FileSystemEntry.file() throws if trying to get the file
+    if (entry && entry.isDirectory) {
+        return fromDirEntry(entry);
+    }
+    return fromDataTransferItem(item);
+}
+function flatten(items) {
+    return items.reduce(function (acc, files) { return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__spreadArray)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__spreadArray)([], (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__read)(acc), false), (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__read)((Array.isArray(files) ? flatten(files) : [files])), false); }, []);
+}
+function fromDataTransferItem(item) {
+    var file = item.getAsFile();
+    if (!file) {
+        return Promise.reject("".concat(item, " is not a File"));
+    }
+    var fwp = (0,_file__WEBPACK_IMPORTED_MODULE_0__.toFileWithPath)(file);
+    return Promise.resolve(fwp);
+}
+// https://developer.mozilla.org/en-US/docs/Web/API/FileSystemEntry
+function fromEntry(entry) {
+    return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__awaiter)(this, void 0, void 0, function () {
+        return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__generator)(this, function (_a) {
+            return [2 /*return*/, entry.isDirectory ? fromDirEntry(entry) : fromFileEntry(entry)];
+        });
+    });
+}
+// https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryEntry
+function fromDirEntry(entry) {
+    var reader = entry.createReader();
+    return new Promise(function (resolve, reject) {
+        var entries = [];
+        function readEntries() {
+            var _this = this;
+            // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryEntry/createReader
+            // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryReader/readEntries
+            reader.readEntries(function (batch) { return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__awaiter)(_this, void 0, void 0, function () {
+                var files, err_1, items;
+                return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__generator)(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!!batch.length) return [3 /*break*/, 5];
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, Promise.all(entries)];
+                        case 2:
+                            files = _a.sent();
+                            resolve(files);
+                            return [3 /*break*/, 4];
+                        case 3:
+                            err_1 = _a.sent();
+                            reject(err_1);
+                            return [3 /*break*/, 4];
+                        case 4: return [3 /*break*/, 6];
+                        case 5:
+                            items = Promise.all(batch.map(fromEntry));
+                            entries.push(items);
+                            // Continue reading
+                            readEntries();
+                            _a.label = 6;
+                        case 6: return [2 /*return*/];
+                    }
+                });
+            }); }, function (err) {
+                reject(err);
+            });
+        }
+        readEntries();
+    });
+}
+// https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileEntry
+function fromFileEntry(entry) {
+    return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__awaiter)(this, void 0, void 0, function () {
+        return (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__generator)(this, function (_a) {
+            return [2 /*return*/, new Promise(function (resolve, reject) {
+                    entry.file(function (file) {
+                        var fwp = (0,_file__WEBPACK_IMPORTED_MODULE_0__.toFileWithPath)(file, entry.fullPath);
+                        resolve(fwp);
+                    }, function (err) {
+                        reject(err);
+                    });
+                })];
+        });
+    });
+}
+//# sourceMappingURL=file-selector.js.map
+
+/***/ }),
+
+/***/ "./node_modules/file-selector/dist/es5/file.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/file-selector/dist/es5/file.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   COMMON_MIME_TYPES: () => (/* binding */ COMMON_MIME_TYPES),
+/* harmony export */   toFileWithPath: () => (/* binding */ toFileWithPath)
+/* harmony export */ });
+var COMMON_MIME_TYPES = new Map([
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+    ['aac', 'audio/aac'],
+    ['abw', 'application/x-abiword'],
+    ['arc', 'application/x-freearc'],
+    ['avif', 'image/avif'],
+    ['avi', 'video/x-msvideo'],
+    ['azw', 'application/vnd.amazon.ebook'],
+    ['bin', 'application/octet-stream'],
+    ['bmp', 'image/bmp'],
+    ['bz', 'application/x-bzip'],
+    ['bz2', 'application/x-bzip2'],
+    ['cda', 'application/x-cdf'],
+    ['csh', 'application/x-csh'],
+    ['css', 'text/css'],
+    ['csv', 'text/csv'],
+    ['doc', 'application/msword'],
+    ['docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+    ['eot', 'application/vnd.ms-fontobject'],
+    ['epub', 'application/epub+zip'],
+    ['gz', 'application/gzip'],
+    ['gif', 'image/gif'],
+    ['heic', 'image/heic'],
+    ['heif', 'image/heif'],
+    ['htm', 'text/html'],
+    ['html', 'text/html'],
+    ['ico', 'image/vnd.microsoft.icon'],
+    ['ics', 'text/calendar'],
+    ['jar', 'application/java-archive'],
+    ['jpeg', 'image/jpeg'],
+    ['jpg', 'image/jpeg'],
+    ['js', 'text/javascript'],
+    ['json', 'application/json'],
+    ['jsonld', 'application/ld+json'],
+    ['mid', 'audio/midi'],
+    ['midi', 'audio/midi'],
+    ['mjs', 'text/javascript'],
+    ['mp3', 'audio/mpeg'],
+    ['mp4', 'video/mp4'],
+    ['mpeg', 'video/mpeg'],
+    ['mpkg', 'application/vnd.apple.installer+xml'],
+    ['odp', 'application/vnd.oasis.opendocument.presentation'],
+    ['ods', 'application/vnd.oasis.opendocument.spreadsheet'],
+    ['odt', 'application/vnd.oasis.opendocument.text'],
+    ['oga', 'audio/ogg'],
+    ['ogv', 'video/ogg'],
+    ['ogx', 'application/ogg'],
+    ['opus', 'audio/opus'],
+    ['otf', 'font/otf'],
+    ['png', 'image/png'],
+    ['pdf', 'application/pdf'],
+    ['php', 'application/x-httpd-php'],
+    ['ppt', 'application/vnd.ms-powerpoint'],
+    ['pptx', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'],
+    ['rar', 'application/vnd.rar'],
+    ['rtf', 'application/rtf'],
+    ['sh', 'application/x-sh'],
+    ['svg', 'image/svg+xml'],
+    ['swf', 'application/x-shockwave-flash'],
+    ['tar', 'application/x-tar'],
+    ['tif', 'image/tiff'],
+    ['tiff', 'image/tiff'],
+    ['ts', 'video/mp2t'],
+    ['ttf', 'font/ttf'],
+    ['txt', 'text/plain'],
+    ['vsd', 'application/vnd.visio'],
+    ['wav', 'audio/wav'],
+    ['weba', 'audio/webm'],
+    ['webm', 'video/webm'],
+    ['webp', 'image/webp'],
+    ['woff', 'font/woff'],
+    ['woff2', 'font/woff2'],
+    ['xhtml', 'application/xhtml+xml'],
+    ['xls', 'application/vnd.ms-excel'],
+    ['xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+    ['xml', 'application/xml'],
+    ['xul', 'application/vnd.mozilla.xul+xml'],
+    ['zip', 'application/zip'],
+    ['7z', 'application/x-7z-compressed'],
+    // Others
+    ['mkv', 'video/x-matroska'],
+    ['mov', 'video/quicktime'],
+    ['msg', 'application/vnd.ms-outlook']
+]);
+function toFileWithPath(file, path) {
+    var f = withMimeType(file);
+    if (typeof f.path !== 'string') { // on electron, path is already set to the absolute path
+        var webkitRelativePath = file.webkitRelativePath;
+        Object.defineProperty(f, 'path', {
+            value: typeof path === 'string'
+                ? path
+                // If <input webkitdirectory> is set,
+                // the File will have a {webkitRelativePath} property
+                // https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
+                : typeof webkitRelativePath === 'string' && webkitRelativePath.length > 0
+                    ? webkitRelativePath
+                    : file.name,
+            writable: false,
+            configurable: false,
+            enumerable: true
+        });
+    }
+    return f;
+}
+function withMimeType(file) {
+    var name = file.name;
+    var hasExtension = name && name.lastIndexOf('.') !== -1;
+    if (hasExtension && !file.type) {
+        var ext = name.split('.')
+            .pop().toLowerCase();
+        var type = COMMON_MIME_TYPES.get(ext);
+        if (type) {
+            Object.defineProperty(file, 'type', {
+                value: type,
+                writable: false,
+                configurable: false,
+                enumerable: true
+            });
+        }
+    }
+    return file;
+}
+//# sourceMappingURL=file.js.map
+
+/***/ }),
+
+/***/ "./node_modules/file-selector/dist/es5/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/file-selector/dist/es5/index.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   fromEvent: () => (/* reexport safe */ _file_selector__WEBPACK_IMPORTED_MODULE_0__.fromEvent)
+/* harmony export */ });
+/* harmony import */ var _file_selector__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./file-selector */ "./node_modules/file-selector/dist/es5/file-selector.js");
+
+//# sourceMappingURL=index.js.map
 
 /***/ }),
 
@@ -5098,6 +17427,120 @@ module.exports = function hasSymbols() {
 var bind = __webpack_require__(/*! function-bind */ "./node_modules/function-bind/index.js");
 
 module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
+
+
+/***/ }),
+
+/***/ "./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js ***!
+  \**********************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var reactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+
+/**
+ * Copyright 2015, Yahoo! Inc.
+ * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
+ */
+var REACT_STATICS = {
+  childContextTypes: true,
+  contextType: true,
+  contextTypes: true,
+  defaultProps: true,
+  displayName: true,
+  getDefaultProps: true,
+  getDerivedStateFromError: true,
+  getDerivedStateFromProps: true,
+  mixins: true,
+  propTypes: true,
+  type: true
+};
+var KNOWN_STATICS = {
+  name: true,
+  length: true,
+  prototype: true,
+  caller: true,
+  callee: true,
+  arguments: true,
+  arity: true
+};
+var FORWARD_REF_STATICS = {
+  '$$typeof': true,
+  render: true,
+  defaultProps: true,
+  displayName: true,
+  propTypes: true
+};
+var MEMO_STATICS = {
+  '$$typeof': true,
+  compare: true,
+  defaultProps: true,
+  displayName: true,
+  propTypes: true,
+  type: true
+};
+var TYPE_STATICS = {};
+TYPE_STATICS[reactIs.ForwardRef] = FORWARD_REF_STATICS;
+TYPE_STATICS[reactIs.Memo] = MEMO_STATICS;
+
+function getStatics(component) {
+  // React v16.11 and below
+  if (reactIs.isMemo(component)) {
+    return MEMO_STATICS;
+  } // React v16.12 and above
+
+
+  return TYPE_STATICS[component['$$typeof']] || REACT_STATICS;
+}
+
+var defineProperty = Object.defineProperty;
+var getOwnPropertyNames = Object.getOwnPropertyNames;
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+var getPrototypeOf = Object.getPrototypeOf;
+var objectPrototype = Object.prototype;
+function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
+  if (typeof sourceComponent !== 'string') {
+    // don't hoist over string (html) components
+    if (objectPrototype) {
+      var inheritedComponent = getPrototypeOf(sourceComponent);
+
+      if (inheritedComponent && inheritedComponent !== objectPrototype) {
+        hoistNonReactStatics(targetComponent, inheritedComponent, blacklist);
+      }
+    }
+
+    var keys = getOwnPropertyNames(sourceComponent);
+
+    if (getOwnPropertySymbols) {
+      keys = keys.concat(getOwnPropertySymbols(sourceComponent));
+    }
+
+    var targetStatics = getStatics(targetComponent);
+    var sourceStatics = getStatics(sourceComponent);
+
+    for (var i = 0; i < keys.length; ++i) {
+      var key = keys[i];
+
+      if (!KNOWN_STATICS[key] && !(blacklist && blacklist[key]) && !(sourceStatics && sourceStatics[key]) && !(targetStatics && targetStatics[key])) {
+        var descriptor = getOwnPropertyDescriptor(sourceComponent, key);
+
+        try {
+          // Avoid failures from read-only properties
+          defineProperty(targetComponent, key, descriptor);
+        } catch (e) {}
+      }
+    }
+  }
+
+  return targetComponent;
+}
+
+module.exports = hoistNonReactStatics;
 
 
 /***/ }),
@@ -24345,6 +36788,35 @@ const ChevronRight = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["defau
 
 /***/ }),
 
+/***/ "./node_modules/lucide-react/dist/esm/icons/chevrons-up-down.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/chevrons-up-down.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ChevronsUpDown)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * lucide-react v0.292.0 - ISC
+ */
+
+
+
+const ChevronsUpDown = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("ChevronsUpDown", [
+  ["path", { d: "m7 15 5 5 5-5", key: "1hf1tw" }],
+  ["path", { d: "m7 9 5-5 5 5", key: "sgt6xg" }]
+]);
+
+
+//# sourceMappingURL=chevrons-up-down.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/lucide-react/dist/esm/icons/circle.js":
 /*!************************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/circle.js ***!
@@ -24404,6 +36876,118 @@ const Compass = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])
 
 
 //# sourceMappingURL=compass.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/icons/file.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/file.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ File)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * lucide-react v0.292.0 - ISC
+ */
+
+
+
+const File = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("File", [
+  [
+    "path",
+    {
+      d: "M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z",
+      key: "1nnpy2"
+    }
+  ],
+  ["polyline", { points: "14 2 14 8 20 8", key: "1ew0cm" }]
+]);
+
+
+//# sourceMappingURL=file.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/icons/grip.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/grip.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Grip)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * lucide-react v0.292.0 - ISC
+ */
+
+
+
+const Grip = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("Grip", [
+  ["circle", { cx: "12", cy: "5", r: "1", key: "gxeob9" }],
+  ["circle", { cx: "19", cy: "5", r: "1", key: "w8mnmm" }],
+  ["circle", { cx: "5", cy: "5", r: "1", key: "lttvr7" }],
+  ["circle", { cx: "12", cy: "12", r: "1", key: "41hilf" }],
+  ["circle", { cx: "19", cy: "12", r: "1", key: "1wjl8i" }],
+  ["circle", { cx: "5", cy: "12", r: "1", key: "1pcz8c" }],
+  ["circle", { cx: "12", cy: "19", r: "1", key: "lyex9k" }],
+  ["circle", { cx: "19", cy: "19", r: "1", key: "shf9b7" }],
+  ["circle", { cx: "5", cy: "19", r: "1", key: "bfqh0e" }]
+]);
+
+
+//# sourceMappingURL=grip.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/icons/image.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/image.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Image)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * lucide-react v0.292.0 - ISC
+ */
+
+
+
+const Image = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("Image", [
+  [
+    "rect",
+    {
+      width: "18",
+      height: "18",
+      x: "3",
+      y: "3",
+      rx: "2",
+      ry: "2",
+      key: "1m3agn"
+    }
+  ],
+  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
+  ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
+]);
+
+
+//# sourceMappingURL=image.js.map
 
 
 /***/ }),
@@ -24485,6 +37069,38 @@ const Layout = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
 
 
 //# sourceMappingURL=layout.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/icons/list-checks.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/list-checks.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ListChecks)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * lucide-react v0.292.0 - ISC
+ */
+
+
+
+const ListChecks = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("ListChecks", [
+  ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
+  ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }],
+  ["path", { d: "M13 6h8", key: "15sg57" }],
+  ["path", { d: "M13 12h8", key: "h98zly" }],
+  ["path", { d: "M13 18h8", key: "oe0vm4" }]
+]);
+
+
+//# sourceMappingURL=list-checks.js.map
 
 
 /***/ }),
@@ -24670,6 +37286,65 @@ const Pencil = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
 
 /***/ }),
 
+/***/ "./node_modules/lucide-react/dist/esm/icons/plus-circle.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/plus-circle.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ PlusCircle)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * lucide-react v0.292.0 - ISC
+ */
+
+
+
+const PlusCircle = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("PlusCircle", [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M8 12h8", key: "1wcyev" }],
+  ["path", { d: "M12 8v8", key: "napkw2" }]
+]);
+
+
+//# sourceMappingURL=plus-circle.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/icons/search.js":
+/*!************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/search.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Search)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * lucide-react v0.292.0 - ISC
+ */
+
+
+
+const Search = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("Search", [
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
+  ["path", { d: "m21 21-4.3-4.3", key: "1qie3q" }]
+]);
+
+
+//# sourceMappingURL=search.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/lucide-react/dist/esm/icons/sun.js":
 /*!*********************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/sun.js ***!
@@ -24706,6 +37381,42 @@ const Sun = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("Su
 
 /***/ }),
 
+/***/ "./node_modules/lucide-react/dist/esm/icons/upload-cloud.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/upload-cloud.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ UploadCloud)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * lucide-react v0.292.0 - ISC
+ */
+
+
+
+const UploadCloud = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("UploadCloud", [
+  [
+    "path",
+    {
+      d: "M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242",
+      key: "1pljnt"
+    }
+  ],
+  ["path", { d: "M12 12v9", key: "192myk" }],
+  ["path", { d: "m16 16-4-4-4 4", key: "119tzi" }]
+]);
+
+
+//# sourceMappingURL=upload-cloud.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/lucide-react/dist/esm/icons/x.js":
 /*!*******************************************************!*\
   !*** ./node_modules/lucide-react/dist/esm/icons/x.js ***!
@@ -24731,6 +37442,72 @@ const X = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("X", 
 
 
 //# sourceMappingURL=x.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/memoize-one/dist/memoize-one.esm.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/memoize-one/dist/memoize-one.esm.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ memoizeOne)
+/* harmony export */ });
+var safeIsNaN = Number.isNaN ||
+    function ponyfill(value) {
+        return typeof value === 'number' && value !== value;
+    };
+function isEqual(first, second) {
+    if (first === second) {
+        return true;
+    }
+    if (safeIsNaN(first) && safeIsNaN(second)) {
+        return true;
+    }
+    return false;
+}
+function areInputsEqual(newInputs, lastInputs) {
+    if (newInputs.length !== lastInputs.length) {
+        return false;
+    }
+    for (var i = 0; i < newInputs.length; i++) {
+        if (!isEqual(newInputs[i], lastInputs[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function memoizeOne(resultFn, isEqual) {
+    if (isEqual === void 0) { isEqual = areInputsEqual; }
+    var cache = null;
+    function memoized() {
+        var newArgs = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            newArgs[_i] = arguments[_i];
+        }
+        if (cache && cache.lastThis === this && isEqual(newArgs, cache.lastArgs)) {
+            return cache.lastResult;
+        }
+        var lastResult = resultFn.apply(this, newArgs);
+        cache = {
+            lastResult: lastResult,
+            lastArgs: newArgs,
+            lastThis: this,
+        };
+        return lastResult;
+    }
+    memoized.clear = function clear() {
+        cache = null;
+    };
+    return memoized;
+}
+
+
 
 
 /***/ }),
@@ -25230,6 +38007,107 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, 
   return NProgress;
 });
 
+
+
+/***/ }),
+
+/***/ "./node_modules/object-assign/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/object-assign/index.js ***!
+  \*********************************************/
+/***/ ((module) => {
+
+"use strict";
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+
+/* eslint-disable no-unused-vars */
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !==
+				'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (getOwnPropertySymbols) {
+			symbols = getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
 
 
 /***/ }),
@@ -25950,6 +38828,800 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/checkPropTypes.js":
+/*!***************************************************!*\
+  !*** ./node_modules/prop-types/checkPropTypes.js ***!
+  \***************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+var printWarning = function() {};
+
+if (true) {
+  var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
+  var loggedTypeFailures = {};
+  var has = __webpack_require__(/*! ./lib/has */ "./node_modules/prop-types/lib/has.js");
+
+  printWarning = function(text) {
+    var message = 'Warning: ' + text;
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) { /**/ }
+  };
+}
+
+/**
+ * Assert that the values match with the type specs.
+ * Error messages are memorized and will only be shown once.
+ *
+ * @param {object} typeSpecs Map of name to a ReactPropType
+ * @param {object} values Runtime values that need to be type-checked
+ * @param {string} location e.g. "prop", "context", "child context"
+ * @param {string} componentName Name of the component for error messages.
+ * @param {?Function} getStack Returns the component stack.
+ * @private
+ */
+function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
+  if (true) {
+    for (var typeSpecName in typeSpecs) {
+      if (has(typeSpecs, typeSpecName)) {
+        var error;
+        // Prop type validation may throw. In case they do, we don't want to
+        // fail the render phase where it didn't fail before. So we log it.
+        // After these have been cleaned up, we'll let them throw.
+        try {
+          // This is intentionally an invariant that gets caught. It's the same
+          // behavior as without this statement except with a better message.
+          if (typeof typeSpecs[typeSpecName] !== 'function') {
+            var err = Error(
+              (componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' +
+              'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' +
+              'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.'
+            );
+            err.name = 'Invariant Violation';
+            throw err;
+          }
+          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
+        } catch (ex) {
+          error = ex;
+        }
+        if (error && !(error instanceof Error)) {
+          printWarning(
+            (componentName || 'React class') + ': type specification of ' +
+            location + ' `' + typeSpecName + '` is invalid; the type checker ' +
+            'function must return `null` or an `Error` but returned a ' + typeof error + '. ' +
+            'You may have forgotten to pass an argument to the type checker ' +
+            'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
+            'shape all require an argument).'
+          );
+        }
+        if (error instanceof Error && !(error.message in loggedTypeFailures)) {
+          // Only monitor this failure once because there tends to be a lot of the
+          // same error.
+          loggedTypeFailures[error.message] = true;
+
+          var stack = getStack ? getStack() : '';
+
+          printWarning(
+            'Failed ' + location + ' type: ' + error.message + (stack != null ? stack : '')
+          );
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Resets warning cache when testing.
+ *
+ * @private
+ */
+checkPropTypes.resetWarningCache = function() {
+  if (true) {
+    loggedTypeFailures = {};
+  }
+}
+
+module.exports = checkPropTypes;
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/factoryWithTypeCheckers.js":
+/*!************************************************************!*\
+  !*** ./node_modules/prop-types/factoryWithTypeCheckers.js ***!
+  \************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+var assign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
+
+var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
+var has = __webpack_require__(/*! ./lib/has */ "./node_modules/prop-types/lib/has.js");
+var checkPropTypes = __webpack_require__(/*! ./checkPropTypes */ "./node_modules/prop-types/checkPropTypes.js");
+
+var printWarning = function() {};
+
+if (true) {
+  printWarning = function(text) {
+    var message = 'Warning: ' + text;
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+}
+
+function emptyFunctionThatReturnsNull() {
+  return null;
+}
+
+module.exports = function(isValidElement, throwOnDirectAccess) {
+  /* global Symbol */
+  var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+  var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
+
+  /**
+   * Returns the iterator method function contained on the iterable object.
+   *
+   * Be sure to invoke the function with the iterable as context:
+   *
+   *     var iteratorFn = getIteratorFn(myIterable);
+   *     if (iteratorFn) {
+   *       var iterator = iteratorFn.call(myIterable);
+   *       ...
+   *     }
+   *
+   * @param {?object} maybeIterable
+   * @return {?function}
+   */
+  function getIteratorFn(maybeIterable) {
+    var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
+    if (typeof iteratorFn === 'function') {
+      return iteratorFn;
+    }
+  }
+
+  /**
+   * Collection of methods that allow declaration and validation of props that are
+   * supplied to React components. Example usage:
+   *
+   *   var Props = require('ReactPropTypes');
+   *   var MyArticle = React.createClass({
+   *     propTypes: {
+   *       // An optional string prop named "description".
+   *       description: Props.string,
+   *
+   *       // A required enum prop named "category".
+   *       category: Props.oneOf(['News','Photos']).isRequired,
+   *
+   *       // A prop named "dialog" that requires an instance of Dialog.
+   *       dialog: Props.instanceOf(Dialog).isRequired
+   *     },
+   *     render: function() { ... }
+   *   });
+   *
+   * A more formal specification of how these methods are used:
+   *
+   *   type := array|bool|func|object|number|string|oneOf([...])|instanceOf(...)
+   *   decl := ReactPropTypes.{type}(.isRequired)?
+   *
+   * Each and every declaration produces a function with the same signature. This
+   * allows the creation of custom validation functions. For example:
+   *
+   *  var MyLink = React.createClass({
+   *    propTypes: {
+   *      // An optional string or URI prop named "href".
+   *      href: function(props, propName, componentName) {
+   *        var propValue = props[propName];
+   *        if (propValue != null && typeof propValue !== 'string' &&
+   *            !(propValue instanceof URI)) {
+   *          return new Error(
+   *            'Expected a string or an URI for ' + propName + ' in ' +
+   *            componentName
+   *          );
+   *        }
+   *      }
+   *    },
+   *    render: function() {...}
+   *  });
+   *
+   * @internal
+   */
+
+  var ANONYMOUS = '<<anonymous>>';
+
+  // Important!
+  // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
+  var ReactPropTypes = {
+    array: createPrimitiveTypeChecker('array'),
+    bigint: createPrimitiveTypeChecker('bigint'),
+    bool: createPrimitiveTypeChecker('boolean'),
+    func: createPrimitiveTypeChecker('function'),
+    number: createPrimitiveTypeChecker('number'),
+    object: createPrimitiveTypeChecker('object'),
+    string: createPrimitiveTypeChecker('string'),
+    symbol: createPrimitiveTypeChecker('symbol'),
+
+    any: createAnyTypeChecker(),
+    arrayOf: createArrayOfTypeChecker,
+    element: createElementTypeChecker(),
+    elementType: createElementTypeTypeChecker(),
+    instanceOf: createInstanceTypeChecker,
+    node: createNodeChecker(),
+    objectOf: createObjectOfTypeChecker,
+    oneOf: createEnumTypeChecker,
+    oneOfType: createUnionTypeChecker,
+    shape: createShapeTypeChecker,
+    exact: createStrictShapeTypeChecker,
+  };
+
+  /**
+   * inlined Object.is polyfill to avoid requiring consumers ship their own
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+   */
+  /*eslint-disable no-self-compare*/
+  function is(x, y) {
+    // SameValue algorithm
+    if (x === y) {
+      // Steps 1-5, 7-10
+      // Steps 6.b-6.e: +0 != -0
+      return x !== 0 || 1 / x === 1 / y;
+    } else {
+      // Step 6.a: NaN == NaN
+      return x !== x && y !== y;
+    }
+  }
+  /*eslint-enable no-self-compare*/
+
+  /**
+   * We use an Error-like object for backward compatibility as people may call
+   * PropTypes directly and inspect their output. However, we don't use real
+   * Errors anymore. We don't inspect their stack anyway, and creating them
+   * is prohibitively expensive if they are created too often, such as what
+   * happens in oneOfType() for any type before the one that matched.
+   */
+  function PropTypeError(message, data) {
+    this.message = message;
+    this.data = data && typeof data === 'object' ? data: {};
+    this.stack = '';
+  }
+  // Make `instanceof Error` still work for returned errors.
+  PropTypeError.prototype = Error.prototype;
+
+  function createChainableTypeChecker(validate) {
+    if (true) {
+      var manualPropTypeCallCache = {};
+      var manualPropTypeWarningCount = 0;
+    }
+    function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
+      componentName = componentName || ANONYMOUS;
+      propFullName = propFullName || propName;
+
+      if (secret !== ReactPropTypesSecret) {
+        if (throwOnDirectAccess) {
+          // New behavior only for users of `prop-types` package
+          var err = new Error(
+            'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
+            'Use `PropTypes.checkPropTypes()` to call them. ' +
+            'Read more at http://fb.me/use-check-prop-types'
+          );
+          err.name = 'Invariant Violation';
+          throw err;
+        } else if ( true && typeof console !== 'undefined') {
+          // Old behavior for people using React.PropTypes
+          var cacheKey = componentName + ':' + propName;
+          if (
+            !manualPropTypeCallCache[cacheKey] &&
+            // Avoid spamming the console because they are often not actionable except for lib authors
+            manualPropTypeWarningCount < 3
+          ) {
+            printWarning(
+              'You are manually calling a React.PropTypes validation ' +
+              'function for the `' + propFullName + '` prop on `' + componentName + '`. This is deprecated ' +
+              'and will throw in the standalone `prop-types` package. ' +
+              'You may be seeing this warning due to a third-party PropTypes ' +
+              'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.'
+            );
+            manualPropTypeCallCache[cacheKey] = true;
+            manualPropTypeWarningCount++;
+          }
+        }
+      }
+      if (props[propName] == null) {
+        if (isRequired) {
+          if (props[propName] === null) {
+            return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required ' + ('in `' + componentName + '`, but its value is `null`.'));
+          }
+          return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required in ' + ('`' + componentName + '`, but its value is `undefined`.'));
+        }
+        return null;
+      } else {
+        return validate(props, propName, componentName, location, propFullName);
+      }
+    }
+
+    var chainedCheckType = checkType.bind(null, false);
+    chainedCheckType.isRequired = checkType.bind(null, true);
+
+    return chainedCheckType;
+  }
+
+  function createPrimitiveTypeChecker(expectedType) {
+    function validate(props, propName, componentName, location, propFullName, secret) {
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== expectedType) {
+        // `propValue` being instance of, say, date/regexp, pass the 'object'
+        // check, but we can offer a more precise error message here rather than
+        // 'of type `object`'.
+        var preciseType = getPreciseType(propValue);
+
+        return new PropTypeError(
+          'Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'),
+          {expectedType: expectedType}
+        );
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createAnyTypeChecker() {
+    return createChainableTypeChecker(emptyFunctionThatReturnsNull);
+  }
+
+  function createArrayOfTypeChecker(typeChecker) {
+    function validate(props, propName, componentName, location, propFullName) {
+      if (typeof typeChecker !== 'function') {
+        return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside arrayOf.');
+      }
+      var propValue = props[propName];
+      if (!Array.isArray(propValue)) {
+        var propType = getPropType(propValue);
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an array.'));
+      }
+      for (var i = 0; i < propValue.length; i++) {
+        var error = typeChecker(propValue, i, componentName, location, propFullName + '[' + i + ']', ReactPropTypesSecret);
+        if (error instanceof Error) {
+          return error;
+        }
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createElementTypeChecker() {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      if (!isValidElement(propValue)) {
+        var propType = getPropType(propValue);
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement.'));
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createElementTypeTypeChecker() {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      if (!ReactIs.isValidElementType(propValue)) {
+        var propType = getPropType(propValue);
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement type.'));
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createInstanceTypeChecker(expectedClass) {
+    function validate(props, propName, componentName, location, propFullName) {
+      if (!(props[propName] instanceof expectedClass)) {
+        var expectedClassName = expectedClass.name || ANONYMOUS;
+        var actualClassName = getClassName(props[propName]);
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + actualClassName + '` supplied to `' + componentName + '`, expected ') + ('instance of `' + expectedClassName + '`.'));
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createEnumTypeChecker(expectedValues) {
+    if (!Array.isArray(expectedValues)) {
+      if (true) {
+        if (arguments.length > 1) {
+          printWarning(
+            'Invalid arguments supplied to oneOf, expected an array, got ' + arguments.length + ' arguments. ' +
+            'A common mistake is to write oneOf(x, y, z) instead of oneOf([x, y, z]).'
+          );
+        } else {
+          printWarning('Invalid argument supplied to oneOf, expected an array.');
+        }
+      }
+      return emptyFunctionThatReturnsNull;
+    }
+
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      for (var i = 0; i < expectedValues.length; i++) {
+        if (is(propValue, expectedValues[i])) {
+          return null;
+        }
+      }
+
+      var valuesString = JSON.stringify(expectedValues, function replacer(key, value) {
+        var type = getPreciseType(value);
+        if (type === 'symbol') {
+          return String(value);
+        }
+        return value;
+      });
+      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + String(propValue) + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createObjectOfTypeChecker(typeChecker) {
+    function validate(props, propName, componentName, location, propFullName) {
+      if (typeof typeChecker !== 'function') {
+        return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside objectOf.');
+      }
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== 'object') {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an object.'));
+      }
+      for (var key in propValue) {
+        if (has(propValue, key)) {
+          var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+          if (error instanceof Error) {
+            return error;
+          }
+        }
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createUnionTypeChecker(arrayOfTypeCheckers) {
+    if (!Array.isArray(arrayOfTypeCheckers)) {
+       true ? printWarning('Invalid argument supplied to oneOfType, expected an instance of array.') : 0;
+      return emptyFunctionThatReturnsNull;
+    }
+
+    for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
+      var checker = arrayOfTypeCheckers[i];
+      if (typeof checker !== 'function') {
+        printWarning(
+          'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
+          'received ' + getPostfixForTypeWarning(checker) + ' at index ' + i + '.'
+        );
+        return emptyFunctionThatReturnsNull;
+      }
+    }
+
+    function validate(props, propName, componentName, location, propFullName) {
+      var expectedTypes = [];
+      for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
+        var checker = arrayOfTypeCheckers[i];
+        var checkerResult = checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret);
+        if (checkerResult == null) {
+          return null;
+        }
+        if (checkerResult.data && has(checkerResult.data, 'expectedType')) {
+          expectedTypes.push(checkerResult.data.expectedType);
+        }
+      }
+      var expectedTypesMessage = (expectedTypes.length > 0) ? ', expected one of type [' + expectedTypes.join(', ') + ']': '';
+      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`' + expectedTypesMessage + '.'));
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createNodeChecker() {
+    function validate(props, propName, componentName, location, propFullName) {
+      if (!isNode(props[propName])) {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`, expected a ReactNode.'));
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function invalidValidatorError(componentName, location, propFullName, key, type) {
+    return new PropTypeError(
+      (componentName || 'React class') + ': ' + location + ' type `' + propFullName + '.' + key + '` is invalid; ' +
+      'it must be a function, usually from the `prop-types` package, but received `' + type + '`.'
+    );
+  }
+
+  function createShapeTypeChecker(shapeTypes) {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== 'object') {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+      }
+      for (var key in shapeTypes) {
+        var checker = shapeTypes[key];
+        if (typeof checker !== 'function') {
+          return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+        }
+        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+        if (error) {
+          return error;
+        }
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createStrictShapeTypeChecker(shapeTypes) {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== 'object') {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+      }
+      // We need to check all keys in case some are required but missing from props.
+      var allKeys = assign({}, props[propName], shapeTypes);
+      for (var key in allKeys) {
+        var checker = shapeTypes[key];
+        if (has(shapeTypes, key) && typeof checker !== 'function') {
+          return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+        }
+        if (!checker) {
+          return new PropTypeError(
+            'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
+            '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
+            '\nValid keys: ' + JSON.stringify(Object.keys(shapeTypes), null, '  ')
+          );
+        }
+        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+        if (error) {
+          return error;
+        }
+      }
+      return null;
+    }
+
+    return createChainableTypeChecker(validate);
+  }
+
+  function isNode(propValue) {
+    switch (typeof propValue) {
+      case 'number':
+      case 'string':
+      case 'undefined':
+        return true;
+      case 'boolean':
+        return !propValue;
+      case 'object':
+        if (Array.isArray(propValue)) {
+          return propValue.every(isNode);
+        }
+        if (propValue === null || isValidElement(propValue)) {
+          return true;
+        }
+
+        var iteratorFn = getIteratorFn(propValue);
+        if (iteratorFn) {
+          var iterator = iteratorFn.call(propValue);
+          var step;
+          if (iteratorFn !== propValue.entries) {
+            while (!(step = iterator.next()).done) {
+              if (!isNode(step.value)) {
+                return false;
+              }
+            }
+          } else {
+            // Iterator will provide entry [k,v] tuples rather than values.
+            while (!(step = iterator.next()).done) {
+              var entry = step.value;
+              if (entry) {
+                if (!isNode(entry[1])) {
+                  return false;
+                }
+              }
+            }
+          }
+        } else {
+          return false;
+        }
+
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  function isSymbol(propType, propValue) {
+    // Native Symbol.
+    if (propType === 'symbol') {
+      return true;
+    }
+
+    // falsy value can't be a Symbol
+    if (!propValue) {
+      return false;
+    }
+
+    // 19.4.3.5 Symbol.prototype[@@toStringTag] === 'Symbol'
+    if (propValue['@@toStringTag'] === 'Symbol') {
+      return true;
+    }
+
+    // Fallback for non-spec compliant Symbols which are polyfilled.
+    if (typeof Symbol === 'function' && propValue instanceof Symbol) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // Equivalent of `typeof` but with special handling for array and regexp.
+  function getPropType(propValue) {
+    var propType = typeof propValue;
+    if (Array.isArray(propValue)) {
+      return 'array';
+    }
+    if (propValue instanceof RegExp) {
+      // Old webkits (at least until Android 4.0) return 'function' rather than
+      // 'object' for typeof a RegExp. We'll normalize this here so that /bla/
+      // passes PropTypes.object.
+      return 'object';
+    }
+    if (isSymbol(propType, propValue)) {
+      return 'symbol';
+    }
+    return propType;
+  }
+
+  // This handles more types than `getPropType`. Only used for error messages.
+  // See `createPrimitiveTypeChecker`.
+  function getPreciseType(propValue) {
+    if (typeof propValue === 'undefined' || propValue === null) {
+      return '' + propValue;
+    }
+    var propType = getPropType(propValue);
+    if (propType === 'object') {
+      if (propValue instanceof Date) {
+        return 'date';
+      } else if (propValue instanceof RegExp) {
+        return 'regexp';
+      }
+    }
+    return propType;
+  }
+
+  // Returns a string that is postfixed to a warning about an invalid type.
+  // For example, "undefined" or "of type array"
+  function getPostfixForTypeWarning(value) {
+    var type = getPreciseType(value);
+    switch (type) {
+      case 'array':
+      case 'object':
+        return 'an ' + type;
+      case 'boolean':
+      case 'date':
+      case 'regexp':
+        return 'a ' + type;
+      default:
+        return type;
+    }
+  }
+
+  // Returns class name of the object, if any.
+  function getClassName(propValue) {
+    if (!propValue.constructor || !propValue.constructor.name) {
+      return ANONYMOUS;
+    }
+    return propValue.constructor.name;
+  }
+
+  ReactPropTypes.checkPropTypes = checkPropTypes;
+  ReactPropTypes.resetWarningCache = checkPropTypes.resetWarningCache;
+  ReactPropTypes.PropTypes = ReactPropTypes;
+
+  return ReactPropTypes;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/prop-types/index.js ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+if (true) {
+  var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+
+  // By explicitly using `prop-types` you are opting into new development behavior.
+  // http://fb.me/prop-types-in-prod
+  var throwOnDirectAccess = true;
+  module.exports = __webpack_require__(/*! ./factoryWithTypeCheckers */ "./node_modules/prop-types/factoryWithTypeCheckers.js")(ReactIs.isElement, throwOnDirectAccess);
+} else {}
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/lib/ReactPropTypesSecret.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/prop-types/lib/ReactPropTypesSecret.js ***!
+  \*************************************************************/
+/***/ ((module) => {
+
+"use strict";
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+module.exports = ReactPropTypesSecret;
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/lib/has.js":
+/*!********************************************!*\
+  !*** ./node_modules/prop-types/lib/has.js ***!
+  \********************************************/
+/***/ ((module) => {
+
+module.exports = Function.call.bind(Object.prototype.hasOwnProperty);
 
 
 /***/ }),
@@ -26875,6 +40547,55 @@ module.exports = {
     maybeMap: maybeMap,
     merge: merge
 };
+
+
+/***/ }),
+
+/***/ "./node_modules/raf-schd/dist/raf-schd.esm.js":
+/*!****************************************************!*\
+  !*** ./node_modules/raf-schd/dist/raf-schd.esm.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var rafSchd = function rafSchd(fn) {
+  var lastArgs = [];
+  var frameId = null;
+
+  var wrapperFn = function wrapperFn() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    lastArgs = args;
+
+    if (frameId) {
+      return;
+    }
+
+    frameId = requestAnimationFrame(function () {
+      frameId = null;
+      fn.apply(void 0, lastArgs);
+    });
+  };
+
+  wrapperFn.cancel = function () {
+    if (!frameId) {
+      return;
+    }
+
+    cancelAnimationFrame(frameId);
+    frameId = null;
+  };
+
+  return wrapperFn;
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (rafSchd);
 
 
 /***/ }),
@@ -56830,6 +70551,3565 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/react-dropzone/dist/es/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/react-dropzone/dist/es/index.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ErrorCode: () => (/* reexport safe */ _utils_index__WEBPACK_IMPORTED_MODULE_3__.ErrorCode),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   useDropzone: () => (/* binding */ useDropzone)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var file_selector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! file-selector */ "./node_modules/file-selector/dist/es5/index.js");
+/* harmony import */ var _utils_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils */ "./node_modules/react-dropzone/dist/es/utils/index.js");
+var _excluded = ["children"],
+    _excluded2 = ["open"],
+    _excluded3 = ["refKey", "role", "onKeyDown", "onFocus", "onBlur", "onClick", "onDragEnter", "onDragOver", "onDragLeave", "onDrop"],
+    _excluded4 = ["refKey", "onChange", "onClick"];
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+/* eslint prefer-template: 0 */
+
+
+
+
+/**
+ * Convenience wrapper component for the `useDropzone` hook
+ *
+ * ```jsx
+ * <Dropzone>
+ *   {({getRootProps, getInputProps}) => (
+ *     <div {...getRootProps()}>
+ *       <input {...getInputProps()} />
+ *       <p>Drag 'n' drop some files here, or click to select files</p>
+ *     </div>
+ *   )}
+ * </Dropzone>
+ * ```
+ */
+
+var Dropzone = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (_ref, ref) {
+  var children = _ref.children,
+      params = _objectWithoutProperties(_ref, _excluded);
+
+  var _useDropzone = useDropzone(params),
+      open = _useDropzone.open,
+      props = _objectWithoutProperties(_useDropzone, _excluded2);
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(ref, function () {
+    return {
+      open: open
+    };
+  }, [open]); // TODO: Figure out why react-styleguidist cannot create docs if we don't return a jsx element
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, children(_objectSpread(_objectSpread({}, props), {}, {
+    open: open
+  })));
+});
+Dropzone.displayName = "Dropzone"; // Add default props for react-docgen
+
+var defaultProps = {
+  disabled: false,
+  getFilesFromEvent: file_selector__WEBPACK_IMPORTED_MODULE_1__.fromEvent,
+  maxSize: Infinity,
+  minSize: 0,
+  multiple: true,
+  maxFiles: 0,
+  preventDropOnDocument: true,
+  noClick: false,
+  noKeyboard: false,
+  noDrag: false,
+  noDragEventsBubbling: false,
+  validator: null,
+  useFsAccessApi: true,
+  autoFocus: false
+};
+Dropzone.defaultProps = defaultProps;
+Dropzone.propTypes = {
+  /**
+   * Render function that exposes the dropzone state and prop getter fns
+   *
+   * @param {object} params
+   * @param {Function} params.getRootProps Returns the props you should apply to the root drop container you render
+   * @param {Function} params.getInputProps Returns the props you should apply to hidden file input you render
+   * @param {Function} params.open Open the native file selection dialog
+   * @param {boolean} params.isFocused Dropzone area is in focus
+   * @param {boolean} params.isFileDialogActive File dialog is opened
+   * @param {boolean} params.isDragActive Active drag is in progress
+   * @param {boolean} params.isDragAccept Dragged files are accepted
+   * @param {boolean} params.isDragReject Some dragged files are rejected
+   * @param {File[]} params.acceptedFiles Accepted files
+   * @param {FileRejection[]} params.fileRejections Rejected files and why they were rejected
+   */
+  children: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Set accepted file types.
+   * Checkout https://developer.mozilla.org/en-US/docs/Web/API/window/showOpenFilePicker types option for more information.
+   * Keep in mind that mime type determination is not reliable across platforms. CSV files,
+   * for example, are reported as text/plain under macOS but as application/vnd.ms-excel under
+   * Windows. In some cases there might not be a mime type set at all (https://github.com/react-dropzone/react-dropzone/issues/276).
+   */
+  accept: prop_types__WEBPACK_IMPORTED_MODULE_2___default().objectOf(prop_types__WEBPACK_IMPORTED_MODULE_2___default().arrayOf((prop_types__WEBPACK_IMPORTED_MODULE_2___default().string))),
+
+  /**
+   * Allow drag 'n' drop (or selection from the file dialog) of multiple files
+   */
+  multiple: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
+
+  /**
+   * If false, allow dropped items to take over the current browser window
+   */
+  preventDropOnDocument: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
+
+  /**
+   * If true, disables click to open the native file selection dialog
+   */
+  noClick: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
+
+  /**
+   * If true, disables SPACE/ENTER to open the native file selection dialog.
+   * Note that it also stops tracking the focus state.
+   */
+  noKeyboard: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
+
+  /**
+   * If true, disables drag 'n' drop
+   */
+  noDrag: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
+
+  /**
+   * If true, stops drag event propagation to parents
+   */
+  noDragEventsBubbling: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
+
+  /**
+   * Minimum file size (in bytes)
+   */
+  minSize: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().number),
+
+  /**
+   * Maximum file size (in bytes)
+   */
+  maxSize: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().number),
+
+  /**
+   * Maximum accepted number of files
+   * The default value is 0 which means there is no limitation to how many files are accepted.
+   */
+  maxFiles: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().number),
+
+  /**
+   * Enable/disable the dropzone
+   */
+  disabled: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
+
+  /**
+   * Use this to provide a custom file aggregator
+   *
+   * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+   */
+  getFilesFromEvent: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Cb for when closing the file dialog with no selection
+   */
+  onFileDialogCancel: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Cb for when opening the file dialog
+   */
+  onFileDialogOpen: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Set to true to use the https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API
+   * to open the file picker instead of using an `<input type="file">` click event.
+   */
+  useFsAccessApi: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
+
+  /**
+   * Set to true to focus the root element on render
+   */
+  autoFocus: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool),
+
+  /**
+   * Cb for when the `dragenter` event occurs.
+   *
+   * @param {DragEvent} event
+   */
+  onDragEnter: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Cb for when the `dragleave` event occurs
+   *
+   * @param {DragEvent} event
+   */
+  onDragLeave: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Cb for when the `dragover` event occurs
+   *
+   * @param {DragEvent} event
+   */
+  onDragOver: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Cb for when the `drop` event occurs.
+   * Note that this callback is invoked after the `getFilesFromEvent` callback is done.
+   *
+   * Files are accepted or rejected based on the `accept`, `multiple`, `minSize` and `maxSize` props.
+   * `accept` must be a valid [MIME type](http://www.iana.org/assignments/media-types/media-types.xhtml) according to [input element specification](https://www.w3.org/wiki/HTML/Elements/input/file) or a valid file extension.
+   * If `multiple` is set to false and additional files are dropped,
+   * all files besides the first will be rejected.
+   * Any file which does not have a size in the [`minSize`, `maxSize`] range, will be rejected as well.
+   *
+   * Note that the `onDrop` callback will always be invoked regardless if the dropped files were accepted or rejected.
+   * If you'd like to react to a specific scenario, use the `onDropAccepted`/`onDropRejected` props.
+   *
+   * `onDrop` will provide you with an array of [File](https://developer.mozilla.org/en-US/docs/Web/API/File) objects which you can then process and send to a server.
+   * For example, with [SuperAgent](https://github.com/visionmedia/superagent) as a http/ajax library:
+   *
+   * ```js
+   * function onDrop(acceptedFiles) {
+   *   const req = request.post('/upload')
+   *   acceptedFiles.forEach(file => {
+   *     req.attach(file.name, file)
+   *   })
+   *   req.end(callback)
+   * }
+   * ```
+   *
+   * @param {File[]} acceptedFiles
+   * @param {FileRejection[]} fileRejections
+   * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+   */
+  onDrop: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Cb for when the `drop` event occurs.
+   * Note that if no files are accepted, this callback is not invoked.
+   *
+   * @param {File[]} files
+   * @param {(DragEvent|Event)} event
+   */
+  onDropAccepted: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Cb for when the `drop` event occurs.
+   * Note that if no files are rejected, this callback is not invoked.
+   *
+   * @param {FileRejection[]} fileRejections
+   * @param {(DragEvent|Event)} event
+   */
+  onDropRejected: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Cb for when there's some error from any of the promises.
+   *
+   * @param {Error} error
+   */
+  onError: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func),
+
+  /**
+   * Custom validation function. It must return null if there's no errors.
+   * @param {File} file
+   * @returns {FileError|FileError[]|null}
+   */
+  validator: (prop_types__WEBPACK_IMPORTED_MODULE_2___default().func)
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Dropzone);
+/**
+ * A function that is invoked for the `dragenter`,
+ * `dragover` and `dragleave` events.
+ * It is not invoked if the items are not files (such as link, text, etc.).
+ *
+ * @callback dragCb
+ * @param {DragEvent} event
+ */
+
+/**
+ * A function that is invoked for the `drop` or input change event.
+ * It is not invoked if the items are not files (such as link, text, etc.).
+ *
+ * @callback dropCb
+ * @param {File[]} acceptedFiles List of accepted files
+ * @param {FileRejection[]} fileRejections List of rejected files and why they were rejected
+ * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+ */
+
+/**
+ * A function that is invoked for the `drop` or input change event.
+ * It is not invoked if the items are files (such as link, text, etc.).
+ *
+ * @callback dropAcceptedCb
+ * @param {File[]} files List of accepted files that meet the given criteria
+ * (`accept`, `multiple`, `minSize`, `maxSize`)
+ * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+ */
+
+/**
+ * A function that is invoked for the `drop` or input change event.
+ *
+ * @callback dropRejectedCb
+ * @param {File[]} files List of rejected files that do not meet the given criteria
+ * (`accept`, `multiple`, `minSize`, `maxSize`)
+ * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+ */
+
+/**
+ * A function that is used aggregate files,
+ * in a asynchronous fashion, from drag or input change events.
+ *
+ * @callback getFilesFromEvent
+ * @param {(DragEvent|Event)} event A drag event or input change event (if files were selected via the file dialog)
+ * @returns {(File[]|Promise<File[]>)}
+ */
+
+/**
+ * An object with the current dropzone state.
+ *
+ * @typedef {object} DropzoneState
+ * @property {boolean} isFocused Dropzone area is in focus
+ * @property {boolean} isFileDialogActive File dialog is opened
+ * @property {boolean} isDragActive Active drag is in progress
+ * @property {boolean} isDragAccept Dragged files are accepted
+ * @property {boolean} isDragReject Some dragged files are rejected
+ * @property {File[]} acceptedFiles Accepted files
+ * @property {FileRejection[]} fileRejections Rejected files and why they were rejected
+ */
+
+/**
+ * An object with the dropzone methods.
+ *
+ * @typedef {object} DropzoneMethods
+ * @property {Function} getRootProps Returns the props you should apply to the root drop container you render
+ * @property {Function} getInputProps Returns the props you should apply to hidden file input you render
+ * @property {Function} open Open the native file selection dialog
+ */
+
+var initialState = {
+  isFocused: false,
+  isFileDialogActive: false,
+  isDragActive: false,
+  isDragAccept: false,
+  isDragReject: false,
+  acceptedFiles: [],
+  fileRejections: []
+};
+/**
+ * A React hook that creates a drag 'n' drop area.
+ *
+ * ```jsx
+ * function MyDropzone(props) {
+ *   const {getRootProps, getInputProps} = useDropzone({
+ *     onDrop: acceptedFiles => {
+ *       // do something with the File objects, e.g. upload to some server
+ *     }
+ *   });
+ *   return (
+ *     <div {...getRootProps()}>
+ *       <input {...getInputProps()} />
+ *       <p>Drag and drop some files here, or click to select files</p>
+ *     </div>
+ *   )
+ * }
+ * ```
+ *
+ * @function useDropzone
+ *
+ * @param {object} props
+ * @param {import("./utils").AcceptProp} [props.accept] Set accepted file types.
+ * Checkout https://developer.mozilla.org/en-US/docs/Web/API/window/showOpenFilePicker types option for more information.
+ * Keep in mind that mime type determination is not reliable across platforms. CSV files,
+ * for example, are reported as text/plain under macOS but as application/vnd.ms-excel under
+ * Windows. In some cases there might not be a mime type set at all (https://github.com/react-dropzone/react-dropzone/issues/276).
+ * @param {boolean} [props.multiple=true] Allow drag 'n' drop (or selection from the file dialog) of multiple files
+ * @param {boolean} [props.preventDropOnDocument=true] If false, allow dropped items to take over the current browser window
+ * @param {boolean} [props.noClick=false] If true, disables click to open the native file selection dialog
+ * @param {boolean} [props.noKeyboard=false] If true, disables SPACE/ENTER to open the native file selection dialog.
+ * Note that it also stops tracking the focus state.
+ * @param {boolean} [props.noDrag=false] If true, disables drag 'n' drop
+ * @param {boolean} [props.noDragEventsBubbling=false] If true, stops drag event propagation to parents
+ * @param {number} [props.minSize=0] Minimum file size (in bytes)
+ * @param {number} [props.maxSize=Infinity] Maximum file size (in bytes)
+ * @param {boolean} [props.disabled=false] Enable/disable the dropzone
+ * @param {getFilesFromEvent} [props.getFilesFromEvent] Use this to provide a custom file aggregator
+ * @param {Function} [props.onFileDialogCancel] Cb for when closing the file dialog with no selection
+ * @param {boolean} [props.useFsAccessApi] Set to true to use the https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API
+ * to open the file picker instead of using an `<input type="file">` click event.
+ * @param {boolean} autoFocus Set to true to auto focus the root element.
+ * @param {Function} [props.onFileDialogOpen] Cb for when opening the file dialog
+ * @param {dragCb} [props.onDragEnter] Cb for when the `dragenter` event occurs.
+ * @param {dragCb} [props.onDragLeave] Cb for when the `dragleave` event occurs
+ * @param {dragCb} [props.onDragOver] Cb for when the `dragover` event occurs
+ * @param {dropCb} [props.onDrop] Cb for when the `drop` event occurs.
+ * Note that this callback is invoked after the `getFilesFromEvent` callback is done.
+ *
+ * Files are accepted or rejected based on the `accept`, `multiple`, `minSize` and `maxSize` props.
+ * `accept` must be an object with keys as a valid [MIME type](http://www.iana.org/assignments/media-types/media-types.xhtml) according to [input element specification](https://www.w3.org/wiki/HTML/Elements/input/file) and the value an array of file extensions (optional).
+ * If `multiple` is set to false and additional files are dropped,
+ * all files besides the first will be rejected.
+ * Any file which does not have a size in the [`minSize`, `maxSize`] range, will be rejected as well.
+ *
+ * Note that the `onDrop` callback will always be invoked regardless if the dropped files were accepted or rejected.
+ * If you'd like to react to a specific scenario, use the `onDropAccepted`/`onDropRejected` props.
+ *
+ * `onDrop` will provide you with an array of [File](https://developer.mozilla.org/en-US/docs/Web/API/File) objects which you can then process and send to a server.
+ * For example, with [SuperAgent](https://github.com/visionmedia/superagent) as a http/ajax library:
+ *
+ * ```js
+ * function onDrop(acceptedFiles) {
+ *   const req = request.post('/upload')
+ *   acceptedFiles.forEach(file => {
+ *     req.attach(file.name, file)
+ *   })
+ *   req.end(callback)
+ * }
+ * ```
+ * @param {dropAcceptedCb} [props.onDropAccepted]
+ * @param {dropRejectedCb} [props.onDropRejected]
+ * @param {(error: Error) => void} [props.onError]
+ *
+ * @returns {DropzoneState & DropzoneMethods}
+ */
+
+function useDropzone() {
+  var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  var _defaultProps$props = _objectSpread(_objectSpread({}, defaultProps), props),
+      accept = _defaultProps$props.accept,
+      disabled = _defaultProps$props.disabled,
+      getFilesFromEvent = _defaultProps$props.getFilesFromEvent,
+      maxSize = _defaultProps$props.maxSize,
+      minSize = _defaultProps$props.minSize,
+      multiple = _defaultProps$props.multiple,
+      maxFiles = _defaultProps$props.maxFiles,
+      onDragEnter = _defaultProps$props.onDragEnter,
+      onDragLeave = _defaultProps$props.onDragLeave,
+      onDragOver = _defaultProps$props.onDragOver,
+      onDrop = _defaultProps$props.onDrop,
+      onDropAccepted = _defaultProps$props.onDropAccepted,
+      onDropRejected = _defaultProps$props.onDropRejected,
+      onFileDialogCancel = _defaultProps$props.onFileDialogCancel,
+      onFileDialogOpen = _defaultProps$props.onFileDialogOpen,
+      useFsAccessApi = _defaultProps$props.useFsAccessApi,
+      autoFocus = _defaultProps$props.autoFocus,
+      preventDropOnDocument = _defaultProps$props.preventDropOnDocument,
+      noClick = _defaultProps$props.noClick,
+      noKeyboard = _defaultProps$props.noKeyboard,
+      noDrag = _defaultProps$props.noDrag,
+      noDragEventsBubbling = _defaultProps$props.noDragEventsBubbling,
+      onError = _defaultProps$props.onError,
+      validator = _defaultProps$props.validator;
+
+  var acceptAttr = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return (0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.acceptPropAsAcceptAttr)(accept);
+  }, [accept]);
+  var pickerTypes = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return (0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.pickerOptionsFromAccept)(accept);
+  }, [accept]);
+  var onFileDialogOpenCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return typeof onFileDialogOpen === "function" ? onFileDialogOpen : noop;
+  }, [onFileDialogOpen]);
+  var onFileDialogCancelCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return typeof onFileDialogCancel === "function" ? onFileDialogCancel : noop;
+  }, [onFileDialogCancel]);
+  /**
+   * @constant
+   * @type {React.MutableRefObject<HTMLElement>}
+   */
+
+  var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var inputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+
+  var _useReducer = (0,react__WEBPACK_IMPORTED_MODULE_0__.useReducer)(reducer, initialState),
+      _useReducer2 = _slicedToArray(_useReducer, 2),
+      state = _useReducer2[0],
+      dispatch = _useReducer2[1];
+
+  var isFocused = state.isFocused,
+      isFileDialogActive = state.isFileDialogActive;
+  var fsAccessApiWorksRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(typeof window !== "undefined" && window.isSecureContext && useFsAccessApi && (0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.canUseFileSystemAccessAPI)()); // Update file dialog active state when the window is focused on
+
+  var onWindowFocus = function onWindowFocus() {
+    // Execute the timeout only if the file dialog is opened in the browser
+    if (!fsAccessApiWorksRef.current && isFileDialogActive) {
+      setTimeout(function () {
+        if (inputRef.current) {
+          var files = inputRef.current.files;
+
+          if (!files.length) {
+            dispatch({
+              type: "closeDialog"
+            });
+            onFileDialogCancelCb();
+          }
+        }
+      }, 300);
+    }
+  };
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    window.addEventListener("focus", onWindowFocus, false);
+    return function () {
+      window.removeEventListener("focus", onWindowFocus, false);
+    };
+  }, [inputRef, isFileDialogActive, onFileDialogCancelCb, fsAccessApiWorksRef]);
+  var dragTargetsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)([]);
+
+  var onDocumentDrop = function onDocumentDrop(event) {
+    if (rootRef.current && rootRef.current.contains(event.target)) {
+      // If we intercepted an event for our instance, let it propagate down to the instance's onDrop handler
+      return;
+    }
+
+    event.preventDefault();
+    dragTargetsRef.current = [];
+  };
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    if (preventDropOnDocument) {
+      document.addEventListener("dragover", _utils_index__WEBPACK_IMPORTED_MODULE_3__.onDocumentDragOver, false);
+      document.addEventListener("drop", onDocumentDrop, false);
+    }
+
+    return function () {
+      if (preventDropOnDocument) {
+        document.removeEventListener("dragover", _utils_index__WEBPACK_IMPORTED_MODULE_3__.onDocumentDragOver);
+        document.removeEventListener("drop", onDocumentDrop);
+      }
+    };
+  }, [rootRef, preventDropOnDocument]); // Auto focus the root when autoFocus is true
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    if (!disabled && autoFocus && rootRef.current) {
+      rootRef.current.focus();
+    }
+
+    return function () {};
+  }, [rootRef, autoFocus, disabled]);
+  var onErrCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+    if (onError) {
+      onError(e);
+    } else {
+      // Let the user know something's gone wrong if they haven't provided the onError cb.
+      console.error(e);
+    }
+  }, [onError]);
+  var onDragEnterCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (event) {
+    event.preventDefault(); // Persist here because we need the event later after getFilesFromEvent() is done
+
+    event.persist();
+    stopPropagation(event);
+    dragTargetsRef.current = [].concat(_toConsumableArray(dragTargetsRef.current), [event.target]);
+
+    if ((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.isEvtWithFiles)(event)) {
+      Promise.resolve(getFilesFromEvent(event)).then(function (files) {
+        if ((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.isPropagationStopped)(event) && !noDragEventsBubbling) {
+          return;
+        }
+
+        var fileCount = files.length;
+        var isDragAccept = fileCount > 0 && (0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.allFilesAccepted)({
+          files: files,
+          accept: acceptAttr,
+          minSize: minSize,
+          maxSize: maxSize,
+          multiple: multiple,
+          maxFiles: maxFiles,
+          validator: validator
+        });
+        var isDragReject = fileCount > 0 && !isDragAccept;
+        dispatch({
+          isDragAccept: isDragAccept,
+          isDragReject: isDragReject,
+          isDragActive: true,
+          type: "setDraggedFiles"
+        });
+
+        if (onDragEnter) {
+          onDragEnter(event);
+        }
+      }).catch(function (e) {
+        return onErrCb(e);
+      });
+    }
+  }, [getFilesFromEvent, onDragEnter, onErrCb, noDragEventsBubbling, acceptAttr, minSize, maxSize, multiple, maxFiles, validator]);
+  var onDragOverCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (event) {
+    event.preventDefault();
+    event.persist();
+    stopPropagation(event);
+    var hasFiles = (0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.isEvtWithFiles)(event);
+
+    if (hasFiles && event.dataTransfer) {
+      try {
+        event.dataTransfer.dropEffect = "copy";
+      } catch (_unused) {}
+      /* eslint-disable-line no-empty */
+
+    }
+
+    if (hasFiles && onDragOver) {
+      onDragOver(event);
+    }
+
+    return false;
+  }, [onDragOver, noDragEventsBubbling]);
+  var onDragLeaveCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (event) {
+    event.preventDefault();
+    event.persist();
+    stopPropagation(event); // Only deactivate once the dropzone and all children have been left
+
+    var targets = dragTargetsRef.current.filter(function (target) {
+      return rootRef.current && rootRef.current.contains(target);
+    }); // Make sure to remove a target present multiple times only once
+    // (Firefox may fire dragenter/dragleave multiple times on the same element)
+
+    var targetIdx = targets.indexOf(event.target);
+
+    if (targetIdx !== -1) {
+      targets.splice(targetIdx, 1);
+    }
+
+    dragTargetsRef.current = targets;
+
+    if (targets.length > 0) {
+      return;
+    }
+
+    dispatch({
+      type: "setDraggedFiles",
+      isDragActive: false,
+      isDragAccept: false,
+      isDragReject: false
+    });
+
+    if ((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.isEvtWithFiles)(event) && onDragLeave) {
+      onDragLeave(event);
+    }
+  }, [rootRef, onDragLeave, noDragEventsBubbling]);
+  var setFiles = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (files, event) {
+    var acceptedFiles = [];
+    var fileRejections = [];
+    files.forEach(function (file) {
+      var _fileAccepted = (0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.fileAccepted)(file, acceptAttr),
+          _fileAccepted2 = _slicedToArray(_fileAccepted, 2),
+          accepted = _fileAccepted2[0],
+          acceptError = _fileAccepted2[1];
+
+      var _fileMatchSize = (0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.fileMatchSize)(file, minSize, maxSize),
+          _fileMatchSize2 = _slicedToArray(_fileMatchSize, 2),
+          sizeMatch = _fileMatchSize2[0],
+          sizeError = _fileMatchSize2[1];
+
+      var customErrors = validator ? validator(file) : null;
+
+      if (accepted && sizeMatch && !customErrors) {
+        acceptedFiles.push(file);
+      } else {
+        var errors = [acceptError, sizeError];
+
+        if (customErrors) {
+          errors = errors.concat(customErrors);
+        }
+
+        fileRejections.push({
+          file: file,
+          errors: errors.filter(function (e) {
+            return e;
+          })
+        });
+      }
+    });
+
+    if (!multiple && acceptedFiles.length > 1 || multiple && maxFiles >= 1 && acceptedFiles.length > maxFiles) {
+      // Reject everything and empty accepted files
+      acceptedFiles.forEach(function (file) {
+        fileRejections.push({
+          file: file,
+          errors: [_utils_index__WEBPACK_IMPORTED_MODULE_3__.TOO_MANY_FILES_REJECTION]
+        });
+      });
+      acceptedFiles.splice(0);
+    }
+
+    dispatch({
+      acceptedFiles: acceptedFiles,
+      fileRejections: fileRejections,
+      type: "setFiles"
+    });
+
+    if (onDrop) {
+      onDrop(acceptedFiles, fileRejections, event);
+    }
+
+    if (fileRejections.length > 0 && onDropRejected) {
+      onDropRejected(fileRejections, event);
+    }
+
+    if (acceptedFiles.length > 0 && onDropAccepted) {
+      onDropAccepted(acceptedFiles, event);
+    }
+  }, [dispatch, multiple, acceptAttr, minSize, maxSize, maxFiles, onDrop, onDropAccepted, onDropRejected, validator]);
+  var onDropCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (event) {
+    event.preventDefault(); // Persist here because we need the event later after getFilesFromEvent() is done
+
+    event.persist();
+    stopPropagation(event);
+    dragTargetsRef.current = [];
+
+    if ((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.isEvtWithFiles)(event)) {
+      Promise.resolve(getFilesFromEvent(event)).then(function (files) {
+        if ((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.isPropagationStopped)(event) && !noDragEventsBubbling) {
+          return;
+        }
+
+        setFiles(files, event);
+      }).catch(function (e) {
+        return onErrCb(e);
+      });
+    }
+
+    dispatch({
+      type: "reset"
+    });
+  }, [getFilesFromEvent, setFiles, onErrCb, noDragEventsBubbling]); // Fn for opening the file dialog programmatically
+
+  var openFileDialog = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+    // No point to use FS access APIs if context is not secure
+    // https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts#feature_detection
+    if (fsAccessApiWorksRef.current) {
+      dispatch({
+        type: "openDialog"
+      });
+      onFileDialogOpenCb(); // https://developer.mozilla.org/en-US/docs/Web/API/window/showOpenFilePicker
+
+      var opts = {
+        multiple: multiple,
+        types: pickerTypes
+      };
+      window.showOpenFilePicker(opts).then(function (handles) {
+        return getFilesFromEvent(handles);
+      }).then(function (files) {
+        setFiles(files, null);
+        dispatch({
+          type: "closeDialog"
+        });
+      }).catch(function (e) {
+        // AbortError means the user canceled
+        if ((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.isAbort)(e)) {
+          onFileDialogCancelCb(e);
+          dispatch({
+            type: "closeDialog"
+          });
+        } else if ((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.isSecurityError)(e)) {
+          fsAccessApiWorksRef.current = false; // CORS, so cannot use this API
+          // Try using the input
+
+          if (inputRef.current) {
+            inputRef.current.value = null;
+            inputRef.current.click();
+          } else {
+            onErrCb(new Error("Cannot open the file picker because the https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API is not supported and no <input> was provided."));
+          }
+        } else {
+          onErrCb(e);
+        }
+      });
+      return;
+    }
+
+    if (inputRef.current) {
+      dispatch({
+        type: "openDialog"
+      });
+      onFileDialogOpenCb();
+      inputRef.current.value = null;
+      inputRef.current.click();
+    }
+  }, [dispatch, onFileDialogOpenCb, onFileDialogCancelCb, useFsAccessApi, setFiles, onErrCb, pickerTypes, multiple]); // Cb to open the file dialog when SPACE/ENTER occurs on the dropzone
+
+  var onKeyDownCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (event) {
+    // Ignore keyboard events bubbling up the DOM tree
+    if (!rootRef.current || !rootRef.current.isEqualNode(event.target)) {
+      return;
+    }
+
+    if (event.key === " " || event.key === "Enter" || event.keyCode === 32 || event.keyCode === 13) {
+      event.preventDefault();
+      openFileDialog();
+    }
+  }, [rootRef, openFileDialog]); // Update focus state for the dropzone
+
+  var onFocusCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+    dispatch({
+      type: "focus"
+    });
+  }, []);
+  var onBlurCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+    dispatch({
+      type: "blur"
+    });
+  }, []); // Cb to open the file dialog when click occurs on the dropzone
+
+  var onClickCb = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+    if (noClick) {
+      return;
+    } // In IE11/Edge the file-browser dialog is blocking, therefore, use setTimeout()
+    // to ensure React can handle state changes
+    // See: https://github.com/react-dropzone/react-dropzone/issues/450
+
+
+    if ((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.isIeOrEdge)()) {
+      setTimeout(openFileDialog, 0);
+    } else {
+      openFileDialog();
+    }
+  }, [noClick, openFileDialog]);
+
+  var composeHandler = function composeHandler(fn) {
+    return disabled ? null : fn;
+  };
+
+  var composeKeyboardHandler = function composeKeyboardHandler(fn) {
+    return noKeyboard ? null : composeHandler(fn);
+  };
+
+  var composeDragHandler = function composeDragHandler(fn) {
+    return noDrag ? null : composeHandler(fn);
+  };
+
+  var stopPropagation = function stopPropagation(event) {
+    if (noDragEventsBubbling) {
+      event.stopPropagation();
+    }
+  };
+
+  var getRootProps = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return function () {
+      var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref2$refKey = _ref2.refKey,
+          refKey = _ref2$refKey === void 0 ? "ref" : _ref2$refKey,
+          role = _ref2.role,
+          onKeyDown = _ref2.onKeyDown,
+          onFocus = _ref2.onFocus,
+          onBlur = _ref2.onBlur,
+          onClick = _ref2.onClick,
+          onDragEnter = _ref2.onDragEnter,
+          onDragOver = _ref2.onDragOver,
+          onDragLeave = _ref2.onDragLeave,
+          onDrop = _ref2.onDrop,
+          rest = _objectWithoutProperties(_ref2, _excluded3);
+
+      return _objectSpread(_objectSpread(_defineProperty({
+        onKeyDown: composeKeyboardHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onKeyDown, onKeyDownCb)),
+        onFocus: composeKeyboardHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onFocus, onFocusCb)),
+        onBlur: composeKeyboardHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onBlur, onBlurCb)),
+        onClick: composeHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onClick, onClickCb)),
+        onDragEnter: composeDragHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onDragEnter, onDragEnterCb)),
+        onDragOver: composeDragHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onDragOver, onDragOverCb)),
+        onDragLeave: composeDragHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onDragLeave, onDragLeaveCb)),
+        onDrop: composeDragHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onDrop, onDropCb)),
+        role: typeof role === "string" && role !== "" ? role : "presentation"
+      }, refKey, rootRef), !disabled && !noKeyboard ? {
+        tabIndex: 0
+      } : {}), rest);
+    };
+  }, [rootRef, onKeyDownCb, onFocusCb, onBlurCb, onClickCb, onDragEnterCb, onDragOverCb, onDragLeaveCb, onDropCb, noKeyboard, noDrag, disabled]);
+  var onInputElementClick = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (event) {
+    event.stopPropagation();
+  }, []);
+  var getInputProps = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    return function () {
+      var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref3$refKey = _ref3.refKey,
+          refKey = _ref3$refKey === void 0 ? "ref" : _ref3$refKey,
+          onChange = _ref3.onChange,
+          onClick = _ref3.onClick,
+          rest = _objectWithoutProperties(_ref3, _excluded4);
+
+      var inputProps = _defineProperty({
+        accept: acceptAttr,
+        multiple: multiple,
+        type: "file",
+        style: {
+          display: "none"
+        },
+        onChange: composeHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onChange, onDropCb)),
+        onClick: composeHandler((0,_utils_index__WEBPACK_IMPORTED_MODULE_3__.composeEventHandlers)(onClick, onInputElementClick)),
+        tabIndex: -1
+      }, refKey, inputRef);
+
+      return _objectSpread(_objectSpread({}, inputProps), rest);
+    };
+  }, [inputRef, accept, multiple, onDropCb, disabled]);
+  return _objectSpread(_objectSpread({}, state), {}, {
+    isFocused: isFocused && !disabled,
+    getRootProps: getRootProps,
+    getInputProps: getInputProps,
+    rootRef: rootRef,
+    inputRef: inputRef,
+    open: composeHandler(openFileDialog)
+  });
+}
+/**
+ * @param {DropzoneState} state
+ * @param {{type: string} & DropzoneState} action
+ * @returns {DropzoneState}
+ */
+
+function reducer(state, action) {
+  /* istanbul ignore next */
+  switch (action.type) {
+    case "focus":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        isFocused: true
+      });
+
+    case "blur":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        isFocused: false
+      });
+
+    case "openDialog":
+      return _objectSpread(_objectSpread({}, initialState), {}, {
+        isFileDialogActive: true
+      });
+
+    case "closeDialog":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        isFileDialogActive: false
+      });
+
+    case "setDraggedFiles":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        isDragActive: action.isDragActive,
+        isDragAccept: action.isDragAccept,
+        isDragReject: action.isDragReject
+      });
+
+    case "setFiles":
+      return _objectSpread(_objectSpread({}, state), {}, {
+        acceptedFiles: action.acceptedFiles,
+        fileRejections: action.fileRejections
+      });
+
+    case "reset":
+      return _objectSpread({}, initialState);
+
+    default:
+      return state;
+  }
+}
+
+function noop() {}
+
+
+
+/***/ }),
+
+/***/ "./node_modules/react-dropzone/dist/es/utils/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/react-dropzone/dist/es/utils/index.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ErrorCode: () => (/* binding */ ErrorCode),
+/* harmony export */   FILE_INVALID_TYPE: () => (/* binding */ FILE_INVALID_TYPE),
+/* harmony export */   FILE_TOO_LARGE: () => (/* binding */ FILE_TOO_LARGE),
+/* harmony export */   FILE_TOO_SMALL: () => (/* binding */ FILE_TOO_SMALL),
+/* harmony export */   TOO_MANY_FILES: () => (/* binding */ TOO_MANY_FILES),
+/* harmony export */   TOO_MANY_FILES_REJECTION: () => (/* binding */ TOO_MANY_FILES_REJECTION),
+/* harmony export */   acceptPropAsAcceptAttr: () => (/* binding */ acceptPropAsAcceptAttr),
+/* harmony export */   allFilesAccepted: () => (/* binding */ allFilesAccepted),
+/* harmony export */   canUseFileSystemAccessAPI: () => (/* binding */ canUseFileSystemAccessAPI),
+/* harmony export */   composeEventHandlers: () => (/* binding */ composeEventHandlers),
+/* harmony export */   fileAccepted: () => (/* binding */ fileAccepted),
+/* harmony export */   fileMatchSize: () => (/* binding */ fileMatchSize),
+/* harmony export */   getInvalidTypeRejectionErr: () => (/* binding */ getInvalidTypeRejectionErr),
+/* harmony export */   getTooLargeRejectionErr: () => (/* binding */ getTooLargeRejectionErr),
+/* harmony export */   getTooSmallRejectionErr: () => (/* binding */ getTooSmallRejectionErr),
+/* harmony export */   isAbort: () => (/* binding */ isAbort),
+/* harmony export */   isEvtWithFiles: () => (/* binding */ isEvtWithFiles),
+/* harmony export */   isExt: () => (/* binding */ isExt),
+/* harmony export */   isIeOrEdge: () => (/* binding */ isIeOrEdge),
+/* harmony export */   isKindFile: () => (/* binding */ isKindFile),
+/* harmony export */   isMIMEType: () => (/* binding */ isMIMEType),
+/* harmony export */   isPropagationStopped: () => (/* binding */ isPropagationStopped),
+/* harmony export */   isSecurityError: () => (/* binding */ isSecurityError),
+/* harmony export */   onDocumentDragOver: () => (/* binding */ onDocumentDragOver),
+/* harmony export */   pickerOptionsFromAccept: () => (/* binding */ pickerOptionsFromAccept)
+/* harmony export */ });
+/* harmony import */ var attr_accept__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! attr-accept */ "./node_modules/attr-accept/dist/es/index.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+ // Error codes
+
+var FILE_INVALID_TYPE = "file-invalid-type";
+var FILE_TOO_LARGE = "file-too-large";
+var FILE_TOO_SMALL = "file-too-small";
+var TOO_MANY_FILES = "too-many-files";
+var ErrorCode = {
+  FileInvalidType: FILE_INVALID_TYPE,
+  FileTooLarge: FILE_TOO_LARGE,
+  FileTooSmall: FILE_TOO_SMALL,
+  TooManyFiles: TOO_MANY_FILES
+}; // File Errors
+
+var getInvalidTypeRejectionErr = function getInvalidTypeRejectionErr(accept) {
+  accept = Array.isArray(accept) && accept.length === 1 ? accept[0] : accept;
+  var messageSuffix = Array.isArray(accept) ? "one of ".concat(accept.join(", ")) : accept;
+  return {
+    code: FILE_INVALID_TYPE,
+    message: "File type must be ".concat(messageSuffix)
+  };
+};
+var getTooLargeRejectionErr = function getTooLargeRejectionErr(maxSize) {
+  return {
+    code: FILE_TOO_LARGE,
+    message: "File is larger than ".concat(maxSize, " ").concat(maxSize === 1 ? "byte" : "bytes")
+  };
+};
+var getTooSmallRejectionErr = function getTooSmallRejectionErr(minSize) {
+  return {
+    code: FILE_TOO_SMALL,
+    message: "File is smaller than ".concat(minSize, " ").concat(minSize === 1 ? "byte" : "bytes")
+  };
+};
+var TOO_MANY_FILES_REJECTION = {
+  code: TOO_MANY_FILES,
+  message: "Too many files"
+}; // Firefox versions prior to 53 return a bogus MIME type for every file drag, so dragovers with
+// that MIME type will always be accepted
+
+function fileAccepted(file, accept) {
+  var isAcceptable = file.type === "application/x-moz-file" || (0,attr_accept__WEBPACK_IMPORTED_MODULE_0__["default"])(file, accept);
+  return [isAcceptable, isAcceptable ? null : getInvalidTypeRejectionErr(accept)];
+}
+function fileMatchSize(file, minSize, maxSize) {
+  if (isDefined(file.size)) {
+    if (isDefined(minSize) && isDefined(maxSize)) {
+      if (file.size > maxSize) return [false, getTooLargeRejectionErr(maxSize)];
+      if (file.size < minSize) return [false, getTooSmallRejectionErr(minSize)];
+    } else if (isDefined(minSize) && file.size < minSize) return [false, getTooSmallRejectionErr(minSize)];else if (isDefined(maxSize) && file.size > maxSize) return [false, getTooLargeRejectionErr(maxSize)];
+  }
+
+  return [true, null];
+}
+
+function isDefined(value) {
+  return value !== undefined && value !== null;
+}
+/**
+ *
+ * @param {object} options
+ * @param {File[]} options.files
+ * @param {string|string[]} [options.accept]
+ * @param {number} [options.minSize]
+ * @param {number} [options.maxSize]
+ * @param {boolean} [options.multiple]
+ * @param {number} [options.maxFiles]
+ * @param {(f: File) => FileError|FileError[]|null} [options.validator]
+ * @returns
+ */
+
+
+function allFilesAccepted(_ref) {
+  var files = _ref.files,
+      accept = _ref.accept,
+      minSize = _ref.minSize,
+      maxSize = _ref.maxSize,
+      multiple = _ref.multiple,
+      maxFiles = _ref.maxFiles,
+      validator = _ref.validator;
+
+  if (!multiple && files.length > 1 || multiple && maxFiles >= 1 && files.length > maxFiles) {
+    return false;
+  }
+
+  return files.every(function (file) {
+    var _fileAccepted = fileAccepted(file, accept),
+        _fileAccepted2 = _slicedToArray(_fileAccepted, 1),
+        accepted = _fileAccepted2[0];
+
+    var _fileMatchSize = fileMatchSize(file, minSize, maxSize),
+        _fileMatchSize2 = _slicedToArray(_fileMatchSize, 1),
+        sizeMatch = _fileMatchSize2[0];
+
+    var customErrors = validator ? validator(file) : null;
+    return accepted && sizeMatch && !customErrors;
+  });
+} // React's synthetic events has event.isPropagationStopped,
+// but to remain compatibility with other libs (Preact) fall back
+// to check event.cancelBubble
+
+function isPropagationStopped(event) {
+  if (typeof event.isPropagationStopped === "function") {
+    return event.isPropagationStopped();
+  } else if (typeof event.cancelBubble !== "undefined") {
+    return event.cancelBubble;
+  }
+
+  return false;
+}
+function isEvtWithFiles(event) {
+  if (!event.dataTransfer) {
+    return !!event.target && !!event.target.files;
+  } // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types
+  // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types#file
+
+
+  return Array.prototype.some.call(event.dataTransfer.types, function (type) {
+    return type === "Files" || type === "application/x-moz-file";
+  });
+}
+function isKindFile(item) {
+  return _typeof(item) === "object" && item !== null && item.kind === "file";
+} // allow the entire document to be a drag target
+
+function onDocumentDragOver(event) {
+  event.preventDefault();
+}
+
+function isIe(userAgent) {
+  return userAgent.indexOf("MSIE") !== -1 || userAgent.indexOf("Trident/") !== -1;
+}
+
+function isEdge(userAgent) {
+  return userAgent.indexOf("Edge/") !== -1;
+}
+
+function isIeOrEdge() {
+  var userAgent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window.navigator.userAgent;
+  return isIe(userAgent) || isEdge(userAgent);
+}
+/**
+ * This is intended to be used to compose event handlers
+ * They are executed in order until one of them calls `event.isPropagationStopped()`.
+ * Note that the check is done on the first invoke too,
+ * meaning that if propagation was stopped before invoking the fns,
+ * no handlers will be executed.
+ *
+ * @param {Function} fns the event hanlder functions
+ * @return {Function} the event handler to add to an element
+ */
+
+function composeEventHandlers() {
+  for (var _len = arguments.length, fns = new Array(_len), _key = 0; _key < _len; _key++) {
+    fns[_key] = arguments[_key];
+  }
+
+  return function (event) {
+    for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+
+    return fns.some(function (fn) {
+      if (!isPropagationStopped(event) && fn) {
+        fn.apply(void 0, [event].concat(args));
+      }
+
+      return isPropagationStopped(event);
+    });
+  };
+}
+/**
+ * canUseFileSystemAccessAPI checks if the [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)
+ * is supported by the browser.
+ * @returns {boolean}
+ */
+
+function canUseFileSystemAccessAPI() {
+  return "showOpenFilePicker" in window;
+}
+/**
+ * Convert the `{accept}` dropzone prop to the
+ * `{types}` option for https://developer.mozilla.org/en-US/docs/Web/API/window/showOpenFilePicker
+ *
+ * @param {AcceptProp} accept
+ * @returns {{accept: string[]}[]}
+ */
+
+function pickerOptionsFromAccept(accept) {
+  if (isDefined(accept)) {
+    var acceptForPicker = Object.entries(accept).filter(function (_ref2) {
+      var _ref3 = _slicedToArray(_ref2, 2),
+          mimeType = _ref3[0],
+          ext = _ref3[1];
+
+      var ok = true;
+
+      if (!isMIMEType(mimeType)) {
+        console.warn("Skipped \"".concat(mimeType, "\" because it is not a valid MIME type. Check https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types for a list of valid MIME types."));
+        ok = false;
+      }
+
+      if (!Array.isArray(ext) || !ext.every(isExt)) {
+        console.warn("Skipped \"".concat(mimeType, "\" because an invalid file extension was provided."));
+        ok = false;
+      }
+
+      return ok;
+    }).reduce(function (agg, _ref4) {
+      var _ref5 = _slicedToArray(_ref4, 2),
+          mimeType = _ref5[0],
+          ext = _ref5[1];
+
+      return _objectSpread(_objectSpread({}, agg), {}, _defineProperty({}, mimeType, ext));
+    }, {});
+    return [{
+      // description is required due to https://crbug.com/1264708
+      description: "Files",
+      accept: acceptForPicker
+    }];
+  }
+
+  return accept;
+}
+/**
+ * Convert the `{accept}` dropzone prop to an array of MIME types/extensions.
+ * @param {AcceptProp} accept
+ * @returns {string}
+ */
+
+function acceptPropAsAcceptAttr(accept) {
+  if (isDefined(accept)) {
+    return Object.entries(accept).reduce(function (a, _ref6) {
+      var _ref7 = _slicedToArray(_ref6, 2),
+          mimeType = _ref7[0],
+          ext = _ref7[1];
+
+      return [].concat(_toConsumableArray(a), [mimeType], _toConsumableArray(ext));
+    }, []) // Silently discard invalid entries as pickerOptionsFromAccept warns about these
+    .filter(function (v) {
+      return isMIMEType(v) || isExt(v);
+    }).join(",");
+  }
+
+  return undefined;
+}
+/**
+ * Check if v is an exception caused by aborting a request (e.g window.showOpenFilePicker()).
+ *
+ * See https://developer.mozilla.org/en-US/docs/Web/API/DOMException.
+ * @param {any} v
+ * @returns {boolean} True if v is an abort exception.
+ */
+
+function isAbort(v) {
+  return v instanceof DOMException && (v.name === "AbortError" || v.code === v.ABORT_ERR);
+}
+/**
+ * Check if v is a security error.
+ *
+ * See https://developer.mozilla.org/en-US/docs/Web/API/DOMException.
+ * @param {any} v
+ * @returns {boolean} True if v is a security error.
+ */
+
+function isSecurityError(v) {
+  return v instanceof DOMException && (v.name === "SecurityError" || v.code === v.SECURITY_ERR);
+}
+/**
+ * Check if v is a MIME type string.
+ *
+ * See accepted format: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#unique_file_type_specifiers.
+ *
+ * @param {string} v
+ */
+
+function isMIMEType(v) {
+  return v === "audio/*" || v === "video/*" || v === "image/*" || v === "text/*" || /\w+\/[-+.\w]+/g.test(v);
+}
+/**
+ * Check if v is a file extension.
+ * @param {string} v
+ */
+
+function isExt(v) {
+  return /^.*\.[\w]+$/.test(v);
+}
+/**
+ * @typedef {Object.<string, string[]>} AcceptProp
+ */
+
+/**
+ * @typedef {object} FileError
+ * @property {string} message
+ * @property {ErrorCode|string} code
+ */
+
+/**
+ * @typedef {"file-invalid-type"|"file-too-large"|"file-too-small"|"too-many-files"} ErrorCode
+ */
+
+/***/ }),
+
+/***/ "./node_modules/react-is/cjs/react-is.development.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-is/cjs/react-is.development.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+/** @license React v16.13.1
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+// nor polyfill, then a plain number is used for performance.
+var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+// (unstable) APIs that have been removed. Can we remove the symbols?
+
+var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
+var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
+var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
+
+function isValidElementType(type) {
+  return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+}
+
+function typeOf(object) {
+  if (typeof object === 'object' && object !== null) {
+    var $$typeof = object.$$typeof;
+
+    switch ($$typeof) {
+      case REACT_ELEMENT_TYPE:
+        var type = object.type;
+
+        switch (type) {
+          case REACT_ASYNC_MODE_TYPE:
+          case REACT_CONCURRENT_MODE_TYPE:
+          case REACT_FRAGMENT_TYPE:
+          case REACT_PROFILER_TYPE:
+          case REACT_STRICT_MODE_TYPE:
+          case REACT_SUSPENSE_TYPE:
+            return type;
+
+          default:
+            var $$typeofType = type && type.$$typeof;
+
+            switch ($$typeofType) {
+              case REACT_CONTEXT_TYPE:
+              case REACT_FORWARD_REF_TYPE:
+              case REACT_LAZY_TYPE:
+              case REACT_MEMO_TYPE:
+              case REACT_PROVIDER_TYPE:
+                return $$typeofType;
+
+              default:
+                return $$typeof;
+            }
+
+        }
+
+      case REACT_PORTAL_TYPE:
+        return $$typeof;
+    }
+  }
+
+  return undefined;
+} // AsyncMode is deprecated along with isAsyncMode
+
+var AsyncMode = REACT_ASYNC_MODE_TYPE;
+var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+var ContextConsumer = REACT_CONTEXT_TYPE;
+var ContextProvider = REACT_PROVIDER_TYPE;
+var Element = REACT_ELEMENT_TYPE;
+var ForwardRef = REACT_FORWARD_REF_TYPE;
+var Fragment = REACT_FRAGMENT_TYPE;
+var Lazy = REACT_LAZY_TYPE;
+var Memo = REACT_MEMO_TYPE;
+var Portal = REACT_PORTAL_TYPE;
+var Profiler = REACT_PROFILER_TYPE;
+var StrictMode = REACT_STRICT_MODE_TYPE;
+var Suspense = REACT_SUSPENSE_TYPE;
+var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+
+function isAsyncMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+      hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+
+      console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+    }
+  }
+
+  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+}
+function isConcurrentMode(object) {
+  return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+}
+function isContextConsumer(object) {
+  return typeOf(object) === REACT_CONTEXT_TYPE;
+}
+function isContextProvider(object) {
+  return typeOf(object) === REACT_PROVIDER_TYPE;
+}
+function isElement(object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+function isForwardRef(object) {
+  return typeOf(object) === REACT_FORWARD_REF_TYPE;
+}
+function isFragment(object) {
+  return typeOf(object) === REACT_FRAGMENT_TYPE;
+}
+function isLazy(object) {
+  return typeOf(object) === REACT_LAZY_TYPE;
+}
+function isMemo(object) {
+  return typeOf(object) === REACT_MEMO_TYPE;
+}
+function isPortal(object) {
+  return typeOf(object) === REACT_PORTAL_TYPE;
+}
+function isProfiler(object) {
+  return typeOf(object) === REACT_PROFILER_TYPE;
+}
+function isStrictMode(object) {
+  return typeOf(object) === REACT_STRICT_MODE_TYPE;
+}
+function isSuspense(object) {
+  return typeOf(object) === REACT_SUSPENSE_TYPE;
+}
+
+exports.AsyncMode = AsyncMode;
+exports.ConcurrentMode = ConcurrentMode;
+exports.ContextConsumer = ContextConsumer;
+exports.ContextProvider = ContextProvider;
+exports.Element = Element;
+exports.ForwardRef = ForwardRef;
+exports.Fragment = Fragment;
+exports.Lazy = Lazy;
+exports.Memo = Memo;
+exports.Portal = Portal;
+exports.Profiler = Profiler;
+exports.StrictMode = StrictMode;
+exports.Suspense = Suspense;
+exports.isAsyncMode = isAsyncMode;
+exports.isConcurrentMode = isConcurrentMode;
+exports.isContextConsumer = isContextConsumer;
+exports.isContextProvider = isContextProvider;
+exports.isElement = isElement;
+exports.isForwardRef = isForwardRef;
+exports.isFragment = isFragment;
+exports.isLazy = isLazy;
+exports.isMemo = isMemo;
+exports.isPortal = isPortal;
+exports.isProfiler = isProfiler;
+exports.isStrictMode = isStrictMode;
+exports.isSuspense = isSuspense;
+exports.isValidElementType = isValidElementType;
+exports.typeOf = typeOf;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-is/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/react-is/index.js ***!
+  \****************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/react-is/cjs/react-is.development.js");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/components/Context.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/components/Context.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ReactReduxContext: () => (/* binding */ ReactReduxContext),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const ContextKey = Symbol.for(`react-redux-context`);
+const gT = typeof globalThis !== "undefined" ? globalThis :
+/* fall back to a per-module scope (pre-8.1 behaviour) if `globalThis` is not available */
+{};
+
+function getContext() {
+  var _gT$ContextKey;
+
+  if (!react__WEBPACK_IMPORTED_MODULE_0__.createContext) return {};
+  const contextMap = (_gT$ContextKey = gT[ContextKey]) != null ? _gT$ContextKey : gT[ContextKey] = new Map();
+  let realContext = contextMap.get(react__WEBPACK_IMPORTED_MODULE_0__.createContext);
+
+  if (!realContext) {
+    realContext = react__WEBPACK_IMPORTED_MODULE_0__.createContext(null);
+
+    if (true) {
+      realContext.displayName = 'ReactRedux';
+    }
+
+    contextMap.set(react__WEBPACK_IMPORTED_MODULE_0__.createContext, realContext);
+  }
+
+  return realContext;
+}
+
+const ReactReduxContext = /*#__PURE__*/getContext();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ReactReduxContext);
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/components/Provider.js":
+/*!************************************************************!*\
+  !*** ./node_modules/react-redux/es/components/Provider.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Context__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _utils_Subscription__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/Subscription */ "./node_modules/react-redux/es/utils/Subscription.js");
+/* harmony import */ var _utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/useIsomorphicLayoutEffect */ "./node_modules/react-redux/es/utils/useIsomorphicLayoutEffect.js");
+
+
+
+
+
+function Provider({
+  store,
+  context,
+  children,
+  serverState,
+  stabilityCheck = 'once',
+  noopCheck = 'once'
+}) {
+  const contextValue = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(() => {
+    const subscription = (0,_utils_Subscription__WEBPACK_IMPORTED_MODULE_2__.createSubscription)(store);
+    return {
+      store,
+      subscription,
+      getServerState: serverState ? () => serverState : undefined,
+      stabilityCheck,
+      noopCheck
+    };
+  }, [store, serverState, stabilityCheck, noopCheck]);
+  const previousState = react__WEBPACK_IMPORTED_MODULE_0__.useMemo(() => store.getState(), [store]);
+  (0,_utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_3__.useIsomorphicLayoutEffect)(() => {
+    const {
+      subscription
+    } = contextValue;
+    subscription.onStateChange = subscription.notifyNestedSubs;
+    subscription.trySubscribe();
+
+    if (previousState !== store.getState()) {
+      subscription.notifyNestedSubs();
+    }
+
+    return () => {
+      subscription.tryUnsubscribe();
+      subscription.onStateChange = undefined;
+    };
+  }, [contextValue, previousState]);
+  const Context = context || _Context__WEBPACK_IMPORTED_MODULE_1__.ReactReduxContext; // @ts-ignore 'AnyAction' is assignable to the constraint of type 'A', but 'A' could be instantiated with a different subtype
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Context.Provider, {
+    value: contextValue
+  }, children);
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Provider);
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/components/connect.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/components/connect.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   initializeConnect: () => (/* binding */ initializeConnect)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+/* harmony import */ var hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! hoist-non-react-statics */ "./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js");
+/* harmony import */ var hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_is__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-is */ "./node_modules/react-redux/node_modules/react-is/index.js");
+/* harmony import */ var _connect_selectorFactory__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../connect/selectorFactory */ "./node_modules/react-redux/es/connect/selectorFactory.js");
+/* harmony import */ var _connect_mapDispatchToProps__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../connect/mapDispatchToProps */ "./node_modules/react-redux/es/connect/mapDispatchToProps.js");
+/* harmony import */ var _connect_mapStateToProps__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../connect/mapStateToProps */ "./node_modules/react-redux/es/connect/mapStateToProps.js");
+/* harmony import */ var _connect_mergeProps__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../connect/mergeProps */ "./node_modules/react-redux/es/connect/mergeProps.js");
+/* harmony import */ var _utils_Subscription__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/Subscription */ "./node_modules/react-redux/es/utils/Subscription.js");
+/* harmony import */ var _utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../utils/useIsomorphicLayoutEffect */ "./node_modules/react-redux/es/utils/useIsomorphicLayoutEffect.js");
+/* harmony import */ var _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../utils/shallowEqual */ "./node_modules/react-redux/es/utils/shallowEqual.js");
+/* harmony import */ var _utils_warning__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../utils/warning */ "./node_modules/react-redux/es/utils/warning.js");
+/* harmony import */ var _Context__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _utils_useSyncExternalStore__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../utils/useSyncExternalStore */ "./node_modules/react-redux/es/utils/useSyncExternalStore.js");
+
+
+const _excluded = ["reactReduxForwardedRef"];
+
+/* eslint-disable valid-jsdoc, @typescript-eslint/no-unused-vars */
+
+
+
+
+
+
+
+
+
+
+
+
+
+let useSyncExternalStore = _utils_useSyncExternalStore__WEBPACK_IMPORTED_MODULE_14__.notInitialized;
+const initializeConnect = fn => {
+  useSyncExternalStore = fn;
+}; // Define some constant arrays just to avoid re-creating these
+
+const EMPTY_ARRAY = [null, 0];
+const NO_SUBSCRIPTION_ARRAY = [null, null]; // Attempts to stringify whatever not-really-a-component value we were given
+// for logging in an error message
+
+const stringifyComponent = Comp => {
+  try {
+    return JSON.stringify(Comp);
+  } catch (err) {
+    return String(Comp);
+  }
+};
+
+// This is "just" a `useLayoutEffect`, but with two modifications:
+// - we need to fall back to `useEffect` in SSR to avoid annoying warnings
+// - we extract this to a separate function to avoid closing over values
+//   and causing memory leaks
+function useIsomorphicLayoutEffectWithArgs(effectFunc, effectArgs, dependencies) {
+  (0,_utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_10__.useIsomorphicLayoutEffect)(() => effectFunc(...effectArgs), dependencies);
+} // Effect callback, extracted: assign the latest props values to refs for later usage
+
+
+function captureWrapperProps(lastWrapperProps, lastChildProps, renderIsScheduled, wrapperProps, // actualChildProps: unknown,
+childPropsFromStoreUpdate, notifyNestedSubs) {
+  // We want to capture the wrapper props and child props we used for later comparisons
+  lastWrapperProps.current = wrapperProps;
+  renderIsScheduled.current = false; // If the render was from a store update, clear out that reference and cascade the subscriber update
+
+  if (childPropsFromStoreUpdate.current) {
+    childPropsFromStoreUpdate.current = null;
+    notifyNestedSubs();
+  }
+} // Effect callback, extracted: subscribe to the Redux store or nearest connected ancestor,
+// check for updates after dispatched actions, and trigger re-renders.
+
+
+function subscribeUpdates(shouldHandleStateChanges, store, subscription, childPropsSelector, lastWrapperProps, lastChildProps, renderIsScheduled, isMounted, childPropsFromStoreUpdate, notifyNestedSubs, // forceComponentUpdateDispatch: React.Dispatch<any>,
+additionalSubscribeListener) {
+  // If we're not subscribed to the store, nothing to do here
+  if (!shouldHandleStateChanges) return () => {}; // Capture values for checking if and when this component unmounts
+
+  let didUnsubscribe = false;
+  let lastThrownError = null; // We'll run this callback every time a store subscription update propagates to this component
+
+  const checkForUpdates = () => {
+    if (didUnsubscribe || !isMounted.current) {
+      // Don't run stale listeners.
+      // Redux doesn't guarantee unsubscriptions happen until next dispatch.
+      return;
+    } // TODO We're currently calling getState ourselves here, rather than letting `uSES` do it
+
+
+    const latestStoreState = store.getState();
+    let newChildProps, error;
+
+    try {
+      // Actually run the selector with the most recent store state and wrapper props
+      // to determine what the child props should be
+      newChildProps = childPropsSelector(latestStoreState, lastWrapperProps.current);
+    } catch (e) {
+      error = e;
+      lastThrownError = e;
+    }
+
+    if (!error) {
+      lastThrownError = null;
+    } // If the child props haven't changed, nothing to do here - cascade the subscription update
+
+
+    if (newChildProps === lastChildProps.current) {
+      if (!renderIsScheduled.current) {
+        notifyNestedSubs();
+      }
+    } else {
+      // Save references to the new child props.  Note that we track the "child props from store update"
+      // as a ref instead of a useState/useReducer because we need a way to determine if that value has
+      // been processed.  If this went into useState/useReducer, we couldn't clear out the value without
+      // forcing another re-render, which we don't want.
+      lastChildProps.current = newChildProps;
+      childPropsFromStoreUpdate.current = newChildProps;
+      renderIsScheduled.current = true; // TODO This is hacky and not how `uSES` is meant to be used
+      // Trigger the React `useSyncExternalStore` subscriber
+
+      additionalSubscribeListener();
+    }
+  }; // Actually subscribe to the nearest connected ancestor (or store)
+
+
+  subscription.onStateChange = checkForUpdates;
+  subscription.trySubscribe(); // Pull data from the store after first render in case the store has
+  // changed since we began.
+
+  checkForUpdates();
+
+  const unsubscribeWrapper = () => {
+    didUnsubscribe = true;
+    subscription.tryUnsubscribe();
+    subscription.onStateChange = null;
+
+    if (lastThrownError) {
+      // It's possible that we caught an error due to a bad mapState function, but the
+      // parent re-rendered without this component and we're about to unmount.
+      // This shouldn't happen as long as we do top-down subscriptions correctly, but
+      // if we ever do those wrong, this throw will surface the error in our tests.
+      // In that case, throw the error from here so it doesn't get lost.
+      throw lastThrownError;
+    }
+  };
+
+  return unsubscribeWrapper;
+} // Reducer initial state creation for our update reducer
+
+
+const initStateUpdates = () => EMPTY_ARRAY;
+
+function strictEqual(a, b) {
+  return a === b;
+}
+/**
+ * Infers the type of props that a connector will inject into a component.
+ */
+
+
+let hasWarnedAboutDeprecatedPureOption = false;
+/**
+ * Connects a React component to a Redux store.
+ *
+ * - Without arguments, just wraps the component, without changing the behavior / props
+ *
+ * - If 2 params are passed (3rd param, mergeProps, is skipped), default behavior
+ * is to override ownProps (as stated in the docs), so what remains is everything that's
+ * not a state or dispatch prop
+ *
+ * - When 3rd param is passed, we don't know if ownProps propagate and whether they
+ * should be valid component props, because it depends on mergeProps implementation.
+ * As such, it is the user's responsibility to extend ownProps interface from state or
+ * dispatch props or both when applicable
+ *
+ * @param mapStateToProps A function that extracts values from state
+ * @param mapDispatchToProps Setup for dispatching actions
+ * @param mergeProps Optional callback to merge state and dispatch props together
+ * @param options Options for configuring the connection
+ *
+ */
+
+function connect(mapStateToProps, mapDispatchToProps, mergeProps, {
+  // The `pure` option has been removed, so TS doesn't like us destructuring this to check its existence.
+  // @ts-ignore
+  pure,
+  areStatesEqual = strictEqual,
+  areOwnPropsEqual = _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_11__["default"],
+  areStatePropsEqual = _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_11__["default"],
+  areMergedPropsEqual = _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_11__["default"],
+  // use React's forwardRef to expose a ref of the wrapped component
+  forwardRef = false,
+  // the context consumer to use
+  context = _Context__WEBPACK_IMPORTED_MODULE_13__.ReactReduxContext
+} = {}) {
+  if (true) {
+    if (pure !== undefined && !hasWarnedAboutDeprecatedPureOption) {
+      hasWarnedAboutDeprecatedPureOption = true;
+      (0,_utils_warning__WEBPACK_IMPORTED_MODULE_12__["default"])('The `pure` option has been removed. `connect` is now always a "pure/memoized" component');
+    }
+  }
+
+  const Context = context;
+  const initMapStateToProps = (0,_connect_mapStateToProps__WEBPACK_IMPORTED_MODULE_7__.mapStateToPropsFactory)(mapStateToProps);
+  const initMapDispatchToProps = (0,_connect_mapDispatchToProps__WEBPACK_IMPORTED_MODULE_6__.mapDispatchToPropsFactory)(mapDispatchToProps);
+  const initMergeProps = (0,_connect_mergeProps__WEBPACK_IMPORTED_MODULE_8__.mergePropsFactory)(mergeProps);
+  const shouldHandleStateChanges = Boolean(mapStateToProps);
+
+  const wrapWithConnect = WrappedComponent => {
+    if ( true && !(0,react_is__WEBPACK_IMPORTED_MODULE_4__.isValidElementType)(WrappedComponent)) {
+      throw new Error(`You must pass a component to the function returned by connect. Instead received ${stringifyComponent(WrappedComponent)}`);
+    }
+
+    const wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name || 'Component';
+    const displayName = `Connect(${wrappedComponentName})`;
+    const selectorFactoryOptions = {
+      shouldHandleStateChanges,
+      displayName,
+      wrappedComponentName,
+      WrappedComponent,
+      // @ts-ignore
+      initMapStateToProps,
+      // @ts-ignore
+      initMapDispatchToProps,
+      initMergeProps,
+      areStatesEqual,
+      areStatePropsEqual,
+      areOwnPropsEqual,
+      areMergedPropsEqual
+    };
+
+    function ConnectFunction(props) {
+      const [propsContext, reactReduxForwardedRef, wrapperProps] = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        // Distinguish between actual "data" props that were passed to the wrapper component,
+        // and values needed to control behavior (forwarded refs, alternate context instances).
+        // To maintain the wrapperProps object reference, memoize this destructuring.
+        const {
+          reactReduxForwardedRef
+        } = props,
+              wrapperProps = (0,_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__["default"])(props, _excluded);
+
+        return [props.context, reactReduxForwardedRef, wrapperProps];
+      }, [props]);
+      const ContextToUse = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        // Users may optionally pass in a custom context instance to use instead of our ReactReduxContext.
+        // Memoize the check that determines which context instance we should use.
+        return propsContext && propsContext.Consumer && // @ts-ignore
+        (0,react_is__WEBPACK_IMPORTED_MODULE_4__.isContextConsumer)( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(propsContext.Consumer, null)) ? propsContext : Context;
+      }, [propsContext, Context]); // Retrieve the store and ancestor subscription via context, if available
+
+      const contextValue = react__WEBPACK_IMPORTED_MODULE_3__.useContext(ContextToUse); // The store _must_ exist as either a prop or in context.
+      // We'll check to see if it _looks_ like a Redux store first.
+      // This allows us to pass through a `store` prop that is just a plain value.
+
+      const didStoreComeFromProps = Boolean(props.store) && Boolean(props.store.getState) && Boolean(props.store.dispatch);
+      const didStoreComeFromContext = Boolean(contextValue) && Boolean(contextValue.store);
+
+      if ( true && !didStoreComeFromProps && !didStoreComeFromContext) {
+        throw new Error(`Could not find "store" in the context of ` + `"${displayName}". Either wrap the root component in a <Provider>, ` + `or pass a custom React context provider to <Provider> and the corresponding ` + `React context consumer to ${displayName} in connect options.`);
+      } // Based on the previous check, one of these must be true
+
+
+      const store = didStoreComeFromProps ? props.store : contextValue.store;
+      const getServerState = didStoreComeFromContext ? contextValue.getServerState : store.getState;
+      const childPropsSelector = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        // The child props selector needs the store reference as an input.
+        // Re-create this selector whenever the store changes.
+        return (0,_connect_selectorFactory__WEBPACK_IMPORTED_MODULE_5__["default"])(store.dispatch, selectorFactoryOptions);
+      }, [store]);
+      const [subscription, notifyNestedSubs] = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        if (!shouldHandleStateChanges) return NO_SUBSCRIPTION_ARRAY; // This Subscription's source should match where store came from: props vs. context. A component
+        // connected to the store via props shouldn't use subscription from context, or vice versa.
+
+        const subscription = (0,_utils_Subscription__WEBPACK_IMPORTED_MODULE_9__.createSubscription)(store, didStoreComeFromProps ? undefined : contextValue.subscription); // `notifyNestedSubs` is duplicated to handle the case where the component is unmounted in
+        // the middle of the notification loop, where `subscription` will then be null. This can
+        // probably be avoided if Subscription's listeners logic is changed to not call listeners
+        // that have been unsubscribed in the  middle of the notification loop.
+
+        const notifyNestedSubs = subscription.notifyNestedSubs.bind(subscription);
+        return [subscription, notifyNestedSubs];
+      }, [store, didStoreComeFromProps, contextValue]); // Determine what {store, subscription} value should be put into nested context, if necessary,
+      // and memoize that value to avoid unnecessary context updates.
+
+      const overriddenContextValue = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        if (didStoreComeFromProps) {
+          // This component is directly subscribed to a store from props.
+          // We don't want descendants reading from this store - pass down whatever
+          // the existing context value is from the nearest connected ancestor.
+          return contextValue;
+        } // Otherwise, put this component's subscription instance into context, so that
+        // connected descendants won't update until after this component is done
+
+
+        return (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, contextValue, {
+          subscription
+        });
+      }, [didStoreComeFromProps, contextValue, subscription]); // Set up refs to coordinate values between the subscription effect and the render logic
+
+      const lastChildProps = react__WEBPACK_IMPORTED_MODULE_3__.useRef();
+      const lastWrapperProps = react__WEBPACK_IMPORTED_MODULE_3__.useRef(wrapperProps);
+      const childPropsFromStoreUpdate = react__WEBPACK_IMPORTED_MODULE_3__.useRef();
+      const renderIsScheduled = react__WEBPACK_IMPORTED_MODULE_3__.useRef(false);
+      const isProcessingDispatch = react__WEBPACK_IMPORTED_MODULE_3__.useRef(false);
+      const isMounted = react__WEBPACK_IMPORTED_MODULE_3__.useRef(false);
+      const latestSubscriptionCallbackError = react__WEBPACK_IMPORTED_MODULE_3__.useRef();
+      (0,_utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_10__.useIsomorphicLayoutEffect)(() => {
+        isMounted.current = true;
+        return () => {
+          isMounted.current = false;
+        };
+      }, []);
+      const actualChildPropsSelector = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        const selector = () => {
+          // Tricky logic here:
+          // - This render may have been triggered by a Redux store update that produced new child props
+          // - However, we may have gotten new wrapper props after that
+          // If we have new child props, and the same wrapper props, we know we should use the new child props as-is.
+          // But, if we have new wrapper props, those might change the child props, so we have to recalculate things.
+          // So, we'll use the child props from store update only if the wrapper props are the same as last time.
+          if (childPropsFromStoreUpdate.current && wrapperProps === lastWrapperProps.current) {
+            return childPropsFromStoreUpdate.current;
+          } // TODO We're reading the store directly in render() here. Bad idea?
+          // This will likely cause Bad Things (TM) to happen in Concurrent Mode.
+          // Note that we do this because on renders _not_ caused by store updates, we need the latest store state
+          // to determine what the child props should be.
+
+
+          return childPropsSelector(store.getState(), wrapperProps);
+        };
+
+        return selector;
+      }, [store, wrapperProps]); // We need this to execute synchronously every time we re-render. However, React warns
+      // about useLayoutEffect in SSR, so we try to detect environment and fall back to
+      // just useEffect instead to avoid the warning, since neither will run anyway.
+
+      const subscribeForReact = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        const subscribe = reactListener => {
+          if (!subscription) {
+            return () => {};
+          }
+
+          return subscribeUpdates(shouldHandleStateChanges, store, subscription, // @ts-ignore
+          childPropsSelector, lastWrapperProps, lastChildProps, renderIsScheduled, isMounted, childPropsFromStoreUpdate, notifyNestedSubs, reactListener);
+        };
+
+        return subscribe;
+      }, [subscription]);
+      useIsomorphicLayoutEffectWithArgs(captureWrapperProps, [lastWrapperProps, lastChildProps, renderIsScheduled, wrapperProps, childPropsFromStoreUpdate, notifyNestedSubs]);
+      let actualChildProps;
+
+      try {
+        actualChildProps = useSyncExternalStore( // TODO We're passing through a big wrapper that does a bunch of extra side effects besides subscribing
+        subscribeForReact, // TODO This is incredibly hacky. We've already processed the store update and calculated new child props,
+        // TODO and we're just passing that through so it triggers a re-render for us rather than relying on `uSES`.
+        actualChildPropsSelector, getServerState ? () => childPropsSelector(getServerState(), wrapperProps) : actualChildPropsSelector);
+      } catch (err) {
+        if (latestSubscriptionCallbackError.current) {
+          ;
+          err.message += `\nThe error may be correlated with this previous error:\n${latestSubscriptionCallbackError.current.stack}\n\n`;
+        }
+
+        throw err;
+      }
+
+      (0,_utils_useIsomorphicLayoutEffect__WEBPACK_IMPORTED_MODULE_10__.useIsomorphicLayoutEffect)(() => {
+        latestSubscriptionCallbackError.current = undefined;
+        childPropsFromStoreUpdate.current = undefined;
+        lastChildProps.current = actualChildProps;
+      }); // Now that all that's done, we can finally try to actually render the child component.
+      // We memoize the elements for the rendered child component as an optimization.
+
+      const renderedWrappedComponent = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        return (
+          /*#__PURE__*/
+          // @ts-ignore
+          react__WEBPACK_IMPORTED_MODULE_3__.createElement(WrappedComponent, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, actualChildProps, {
+            ref: reactReduxForwardedRef
+          }))
+        );
+      }, [reactReduxForwardedRef, WrappedComponent, actualChildProps]); // If React sees the exact same element reference as last time, it bails out of re-rendering
+      // that child, same as if it was wrapped in React.memo() or returned false from shouldComponentUpdate.
+
+      const renderedChild = react__WEBPACK_IMPORTED_MODULE_3__.useMemo(() => {
+        if (shouldHandleStateChanges) {
+          // If this component is subscribed to store updates, we need to pass its own
+          // subscription instance down to our descendants. That means rendering the same
+          // Context instance, and putting a different value into the context.
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(ContextToUse.Provider, {
+            value: overriddenContextValue
+          }, renderedWrappedComponent);
+        }
+
+        return renderedWrappedComponent;
+      }, [ContextToUse, renderedWrappedComponent, overriddenContextValue]);
+      return renderedChild;
+    }
+
+    const _Connect = react__WEBPACK_IMPORTED_MODULE_3__.memo(ConnectFunction);
+
+    // Add a hacky cast to get the right output type
+    const Connect = _Connect;
+    Connect.WrappedComponent = WrappedComponent;
+    Connect.displayName = ConnectFunction.displayName = displayName;
+
+    if (forwardRef) {
+      const _forwarded = react__WEBPACK_IMPORTED_MODULE_3__.forwardRef(function forwardConnectRef(props, ref) {
+        // @ts-ignore
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(Connect, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, props, {
+          reactReduxForwardedRef: ref
+        }));
+      });
+
+      const forwarded = _forwarded;
+      forwarded.displayName = displayName;
+      forwarded.WrappedComponent = WrappedComponent;
+      return hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2___default()(forwarded, WrappedComponent);
+    }
+
+    return hoist_non_react_statics__WEBPACK_IMPORTED_MODULE_2___default()(Connect, WrappedComponent);
+  };
+
+  return wrapWithConnect;
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (connect);
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/invalidArgFactory.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/invalidArgFactory.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createInvalidArgFactory: () => (/* binding */ createInvalidArgFactory)
+/* harmony export */ });
+function createInvalidArgFactory(arg, name) {
+  return (dispatch, options) => {
+    throw new Error(`Invalid value of type ${typeof arg} for ${name} argument when connecting component ${options.wrappedComponentName}.`);
+  };
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/mapDispatchToProps.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/mapDispatchToProps.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   mapDispatchToPropsFactory: () => (/* binding */ mapDispatchToPropsFactory)
+/* harmony export */ });
+/* harmony import */ var _utils_bindActionCreators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/bindActionCreators */ "./node_modules/react-redux/es/utils/bindActionCreators.js");
+/* harmony import */ var _wrapMapToProps__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./wrapMapToProps */ "./node_modules/react-redux/es/connect/wrapMapToProps.js");
+/* harmony import */ var _invalidArgFactory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./invalidArgFactory */ "./node_modules/react-redux/es/connect/invalidArgFactory.js");
+
+
+
+function mapDispatchToPropsFactory(mapDispatchToProps) {
+  return mapDispatchToProps && typeof mapDispatchToProps === 'object' ? (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_1__.wrapMapToPropsConstant)(dispatch => // @ts-ignore
+  (0,_utils_bindActionCreators__WEBPACK_IMPORTED_MODULE_0__["default"])(mapDispatchToProps, dispatch)) : !mapDispatchToProps ? (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_1__.wrapMapToPropsConstant)(dispatch => ({
+    dispatch
+  })) : typeof mapDispatchToProps === 'function' ? // @ts-ignore
+  (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_1__.wrapMapToPropsFunc)(mapDispatchToProps, 'mapDispatchToProps') : (0,_invalidArgFactory__WEBPACK_IMPORTED_MODULE_2__.createInvalidArgFactory)(mapDispatchToProps, 'mapDispatchToProps');
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/mapStateToProps.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/mapStateToProps.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   mapStateToPropsFactory: () => (/* binding */ mapStateToPropsFactory)
+/* harmony export */ });
+/* harmony import */ var _wrapMapToProps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrapMapToProps */ "./node_modules/react-redux/es/connect/wrapMapToProps.js");
+/* harmony import */ var _invalidArgFactory__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./invalidArgFactory */ "./node_modules/react-redux/es/connect/invalidArgFactory.js");
+
+
+function mapStateToPropsFactory(mapStateToProps) {
+  return !mapStateToProps ? (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_0__.wrapMapToPropsConstant)(() => ({})) : typeof mapStateToProps === 'function' ? // @ts-ignore
+  (0,_wrapMapToProps__WEBPACK_IMPORTED_MODULE_0__.wrapMapToPropsFunc)(mapStateToProps, 'mapStateToProps') : (0,_invalidArgFactory__WEBPACK_IMPORTED_MODULE_1__.createInvalidArgFactory)(mapStateToProps, 'mapStateToProps');
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/mergeProps.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/mergeProps.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   defaultMergeProps: () => (/* binding */ defaultMergeProps),
+/* harmony export */   mergePropsFactory: () => (/* binding */ mergePropsFactory),
+/* harmony export */   wrapMergePropsFunc: () => (/* binding */ wrapMergePropsFunc)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var _utils_verifyPlainObject__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/verifyPlainObject */ "./node_modules/react-redux/es/utils/verifyPlainObject.js");
+/* harmony import */ var _invalidArgFactory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./invalidArgFactory */ "./node_modules/react-redux/es/connect/invalidArgFactory.js");
+
+
+
+function defaultMergeProps(stateProps, dispatchProps, ownProps) {
+  // @ts-ignore
+  return (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, ownProps, stateProps, dispatchProps);
+}
+function wrapMergePropsFunc(mergeProps) {
+  return function initMergePropsProxy(dispatch, {
+    displayName,
+    areMergedPropsEqual
+  }) {
+    let hasRunOnce = false;
+    let mergedProps;
+    return function mergePropsProxy(stateProps, dispatchProps, ownProps) {
+      const nextMergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+
+      if (hasRunOnce) {
+        if (!areMergedPropsEqual(nextMergedProps, mergedProps)) mergedProps = nextMergedProps;
+      } else {
+        hasRunOnce = true;
+        mergedProps = nextMergedProps;
+        if (true) (0,_utils_verifyPlainObject__WEBPACK_IMPORTED_MODULE_1__["default"])(mergedProps, displayName, 'mergeProps');
+      }
+
+      return mergedProps;
+    };
+  };
+}
+function mergePropsFactory(mergeProps) {
+  return !mergeProps ? () => defaultMergeProps : typeof mergeProps === 'function' ? wrapMergePropsFunc(mergeProps) : (0,_invalidArgFactory__WEBPACK_IMPORTED_MODULE_2__.createInvalidArgFactory)(mergeProps, 'mergeProps');
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/selectorFactory.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/selectorFactory.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ finalPropsSelectorFactory),
+/* harmony export */   pureFinalPropsSelectorFactory: () => (/* binding */ pureFinalPropsSelectorFactory)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+/* harmony import */ var _verifySubselectors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./verifySubselectors */ "./node_modules/react-redux/es/connect/verifySubselectors.js");
+
+const _excluded = ["initMapStateToProps", "initMapDispatchToProps", "initMergeProps"];
+
+function pureFinalPropsSelectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, {
+  areStatesEqual,
+  areOwnPropsEqual,
+  areStatePropsEqual
+}) {
+  let hasRunAtLeastOnce = false;
+  let state;
+  let ownProps;
+  let stateProps;
+  let dispatchProps;
+  let mergedProps;
+
+  function handleFirstCall(firstState, firstOwnProps) {
+    state = firstState;
+    ownProps = firstOwnProps;
+    stateProps = mapStateToProps(state, ownProps);
+    dispatchProps = mapDispatchToProps(dispatch, ownProps);
+    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+    hasRunAtLeastOnce = true;
+    return mergedProps;
+  }
+
+  function handleNewPropsAndNewState() {
+    stateProps = mapStateToProps(state, ownProps);
+    if (mapDispatchToProps.dependsOnOwnProps) dispatchProps = mapDispatchToProps(dispatch, ownProps);
+    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+    return mergedProps;
+  }
+
+  function handleNewProps() {
+    if (mapStateToProps.dependsOnOwnProps) stateProps = mapStateToProps(state, ownProps);
+    if (mapDispatchToProps.dependsOnOwnProps) dispatchProps = mapDispatchToProps(dispatch, ownProps);
+    mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+    return mergedProps;
+  }
+
+  function handleNewState() {
+    const nextStateProps = mapStateToProps(state, ownProps);
+    const statePropsChanged = !areStatePropsEqual(nextStateProps, stateProps);
+    stateProps = nextStateProps;
+    if (statePropsChanged) mergedProps = mergeProps(stateProps, dispatchProps, ownProps);
+    return mergedProps;
+  }
+
+  function handleSubsequentCalls(nextState, nextOwnProps) {
+    const propsChanged = !areOwnPropsEqual(nextOwnProps, ownProps);
+    const stateChanged = !areStatesEqual(nextState, state, nextOwnProps, ownProps);
+    state = nextState;
+    ownProps = nextOwnProps;
+    if (propsChanged && stateChanged) return handleNewPropsAndNewState();
+    if (propsChanged) return handleNewProps();
+    if (stateChanged) return handleNewState();
+    return mergedProps;
+  }
+
+  return function pureFinalPropsSelector(nextState, nextOwnProps) {
+    return hasRunAtLeastOnce ? handleSubsequentCalls(nextState, nextOwnProps) : handleFirstCall(nextState, nextOwnProps);
+  };
+}
+// TODO: Add more comments
+// The selector returned by selectorFactory will memoize its results,
+// allowing connect's shouldComponentUpdate to return false if final
+// props have not changed.
+function finalPropsSelectorFactory(dispatch, _ref) {
+  let {
+    initMapStateToProps,
+    initMapDispatchToProps,
+    initMergeProps
+  } = _ref,
+      options = (0,_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__["default"])(_ref, _excluded);
+
+  const mapStateToProps = initMapStateToProps(dispatch, options);
+  const mapDispatchToProps = initMapDispatchToProps(dispatch, options);
+  const mergeProps = initMergeProps(dispatch, options);
+
+  if (true) {
+    (0,_verifySubselectors__WEBPACK_IMPORTED_MODULE_1__["default"])(mapStateToProps, mapDispatchToProps, mergeProps);
+  }
+
+  return pureFinalPropsSelectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, options);
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/verifySubselectors.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/verifySubselectors.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ verifySubselectors)
+/* harmony export */ });
+/* harmony import */ var _utils_warning__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/warning */ "./node_modules/react-redux/es/utils/warning.js");
+
+
+function verify(selector, methodName) {
+  if (!selector) {
+    throw new Error(`Unexpected value for ${methodName} in connect.`);
+  } else if (methodName === 'mapStateToProps' || methodName === 'mapDispatchToProps') {
+    if (!Object.prototype.hasOwnProperty.call(selector, 'dependsOnOwnProps')) {
+      (0,_utils_warning__WEBPACK_IMPORTED_MODULE_0__["default"])(`The selector for ${methodName} of connect did not specify a value for dependsOnOwnProps.`);
+    }
+  }
+}
+
+function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps) {
+  verify(mapStateToProps, 'mapStateToProps');
+  verify(mapDispatchToProps, 'mapDispatchToProps');
+  verify(mergeProps, 'mergeProps');
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/connect/wrapMapToProps.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/react-redux/es/connect/wrapMapToProps.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getDependsOnOwnProps: () => (/* binding */ getDependsOnOwnProps),
+/* harmony export */   wrapMapToPropsConstant: () => (/* binding */ wrapMapToPropsConstant),
+/* harmony export */   wrapMapToPropsFunc: () => (/* binding */ wrapMapToPropsFunc)
+/* harmony export */ });
+/* harmony import */ var _utils_verifyPlainObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/verifyPlainObject */ "./node_modules/react-redux/es/utils/verifyPlainObject.js");
+
+function wrapMapToPropsConstant( // * Note:
+//  It seems that the dispatch argument
+//  could be a dispatch function in some cases (ex: whenMapDispatchToPropsIsMissing)
+//  and a state object in some others (ex: whenMapStateToPropsIsMissing)
+// eslint-disable-next-line no-unused-vars
+getConstant) {
+  return function initConstantSelector(dispatch) {
+    const constant = getConstant(dispatch);
+
+    function constantSelector() {
+      return constant;
+    }
+
+    constantSelector.dependsOnOwnProps = false;
+    return constantSelector;
+  };
+} // dependsOnOwnProps is used by createMapToPropsProxy to determine whether to pass props as args
+// to the mapToProps function being wrapped. It is also used by makePurePropsSelector to determine
+// whether mapToProps needs to be invoked when props have changed.
+//
+// A length of one signals that mapToProps does not depend on props from the parent component.
+// A length of zero is assumed to mean mapToProps is getting args via arguments or ...args and
+// therefore not reporting its length accurately..
+// TODO Can this get pulled out so that we can subscribe directly to the store if we don't need ownProps?
+
+function getDependsOnOwnProps(mapToProps) {
+  return mapToProps.dependsOnOwnProps ? Boolean(mapToProps.dependsOnOwnProps) : mapToProps.length !== 1;
+} // Used by whenMapStateToPropsIsFunction and whenMapDispatchToPropsIsFunction,
+// this function wraps mapToProps in a proxy function which does several things:
+//
+//  * Detects whether the mapToProps function being called depends on props, which
+//    is used by selectorFactory to decide if it should reinvoke on props changes.
+//
+//  * On first call, handles mapToProps if returns another function, and treats that
+//    new function as the true mapToProps for subsequent calls.
+//
+//  * On first call, verifies the first result is a plain object, in order to warn
+//    the developer that their mapToProps function is not returning a valid result.
+//
+
+function wrapMapToPropsFunc(mapToProps, methodName) {
+  return function initProxySelector(dispatch, {
+    displayName
+  }) {
+    const proxy = function mapToPropsProxy(stateOrDispatch, ownProps) {
+      return proxy.dependsOnOwnProps ? proxy.mapToProps(stateOrDispatch, ownProps) : proxy.mapToProps(stateOrDispatch, undefined);
+    }; // allow detectFactoryAndVerify to get ownProps
+
+
+    proxy.dependsOnOwnProps = true;
+
+    proxy.mapToProps = function detectFactoryAndVerify(stateOrDispatch, ownProps) {
+      proxy.mapToProps = mapToProps;
+      proxy.dependsOnOwnProps = getDependsOnOwnProps(mapToProps);
+      let props = proxy(stateOrDispatch, ownProps);
+
+      if (typeof props === 'function') {
+        proxy.mapToProps = props;
+        proxy.dependsOnOwnProps = getDependsOnOwnProps(props);
+        props = proxy(stateOrDispatch, ownProps);
+      }
+
+      if (true) (0,_utils_verifyPlainObject__WEBPACK_IMPORTED_MODULE_0__["default"])(props, displayName, methodName);
+      return props;
+    };
+
+    return proxy;
+  };
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/exports.js":
+/*!************************************************!*\
+  !*** ./node_modules/react-redux/es/exports.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Provider: () => (/* reexport safe */ _components_Provider__WEBPACK_IMPORTED_MODULE_0__["default"]),
+/* harmony export */   ReactReduxContext: () => (/* reexport safe */ _components_Context__WEBPACK_IMPORTED_MODULE_2__.ReactReduxContext),
+/* harmony export */   connect: () => (/* reexport safe */ _components_connect__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   createDispatchHook: () => (/* reexport safe */ _hooks_useDispatch__WEBPACK_IMPORTED_MODULE_3__.createDispatchHook),
+/* harmony export */   createSelectorHook: () => (/* reexport safe */ _hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__.createSelectorHook),
+/* harmony export */   createStoreHook: () => (/* reexport safe */ _hooks_useStore__WEBPACK_IMPORTED_MODULE_5__.createStoreHook),
+/* harmony export */   shallowEqual: () => (/* reexport safe */ _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_6__["default"]),
+/* harmony export */   useDispatch: () => (/* reexport safe */ _hooks_useDispatch__WEBPACK_IMPORTED_MODULE_3__.useDispatch),
+/* harmony export */   useSelector: () => (/* reexport safe */ _hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__.useSelector),
+/* harmony export */   useStore: () => (/* reexport safe */ _hooks_useStore__WEBPACK_IMPORTED_MODULE_5__.useStore)
+/* harmony export */ });
+/* harmony import */ var _components_Provider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Provider */ "./node_modules/react-redux/es/components/Provider.js");
+/* harmony import */ var _components_connect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/connect */ "./node_modules/react-redux/es/components/connect.js");
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _hooks_useDispatch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./hooks/useDispatch */ "./node_modules/react-redux/es/hooks/useDispatch.js");
+/* harmony import */ var _hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./hooks/useSelector */ "./node_modules/react-redux/es/hooks/useSelector.js");
+/* harmony import */ var _hooks_useStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./hooks/useStore */ "./node_modules/react-redux/es/hooks/useStore.js");
+/* harmony import */ var _utils_shallowEqual__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/shallowEqual */ "./node_modules/react-redux/es/utils/shallowEqual.js");
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./types */ "./node_modules/react-redux/es/types.js");
+
+
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/hooks/useDispatch.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/react-redux/es/hooks/useDispatch.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createDispatchHook: () => (/* binding */ createDispatchHook),
+/* harmony export */   useDispatch: () => (/* binding */ useDispatch)
+/* harmony export */ });
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useStore */ "./node_modules/react-redux/es/hooks/useStore.js");
+
+
+/**
+ * Hook factory, which creates a `useDispatch` hook bound to a given context.
+ *
+ * @param {React.Context} [context=ReactReduxContext] Context passed to your `<Provider>`.
+ * @returns {Function} A `useDispatch` hook bound to the specified context.
+ */
+
+function createDispatchHook(context = _components_Context__WEBPACK_IMPORTED_MODULE_0__.ReactReduxContext) {
+  const useStore = // @ts-ignore
+  context === _components_Context__WEBPACK_IMPORTED_MODULE_0__.ReactReduxContext ? _useStore__WEBPACK_IMPORTED_MODULE_1__.useStore : (0,_useStore__WEBPACK_IMPORTED_MODULE_1__.createStoreHook)(context);
+  return function useDispatch() {
+    const store = useStore(); // @ts-ignore
+
+    return store.dispatch;
+  };
+}
+/**
+ * A hook to access the redux `dispatch` function.
+ *
+ * @returns {any|function} redux store's `dispatch` function
+ *
+ * @example
+ *
+ * import React, { useCallback } from 'react'
+ * import { useDispatch } from 'react-redux'
+ *
+ * export const CounterComponent = ({ value }) => {
+ *   const dispatch = useDispatch()
+ *   const increaseCounter = useCallback(() => dispatch({ type: 'increase-counter' }), [])
+ *   return (
+ *     <div>
+ *       <span>{value}</span>
+ *       <button onClick={increaseCounter}>Increase counter</button>
+ *     </div>
+ *   )
+ * }
+ */
+
+const useDispatch = /*#__PURE__*/createDispatchHook();
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/hooks/useReduxContext.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/react-redux/es/hooks/useReduxContext.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createReduxContextHook: () => (/* binding */ createReduxContextHook),
+/* harmony export */   useReduxContext: () => (/* binding */ useReduxContext)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Context */ "./node_modules/react-redux/es/components/Context.js");
+
+
+
+/**
+ * Hook factory, which creates a `useReduxContext` hook bound to a given context. This is a low-level
+ * hook that you should usually not need to call directly.
+ *
+ * @param {React.Context} [context=ReactReduxContext] Context passed to your `<Provider>`.
+ * @returns {Function} A `useReduxContext` hook bound to the specified context.
+ */
+function createReduxContextHook(context = _components_Context__WEBPACK_IMPORTED_MODULE_1__.ReactReduxContext) {
+  return function useReduxContext() {
+    const contextValue = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(context);
+
+    if ( true && !contextValue) {
+      throw new Error('could not find react-redux context value; please ensure the component is wrapped in a <Provider>');
+    }
+
+    return contextValue;
+  };
+}
+/**
+ * A hook to access the value of the `ReactReduxContext`. This is a low-level
+ * hook that you should usually not need to call directly.
+ *
+ * @returns {any} the value of the `ReactReduxContext`
+ *
+ * @example
+ *
+ * import React from 'react'
+ * import { useReduxContext } from 'react-redux'
+ *
+ * export const CounterComponent = () => {
+ *   const { store } = useReduxContext()
+ *   return <div>{store.getState()}</div>
+ * }
+ */
+
+const useReduxContext = /*#__PURE__*/createReduxContextHook();
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/hooks/useSelector.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/react-redux/es/hooks/useSelector.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createSelectorHook: () => (/* binding */ createSelectorHook),
+/* harmony export */   initializeUseSelector: () => (/* binding */ initializeUseSelector),
+/* harmony export */   useSelector: () => (/* binding */ useSelector)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _useReduxContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useReduxContext */ "./node_modules/react-redux/es/hooks/useReduxContext.js");
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _utils_useSyncExternalStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/useSyncExternalStore */ "./node_modules/react-redux/es/utils/useSyncExternalStore.js");
+
+
+
+
+let useSyncExternalStoreWithSelector = _utils_useSyncExternalStore__WEBPACK_IMPORTED_MODULE_3__.notInitialized;
+const initializeUseSelector = fn => {
+  useSyncExternalStoreWithSelector = fn;
+};
+
+const refEquality = (a, b) => a === b;
+/**
+ * Hook factory, which creates a `useSelector` hook bound to a given context.
+ *
+ * @param {React.Context} [context=ReactReduxContext] Context passed to your `<Provider>`.
+ * @returns {Function} A `useSelector` hook bound to the specified context.
+ */
+
+
+function createSelectorHook(context = _components_Context__WEBPACK_IMPORTED_MODULE_2__.ReactReduxContext) {
+  const useReduxContext = context === _components_Context__WEBPACK_IMPORTED_MODULE_2__.ReactReduxContext ? _useReduxContext__WEBPACK_IMPORTED_MODULE_1__.useReduxContext : (0,_useReduxContext__WEBPACK_IMPORTED_MODULE_1__.createReduxContextHook)(context);
+  return function useSelector(selector, equalityFnOrOptions = {}) {
+    const {
+      equalityFn = refEquality,
+      stabilityCheck = undefined,
+      noopCheck = undefined
+    } = typeof equalityFnOrOptions === 'function' ? {
+      equalityFn: equalityFnOrOptions
+    } : equalityFnOrOptions;
+
+    if (true) {
+      if (!selector) {
+        throw new Error(`You must pass a selector to useSelector`);
+      }
+
+      if (typeof selector !== 'function') {
+        throw new Error(`You must pass a function as a selector to useSelector`);
+      }
+
+      if (typeof equalityFn !== 'function') {
+        throw new Error(`You must pass a function as an equality function to useSelector`);
+      }
+    }
+
+    const {
+      store,
+      subscription,
+      getServerState,
+      stabilityCheck: globalStabilityCheck,
+      noopCheck: globalNoopCheck
+    } = useReduxContext();
+    const firstRun = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
+    const wrappedSelector = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)({
+      [selector.name](state) {
+        const selected = selector(state);
+
+        if (true) {
+          const finalStabilityCheck = typeof stabilityCheck === 'undefined' ? globalStabilityCheck : stabilityCheck;
+
+          if (finalStabilityCheck === 'always' || finalStabilityCheck === 'once' && firstRun.current) {
+            const toCompare = selector(state);
+
+            if (!equalityFn(selected, toCompare)) {
+              let stack = undefined;
+
+              try {
+                throw new Error();
+              } catch (e) {
+                ;
+                ({
+                  stack
+                } = e);
+              }
+
+              console.warn('Selector ' + (selector.name || 'unknown') + ' returned a different result when called with the same parameters. This can lead to unnecessary rerenders.' + '\nSelectors that return a new reference (such as an object or an array) should be memoized: https://redux.js.org/usage/deriving-data-selectors#optimizing-selectors-with-memoization', {
+                state,
+                selected,
+                selected2: toCompare,
+                stack
+              });
+            }
+          }
+
+          const finalNoopCheck = typeof noopCheck === 'undefined' ? globalNoopCheck : noopCheck;
+
+          if (finalNoopCheck === 'always' || finalNoopCheck === 'once' && firstRun.current) {
+            // @ts-ignore
+            if (selected === state) {
+              let stack = undefined;
+
+              try {
+                throw new Error();
+              } catch (e) {
+                ;
+                ({
+                  stack
+                } = e);
+              }
+
+              console.warn('Selector ' + (selector.name || 'unknown') + ' returned the root state when called. This can lead to unnecessary rerenders.' + '\nSelectors that return the entire state are almost certainly a mistake, as they will cause a rerender whenever *anything* in state changes.', {
+                stack
+              });
+            }
+          }
+
+          if (firstRun.current) firstRun.current = false;
+        }
+
+        return selected;
+      }
+
+    }[selector.name], [selector, globalStabilityCheck, stabilityCheck]);
+    const selectedState = useSyncExternalStoreWithSelector(subscription.addNestedSub, store.getState, getServerState || store.getState, wrappedSelector, equalityFn);
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useDebugValue)(selectedState);
+    return selectedState;
+  };
+}
+/**
+ * A hook to access the redux store's state. This hook takes a selector function
+ * as an argument. The selector is called with the store state.
+ *
+ * This hook takes an optional equality comparison function as the second parameter
+ * that allows you to customize the way the selected state is compared to determine
+ * whether the component needs to be re-rendered.
+ *
+ * @param {Function} selector the selector function
+ * @param {Function=} equalityFn the function that will be used to determine equality
+ *
+ * @returns {any} the selected state
+ *
+ * @example
+ *
+ * import React from 'react'
+ * import { useSelector } from 'react-redux'
+ *
+ * export const CounterComponent = () => {
+ *   const counter = useSelector(state => state.counter)
+ *   return <div>{counter}</div>
+ * }
+ */
+
+const useSelector = /*#__PURE__*/createSelectorHook();
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/hooks/useStore.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/react-redux/es/hooks/useStore.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createStoreHook: () => (/* binding */ createStoreHook),
+/* harmony export */   useStore: () => (/* binding */ useStore)
+/* harmony export */ });
+/* harmony import */ var _components_Context__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Context */ "./node_modules/react-redux/es/components/Context.js");
+/* harmony import */ var _useReduxContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useReduxContext */ "./node_modules/react-redux/es/hooks/useReduxContext.js");
+
+
+/**
+ * Hook factory, which creates a `useStore` hook bound to a given context.
+ *
+ * @param {React.Context} [context=ReactReduxContext] Context passed to your `<Provider>`.
+ * @returns {Function} A `useStore` hook bound to the specified context.
+ */
+
+function createStoreHook(context = _components_Context__WEBPACK_IMPORTED_MODULE_0__.ReactReduxContext) {
+  const useReduxContext = // @ts-ignore
+  context === _components_Context__WEBPACK_IMPORTED_MODULE_0__.ReactReduxContext ? _useReduxContext__WEBPACK_IMPORTED_MODULE_1__.useReduxContext : // @ts-ignore
+  (0,_useReduxContext__WEBPACK_IMPORTED_MODULE_1__.createReduxContextHook)(context);
+  return function useStore() {
+    const {
+      store
+    } = useReduxContext(); // @ts-ignore
+
+    return store;
+  };
+}
+/**
+ * A hook to access the redux store.
+ *
+ * @returns {any} the redux store
+ *
+ * @example
+ *
+ * import React from 'react'
+ * import { useStore } from 'react-redux'
+ *
+ * export const ExampleComponent = () => {
+ *   const store = useStore()
+ *   return <div>{store.getState()}</div>
+ * }
+ */
+
+const useStore = /*#__PURE__*/createStoreHook();
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/react-redux/es/index.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Provider: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.Provider),
+/* harmony export */   ReactReduxContext: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.ReactReduxContext),
+/* harmony export */   batch: () => (/* reexport safe */ _utils_reactBatchedUpdates__WEBPACK_IMPORTED_MODULE_2__.unstable_batchedUpdates),
+/* harmony export */   connect: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.connect),
+/* harmony export */   createDispatchHook: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.createDispatchHook),
+/* harmony export */   createSelectorHook: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.createSelectorHook),
+/* harmony export */   createStoreHook: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.createStoreHook),
+/* harmony export */   shallowEqual: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.shallowEqual),
+/* harmony export */   useDispatch: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.useDispatch),
+/* harmony export */   useSelector: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.useSelector),
+/* harmony export */   useStore: () => (/* reexport safe */ _exports__WEBPACK_IMPORTED_MODULE_6__.useStore)
+/* harmony export */ });
+/* harmony import */ var use_sync_external_store_shim__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! use-sync-external-store/shim */ "./node_modules/use-sync-external-store/shim/index.js");
+/* harmony import */ var use_sync_external_store_shim_with_selector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! use-sync-external-store/shim/with-selector */ "./node_modules/use-sync-external-store/shim/with-selector.js");
+/* harmony import */ var _utils_reactBatchedUpdates__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/reactBatchedUpdates */ "./node_modules/react-redux/es/utils/reactBatchedUpdates.js");
+/* harmony import */ var _utils_batch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/batch */ "./node_modules/react-redux/es/utils/batch.js");
+/* harmony import */ var _hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./hooks/useSelector */ "./node_modules/react-redux/es/hooks/useSelector.js");
+/* harmony import */ var _components_connect__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/connect */ "./node_modules/react-redux/es/components/connect.js");
+/* harmony import */ var _exports__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./exports */ "./node_modules/react-redux/es/exports.js");
+// The primary entry point assumes we're working with standard ReactDOM/RN, but
+// older versions that do not include `useSyncExternalStore` (React 16.9 - 17.x).
+// Because of that, the useSyncExternalStore compat shim is needed.
+
+
+
+
+
+
+(0,_hooks_useSelector__WEBPACK_IMPORTED_MODULE_4__.initializeUseSelector)(use_sync_external_store_shim_with_selector__WEBPACK_IMPORTED_MODULE_1__.useSyncExternalStoreWithSelector);
+(0,_components_connect__WEBPACK_IMPORTED_MODULE_5__.initializeConnect)(use_sync_external_store_shim__WEBPACK_IMPORTED_MODULE_0__.useSyncExternalStore); // Enable batched updates in our subscriptions for use
+// with standard React renderers (ReactDOM, React Native)
+
+(0,_utils_batch__WEBPACK_IMPORTED_MODULE_3__.setBatch)(_utils_reactBatchedUpdates__WEBPACK_IMPORTED_MODULE_2__.unstable_batchedUpdates);
+
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/types.js":
+/*!**********************************************!*\
+  !*** ./node_modules/react-redux/es/types.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/Subscription.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/Subscription.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createSubscription: () => (/* binding */ createSubscription)
+/* harmony export */ });
+/* harmony import */ var _batch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./batch */ "./node_modules/react-redux/es/utils/batch.js");
+ // encapsulates the subscription logic for connecting a component to the redux store, as
+// well as nesting subscriptions of descendant components, so that we can ensure the
+// ancestor components re-render before descendants
+
+function createListenerCollection() {
+  const batch = (0,_batch__WEBPACK_IMPORTED_MODULE_0__.getBatch)();
+  let first = null;
+  let last = null;
+  return {
+    clear() {
+      first = null;
+      last = null;
+    },
+
+    notify() {
+      batch(() => {
+        let listener = first;
+
+        while (listener) {
+          listener.callback();
+          listener = listener.next;
+        }
+      });
+    },
+
+    get() {
+      let listeners = [];
+      let listener = first;
+
+      while (listener) {
+        listeners.push(listener);
+        listener = listener.next;
+      }
+
+      return listeners;
+    },
+
+    subscribe(callback) {
+      let isSubscribed = true;
+      let listener = last = {
+        callback,
+        next: null,
+        prev: last
+      };
+
+      if (listener.prev) {
+        listener.prev.next = listener;
+      } else {
+        first = listener;
+      }
+
+      return function unsubscribe() {
+        if (!isSubscribed || first === null) return;
+        isSubscribed = false;
+
+        if (listener.next) {
+          listener.next.prev = listener.prev;
+        } else {
+          last = listener.prev;
+        }
+
+        if (listener.prev) {
+          listener.prev.next = listener.next;
+        } else {
+          first = listener.next;
+        }
+      };
+    }
+
+  };
+}
+
+const nullListeners = {
+  notify() {},
+
+  get: () => []
+};
+function createSubscription(store, parentSub) {
+  let unsubscribe;
+  let listeners = nullListeners; // Reasons to keep the subscription active
+
+  let subscriptionsAmount = 0; // Is this specific subscription subscribed (or only nested ones?)
+
+  let selfSubscribed = false;
+
+  function addNestedSub(listener) {
+    trySubscribe();
+    const cleanupListener = listeners.subscribe(listener); // cleanup nested sub
+
+    let removed = false;
+    return () => {
+      if (!removed) {
+        removed = true;
+        cleanupListener();
+        tryUnsubscribe();
+      }
+    };
+  }
+
+  function notifyNestedSubs() {
+    listeners.notify();
+  }
+
+  function handleChangeWrapper() {
+    if (subscription.onStateChange) {
+      subscription.onStateChange();
+    }
+  }
+
+  function isSubscribed() {
+    return selfSubscribed;
+  }
+
+  function trySubscribe() {
+    subscriptionsAmount++;
+
+    if (!unsubscribe) {
+      unsubscribe = parentSub ? parentSub.addNestedSub(handleChangeWrapper) : store.subscribe(handleChangeWrapper);
+      listeners = createListenerCollection();
+    }
+  }
+
+  function tryUnsubscribe() {
+    subscriptionsAmount--;
+
+    if (unsubscribe && subscriptionsAmount === 0) {
+      unsubscribe();
+      unsubscribe = undefined;
+      listeners.clear();
+      listeners = nullListeners;
+    }
+  }
+
+  function trySubscribeSelf() {
+    if (!selfSubscribed) {
+      selfSubscribed = true;
+      trySubscribe();
+    }
+  }
+
+  function tryUnsubscribeSelf() {
+    if (selfSubscribed) {
+      selfSubscribed = false;
+      tryUnsubscribe();
+    }
+  }
+
+  const subscription = {
+    addNestedSub,
+    notifyNestedSubs,
+    handleChangeWrapper,
+    isSubscribed,
+    trySubscribe: trySubscribeSelf,
+    tryUnsubscribe: tryUnsubscribeSelf,
+    getListeners: () => listeners
+  };
+  return subscription;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/batch.js":
+/*!****************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/batch.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getBatch: () => (/* binding */ getBatch),
+/* harmony export */   setBatch: () => (/* binding */ setBatch)
+/* harmony export */ });
+// Default to a dummy "batch" implementation that just runs the callback
+function defaultNoopBatch(callback) {
+  callback();
+}
+
+let batch = defaultNoopBatch; // Allow injecting another batching function later
+
+const setBatch = newBatch => batch = newBatch; // Supply a getter just to skip dealing with ESM bindings
+
+const getBatch = () => batch;
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/bindActionCreators.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/bindActionCreators.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ bindActionCreators)
+/* harmony export */ });
+function bindActionCreators(actionCreators, dispatch) {
+  const boundActionCreators = {};
+
+  for (const key in actionCreators) {
+    const actionCreator = actionCreators[key];
+
+    if (typeof actionCreator === 'function') {
+      boundActionCreators[key] = (...args) => dispatch(actionCreator(...args));
+    }
+  }
+
+  return boundActionCreators;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/isPlainObject.js":
+/*!************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/isPlainObject.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ isPlainObject)
+/* harmony export */ });
+/**
+ * @param {any} obj The object to inspect.
+ * @returns {boolean} True if the argument appears to be a plain object.
+ */
+function isPlainObject(obj) {
+  if (typeof obj !== 'object' || obj === null) return false;
+  let proto = Object.getPrototypeOf(obj);
+  if (proto === null) return true;
+  let baseProto = proto;
+
+  while (Object.getPrototypeOf(baseProto) !== null) {
+    baseProto = Object.getPrototypeOf(baseProto);
+  }
+
+  return proto === baseProto;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/reactBatchedUpdates.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/reactBatchedUpdates.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   unstable_batchedUpdates: () => (/* reexport safe */ react_dom__WEBPACK_IMPORTED_MODULE_0__.unstable_batchedUpdates)
+/* harmony export */ });
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/shallowEqual.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/shallowEqual.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ shallowEqual)
+/* harmony export */ });
+function is(x, y) {
+  if (x === y) {
+    return x !== 0 || y !== 0 || 1 / x === 1 / y;
+  } else {
+    return x !== x && y !== y;
+  }
+}
+
+function shallowEqual(objA, objB) {
+  if (is(objA, objB)) return true;
+
+  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
+    return false;
+  }
+
+  const keysA = Object.keys(objA);
+  const keysB = Object.keys(objB);
+  if (keysA.length !== keysB.length) return false;
+
+  for (let i = 0; i < keysA.length; i++) {
+    if (!Object.prototype.hasOwnProperty.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/useIsomorphicLayoutEffect.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/useIsomorphicLayoutEffect.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   canUseDOM: () => (/* binding */ canUseDOM),
+/* harmony export */   useIsomorphicLayoutEffect: () => (/* binding */ useIsomorphicLayoutEffect)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+ // React currently throws a warning when using useLayoutEffect on the server.
+// To get around it, we can conditionally useEffect on the server (no-op) and
+// useLayoutEffect in the browser. We need useLayoutEffect to ensure the store
+// subscription callback always has the selector from the latest render commit
+// available, otherwise a store update may happen between render and the effect,
+// which may cause missed updates; we also must ensure the store subscription
+// is created synchronously, otherwise a store update may occur before the
+// subscription is created and an inconsistent state may be observed
+// Matches logic in React's `shared/ExecutionEnvironment` file
+
+const canUseDOM = !!(typeof window !== 'undefined' && typeof window.document !== 'undefined' && typeof window.document.createElement !== 'undefined');
+const useIsomorphicLayoutEffect = canUseDOM ? react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect : react__WEBPACK_IMPORTED_MODULE_0__.useEffect;
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/useSyncExternalStore.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/useSyncExternalStore.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   notInitialized: () => (/* binding */ notInitialized)
+/* harmony export */ });
+const notInitialized = () => {
+  throw new Error('uSES not initialized!');
+};
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/verifyPlainObject.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/verifyPlainObject.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ verifyPlainObject)
+/* harmony export */ });
+/* harmony import */ var _isPlainObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isPlainObject */ "./node_modules/react-redux/es/utils/isPlainObject.js");
+/* harmony import */ var _warning__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./warning */ "./node_modules/react-redux/es/utils/warning.js");
+
+
+function verifyPlainObject(value, displayName, methodName) {
+  if (!(0,_isPlainObject__WEBPACK_IMPORTED_MODULE_0__["default"])(value)) {
+    (0,_warning__WEBPACK_IMPORTED_MODULE_1__["default"])(`${methodName}() in ${displayName} must return a plain object. Instead received ${value}.`);
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/es/utils/warning.js":
+/*!******************************************************!*\
+  !*** ./node_modules/react-redux/es/utils/warning.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ warning)
+/* harmony export */ });
+/**
+ * Prints a warning in the console if it exists.
+ *
+ * @param {String} message The warning message.
+ * @returns {void}
+ */
+function warning(message) {
+  /* eslint-disable no-console */
+  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+    console.error(message);
+  }
+  /* eslint-enable no-console */
+
+
+  try {
+    // This error was thrown as a convenience so that if you enable
+    // "break on all exceptions" in your console,
+    // it would pause the execution at this line.
+    throw new Error(message);
+    /* eslint-disable no-empty */
+  } catch (e) {}
+  /* eslint-enable no-empty */
+
+}
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/node_modules/react-is/cjs/react-is.development.js":
+/*!************************************************************************************!*\
+  !*** ./node_modules/react-redux/node_modules/react-is/cjs/react-is.development.js ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+/**
+ * @license React
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+// ATTENTION
+// When adding new symbols to this file,
+// Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
+// The Symbol used to tag the ReactElement-like types.
+var REACT_ELEMENT_TYPE = Symbol.for('react.element');
+var REACT_PORTAL_TYPE = Symbol.for('react.portal');
+var REACT_FRAGMENT_TYPE = Symbol.for('react.fragment');
+var REACT_STRICT_MODE_TYPE = Symbol.for('react.strict_mode');
+var REACT_PROFILER_TYPE = Symbol.for('react.profiler');
+var REACT_PROVIDER_TYPE = Symbol.for('react.provider');
+var REACT_CONTEXT_TYPE = Symbol.for('react.context');
+var REACT_SERVER_CONTEXT_TYPE = Symbol.for('react.server_context');
+var REACT_FORWARD_REF_TYPE = Symbol.for('react.forward_ref');
+var REACT_SUSPENSE_TYPE = Symbol.for('react.suspense');
+var REACT_SUSPENSE_LIST_TYPE = Symbol.for('react.suspense_list');
+var REACT_MEMO_TYPE = Symbol.for('react.memo');
+var REACT_LAZY_TYPE = Symbol.for('react.lazy');
+var REACT_OFFSCREEN_TYPE = Symbol.for('react.offscreen');
+
+// -----------------------------------------------------------------------------
+
+var enableScopeAPI = false; // Experimental Create Event Handle API.
+var enableCacheElement = false;
+var enableTransitionTracing = false; // No known bugs, but needs performance testing
+
+var enableLegacyHidden = false; // Enables unstable_avoidThisFallback feature in Fiber
+// stuff. Intended to enable React core members to more easily debug scheduling
+// issues in DEV builds.
+
+var enableDebugTracing = false; // Track which Fiber(s) schedule render work.
+
+var REACT_MODULE_REFERENCE;
+
+{
+  REACT_MODULE_REFERENCE = Symbol.for('react.module.reference');
+}
+
+function isValidElementType(type) {
+  if (typeof type === 'string' || typeof type === 'function') {
+    return true;
+  } // Note: typeof might be other than 'symbol' or 'number' (e.g. if it's a polyfill).
+
+
+  if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing  || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden  || type === REACT_OFFSCREEN_TYPE || enableScopeAPI  || enableCacheElement  || enableTransitionTracing ) {
+    return true;
+  }
+
+  if (typeof type === 'object' && type !== null) {
+    if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || // This needs to include all possible module reference object
+    // types supported by any Flight configuration anywhere since
+    // we don't know which Flight build this will end up being used
+    // with.
+    type.$$typeof === REACT_MODULE_REFERENCE || type.getModuleId !== undefined) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function typeOf(object) {
+  if (typeof object === 'object' && object !== null) {
+    var $$typeof = object.$$typeof;
+
+    switch ($$typeof) {
+      case REACT_ELEMENT_TYPE:
+        var type = object.type;
+
+        switch (type) {
+          case REACT_FRAGMENT_TYPE:
+          case REACT_PROFILER_TYPE:
+          case REACT_STRICT_MODE_TYPE:
+          case REACT_SUSPENSE_TYPE:
+          case REACT_SUSPENSE_LIST_TYPE:
+            return type;
+
+          default:
+            var $$typeofType = type && type.$$typeof;
+
+            switch ($$typeofType) {
+              case REACT_SERVER_CONTEXT_TYPE:
+              case REACT_CONTEXT_TYPE:
+              case REACT_FORWARD_REF_TYPE:
+              case REACT_LAZY_TYPE:
+              case REACT_MEMO_TYPE:
+              case REACT_PROVIDER_TYPE:
+                return $$typeofType;
+
+              default:
+                return $$typeof;
+            }
+
+        }
+
+      case REACT_PORTAL_TYPE:
+        return $$typeof;
+    }
+  }
+
+  return undefined;
+}
+var ContextConsumer = REACT_CONTEXT_TYPE;
+var ContextProvider = REACT_PROVIDER_TYPE;
+var Element = REACT_ELEMENT_TYPE;
+var ForwardRef = REACT_FORWARD_REF_TYPE;
+var Fragment = REACT_FRAGMENT_TYPE;
+var Lazy = REACT_LAZY_TYPE;
+var Memo = REACT_MEMO_TYPE;
+var Portal = REACT_PORTAL_TYPE;
+var Profiler = REACT_PROFILER_TYPE;
+var StrictMode = REACT_STRICT_MODE_TYPE;
+var Suspense = REACT_SUSPENSE_TYPE;
+var SuspenseList = REACT_SUSPENSE_LIST_TYPE;
+var hasWarnedAboutDeprecatedIsAsyncMode = false;
+var hasWarnedAboutDeprecatedIsConcurrentMode = false; // AsyncMode should be deprecated
+
+function isAsyncMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+      hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+
+      console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 18+.');
+    }
+  }
+
+  return false;
+}
+function isConcurrentMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsConcurrentMode) {
+      hasWarnedAboutDeprecatedIsConcurrentMode = true; // Using console['warn'] to evade Babel and ESLint
+
+      console['warn']('The ReactIs.isConcurrentMode() alias has been deprecated, ' + 'and will be removed in React 18+.');
+    }
+  }
+
+  return false;
+}
+function isContextConsumer(object) {
+  return typeOf(object) === REACT_CONTEXT_TYPE;
+}
+function isContextProvider(object) {
+  return typeOf(object) === REACT_PROVIDER_TYPE;
+}
+function isElement(object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+function isForwardRef(object) {
+  return typeOf(object) === REACT_FORWARD_REF_TYPE;
+}
+function isFragment(object) {
+  return typeOf(object) === REACT_FRAGMENT_TYPE;
+}
+function isLazy(object) {
+  return typeOf(object) === REACT_LAZY_TYPE;
+}
+function isMemo(object) {
+  return typeOf(object) === REACT_MEMO_TYPE;
+}
+function isPortal(object) {
+  return typeOf(object) === REACT_PORTAL_TYPE;
+}
+function isProfiler(object) {
+  return typeOf(object) === REACT_PROFILER_TYPE;
+}
+function isStrictMode(object) {
+  return typeOf(object) === REACT_STRICT_MODE_TYPE;
+}
+function isSuspense(object) {
+  return typeOf(object) === REACT_SUSPENSE_TYPE;
+}
+function isSuspenseList(object) {
+  return typeOf(object) === REACT_SUSPENSE_LIST_TYPE;
+}
+
+exports.ContextConsumer = ContextConsumer;
+exports.ContextProvider = ContextProvider;
+exports.Element = Element;
+exports.ForwardRef = ForwardRef;
+exports.Fragment = Fragment;
+exports.Lazy = Lazy;
+exports.Memo = Memo;
+exports.Portal = Portal;
+exports.Profiler = Profiler;
+exports.StrictMode = StrictMode;
+exports.Suspense = Suspense;
+exports.SuspenseList = SuspenseList;
+exports.isAsyncMode = isAsyncMode;
+exports.isConcurrentMode = isConcurrentMode;
+exports.isContextConsumer = isContextConsumer;
+exports.isContextProvider = isContextProvider;
+exports.isElement = isElement;
+exports.isForwardRef = isForwardRef;
+exports.isFragment = isFragment;
+exports.isLazy = isLazy;
+exports.isMemo = isMemo;
+exports.isPortal = isPortal;
+exports.isProfiler = isProfiler;
+exports.isStrictMode = isStrictMode;
+exports.isSuspense = isSuspense;
+exports.isSuspenseList = isSuspenseList;
+exports.isValidElementType = isValidElementType;
+exports.typeOf = typeOf;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-redux/node_modules/react-is/index.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/react-redux/node_modules/react-is/index.js ***!
+  \*****************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/react-redux/node_modules/react-is/cjs/react-is.development.js");
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/react-remove-scroll-bar/dist/es2015/component.js":
 /*!***********************************************************************!*\
   !*** ./node_modules/react-remove-scroll-bar/dist/es2015/component.js ***!
@@ -61688,6 +78968,733 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/redux/es/redux.js":
+/*!****************************************!*\
+  !*** ./node_modules/redux/es/redux.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   __DO_NOT_USE__ActionTypes: () => (/* binding */ ActionTypes),
+/* harmony export */   applyMiddleware: () => (/* binding */ applyMiddleware),
+/* harmony export */   bindActionCreators: () => (/* binding */ bindActionCreators),
+/* harmony export */   combineReducers: () => (/* binding */ combineReducers),
+/* harmony export */   compose: () => (/* binding */ compose),
+/* harmony export */   createStore: () => (/* binding */ createStore),
+/* harmony export */   legacy_createStore: () => (/* binding */ legacy_createStore)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_objectSpread2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectSpread2 */ "./node_modules/@babel/runtime/helpers/esm/objectSpread2.js");
+
+
+/**
+ * Adapted from React: https://github.com/facebook/react/blob/master/packages/shared/formatProdErrorMessage.js
+ *
+ * Do not require this module directly! Use normal throw error calls. These messages will be replaced with error codes
+ * during build.
+ * @param {number} code
+ */
+function formatProdErrorMessage(code) {
+  return "Minified Redux error #" + code + "; visit https://redux.js.org/Errors?code=" + code + " for the full message or " + 'use the non-minified dev environment for full errors. ';
+}
+
+// Inlined version of the `symbol-observable` polyfill
+var $$observable = (function () {
+  return typeof Symbol === 'function' && Symbol.observable || '@@observable';
+})();
+
+/**
+ * These are private action types reserved by Redux.
+ * For any unknown actions, you must return the current state.
+ * If the current state is undefined, you must return the initial state.
+ * Do not reference these action types directly in your code.
+ */
+var randomString = function randomString() {
+  return Math.random().toString(36).substring(7).split('').join('.');
+};
+
+var ActionTypes = {
+  INIT: "@@redux/INIT" + randomString(),
+  REPLACE: "@@redux/REPLACE" + randomString(),
+  PROBE_UNKNOWN_ACTION: function PROBE_UNKNOWN_ACTION() {
+    return "@@redux/PROBE_UNKNOWN_ACTION" + randomString();
+  }
+};
+
+/**
+ * @param {any} obj The object to inspect.
+ * @returns {boolean} True if the argument appears to be a plain object.
+ */
+function isPlainObject(obj) {
+  if (typeof obj !== 'object' || obj === null) return false;
+  var proto = obj;
+
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+
+  return Object.getPrototypeOf(obj) === proto;
+}
+
+// Inlined / shortened version of `kindOf` from https://github.com/jonschlinkert/kind-of
+function miniKindOf(val) {
+  if (val === void 0) return 'undefined';
+  if (val === null) return 'null';
+  var type = typeof val;
+
+  switch (type) {
+    case 'boolean':
+    case 'string':
+    case 'number':
+    case 'symbol':
+    case 'function':
+      {
+        return type;
+      }
+  }
+
+  if (Array.isArray(val)) return 'array';
+  if (isDate(val)) return 'date';
+  if (isError(val)) return 'error';
+  var constructorName = ctorName(val);
+
+  switch (constructorName) {
+    case 'Symbol':
+    case 'Promise':
+    case 'WeakMap':
+    case 'WeakSet':
+    case 'Map':
+    case 'Set':
+      return constructorName;
+  } // other
+
+
+  return type.slice(8, -1).toLowerCase().replace(/\s/g, '');
+}
+
+function ctorName(val) {
+  return typeof val.constructor === 'function' ? val.constructor.name : null;
+}
+
+function isError(val) {
+  return val instanceof Error || typeof val.message === 'string' && val.constructor && typeof val.constructor.stackTraceLimit === 'number';
+}
+
+function isDate(val) {
+  if (val instanceof Date) return true;
+  return typeof val.toDateString === 'function' && typeof val.getDate === 'function' && typeof val.setDate === 'function';
+}
+
+function kindOf(val) {
+  var typeOfVal = typeof val;
+
+  if (true) {
+    typeOfVal = miniKindOf(val);
+  }
+
+  return typeOfVal;
+}
+
+/**
+ * @deprecated
+ *
+ * **We recommend using the `configureStore` method
+ * of the `@reduxjs/toolkit` package**, which replaces `createStore`.
+ *
+ * Redux Toolkit is our recommended approach for writing Redux logic today,
+ * including store setup, reducers, data fetching, and more.
+ *
+ * **For more details, please read this Redux docs page:**
+ * **https://redux.js.org/introduction/why-rtk-is-redux-today**
+ *
+ * `configureStore` from Redux Toolkit is an improved version of `createStore` that
+ * simplifies setup and helps avoid common bugs.
+ *
+ * You should not be using the `redux` core package by itself today, except for learning purposes.
+ * The `createStore` method from the core `redux` package will not be removed, but we encourage
+ * all users to migrate to using Redux Toolkit for all Redux code.
+ *
+ * If you want to use `createStore` without this visual deprecation warning, use
+ * the `legacy_createStore` import instead:
+ *
+ * `import { legacy_createStore as createStore} from 'redux'`
+ *
+ */
+
+function createStore(reducer, preloadedState, enhancer) {
+  var _ref2;
+
+  if (typeof preloadedState === 'function' && typeof enhancer === 'function' || typeof enhancer === 'function' && typeof arguments[3] === 'function') {
+    throw new Error( false ? 0 : 'It looks like you are passing several store enhancers to ' + 'createStore(). This is not supported. Instead, compose them ' + 'together to a single function. See https://redux.js.org/tutorials/fundamentals/part-4-store#creating-a-store-with-enhancers for an example.');
+  }
+
+  if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
+    enhancer = preloadedState;
+    preloadedState = undefined;
+  }
+
+  if (typeof enhancer !== 'undefined') {
+    if (typeof enhancer !== 'function') {
+      throw new Error( false ? 0 : "Expected the enhancer to be a function. Instead, received: '" + kindOf(enhancer) + "'");
+    }
+
+    return enhancer(createStore)(reducer, preloadedState);
+  }
+
+  if (typeof reducer !== 'function') {
+    throw new Error( false ? 0 : "Expected the root reducer to be a function. Instead, received: '" + kindOf(reducer) + "'");
+  }
+
+  var currentReducer = reducer;
+  var currentState = preloadedState;
+  var currentListeners = [];
+  var nextListeners = currentListeners;
+  var isDispatching = false;
+  /**
+   * This makes a shallow copy of currentListeners so we can use
+   * nextListeners as a temporary list while dispatching.
+   *
+   * This prevents any bugs around consumers calling
+   * subscribe/unsubscribe in the middle of a dispatch.
+   */
+
+  function ensureCanMutateNextListeners() {
+    if (nextListeners === currentListeners) {
+      nextListeners = currentListeners.slice();
+    }
+  }
+  /**
+   * Reads the state tree managed by the store.
+   *
+   * @returns {any} The current state tree of your application.
+   */
+
+
+  function getState() {
+    if (isDispatching) {
+      throw new Error( false ? 0 : 'You may not call store.getState() while the reducer is executing. ' + 'The reducer has already received the state as an argument. ' + 'Pass it down from the top reducer instead of reading it from the store.');
+    }
+
+    return currentState;
+  }
+  /**
+   * Adds a change listener. It will be called any time an action is dispatched,
+   * and some part of the state tree may potentially have changed. You may then
+   * call `getState()` to read the current state tree inside the callback.
+   *
+   * You may call `dispatch()` from a change listener, with the following
+   * caveats:
+   *
+   * 1. The subscriptions are snapshotted just before every `dispatch()` call.
+   * If you subscribe or unsubscribe while the listeners are being invoked, this
+   * will not have any effect on the `dispatch()` that is currently in progress.
+   * However, the next `dispatch()` call, whether nested or not, will use a more
+   * recent snapshot of the subscription list.
+   *
+   * 2. The listener should not expect to see all state changes, as the state
+   * might have been updated multiple times during a nested `dispatch()` before
+   * the listener is called. It is, however, guaranteed that all subscribers
+   * registered before the `dispatch()` started will be called with the latest
+   * state by the time it exits.
+   *
+   * @param {Function} listener A callback to be invoked on every dispatch.
+   * @returns {Function} A function to remove this change listener.
+   */
+
+
+  function subscribe(listener) {
+    if (typeof listener !== 'function') {
+      throw new Error( false ? 0 : "Expected the listener to be a function. Instead, received: '" + kindOf(listener) + "'");
+    }
+
+    if (isDispatching) {
+      throw new Error( false ? 0 : 'You may not call store.subscribe() while the reducer is executing. ' + 'If you would like to be notified after the store has been updated, subscribe from a ' + 'component and invoke store.getState() in the callback to access the latest state. ' + 'See https://redux.js.org/api/store#subscribelistener for more details.');
+    }
+
+    var isSubscribed = true;
+    ensureCanMutateNextListeners();
+    nextListeners.push(listener);
+    return function unsubscribe() {
+      if (!isSubscribed) {
+        return;
+      }
+
+      if (isDispatching) {
+        throw new Error( false ? 0 : 'You may not unsubscribe from a store listener while the reducer is executing. ' + 'See https://redux.js.org/api/store#subscribelistener for more details.');
+      }
+
+      isSubscribed = false;
+      ensureCanMutateNextListeners();
+      var index = nextListeners.indexOf(listener);
+      nextListeners.splice(index, 1);
+      currentListeners = null;
+    };
+  }
+  /**
+   * Dispatches an action. It is the only way to trigger a state change.
+   *
+   * The `reducer` function, used to create the store, will be called with the
+   * current state tree and the given `action`. Its return value will
+   * be considered the **next** state of the tree, and the change listeners
+   * will be notified.
+   *
+   * The base implementation only supports plain object actions. If you want to
+   * dispatch a Promise, an Observable, a thunk, or something else, you need to
+   * wrap your store creating function into the corresponding middleware. For
+   * example, see the documentation for the `redux-thunk` package. Even the
+   * middleware will eventually dispatch plain object actions using this method.
+   *
+   * @param {Object} action A plain object representing “what changed”. It is
+   * a good idea to keep actions serializable so you can record and replay user
+   * sessions, or use the time travelling `redux-devtools`. An action must have
+   * a `type` property which may not be `undefined`. It is a good idea to use
+   * string constants for action types.
+   *
+   * @returns {Object} For convenience, the same action object you dispatched.
+   *
+   * Note that, if you use a custom middleware, it may wrap `dispatch()` to
+   * return something else (for example, a Promise you can await).
+   */
+
+
+  function dispatch(action) {
+    if (!isPlainObject(action)) {
+      throw new Error( false ? 0 : "Actions must be plain objects. Instead, the actual type was: '" + kindOf(action) + "'. You may need to add middleware to your store setup to handle dispatching other values, such as 'redux-thunk' to handle dispatching functions. See https://redux.js.org/tutorials/fundamentals/part-4-store#middleware and https://redux.js.org/tutorials/fundamentals/part-6-async-logic#using-the-redux-thunk-middleware for examples.");
+    }
+
+    if (typeof action.type === 'undefined') {
+      throw new Error( false ? 0 : 'Actions may not have an undefined "type" property. You may have misspelled an action type string constant.');
+    }
+
+    if (isDispatching) {
+      throw new Error( false ? 0 : 'Reducers may not dispatch actions.');
+    }
+
+    try {
+      isDispatching = true;
+      currentState = currentReducer(currentState, action);
+    } finally {
+      isDispatching = false;
+    }
+
+    var listeners = currentListeners = nextListeners;
+
+    for (var i = 0; i < listeners.length; i++) {
+      var listener = listeners[i];
+      listener();
+    }
+
+    return action;
+  }
+  /**
+   * Replaces the reducer currently used by the store to calculate the state.
+   *
+   * You might need this if your app implements code splitting and you want to
+   * load some of the reducers dynamically. You might also need this if you
+   * implement a hot reloading mechanism for Redux.
+   *
+   * @param {Function} nextReducer The reducer for the store to use instead.
+   * @returns {void}
+   */
+
+
+  function replaceReducer(nextReducer) {
+    if (typeof nextReducer !== 'function') {
+      throw new Error( false ? 0 : "Expected the nextReducer to be a function. Instead, received: '" + kindOf(nextReducer));
+    }
+
+    currentReducer = nextReducer; // This action has a similiar effect to ActionTypes.INIT.
+    // Any reducers that existed in both the new and old rootReducer
+    // will receive the previous state. This effectively populates
+    // the new state tree with any relevant data from the old one.
+
+    dispatch({
+      type: ActionTypes.REPLACE
+    });
+  }
+  /**
+   * Interoperability point for observable/reactive libraries.
+   * @returns {observable} A minimal observable of state changes.
+   * For more information, see the observable proposal:
+   * https://github.com/tc39/proposal-observable
+   */
+
+
+  function observable() {
+    var _ref;
+
+    var outerSubscribe = subscribe;
+    return _ref = {
+      /**
+       * The minimal observable subscription method.
+       * @param {Object} observer Any object that can be used as an observer.
+       * The observer object should have a `next` method.
+       * @returns {subscription} An object with an `unsubscribe` method that can
+       * be used to unsubscribe the observable from the store, and prevent further
+       * emission of values from the observable.
+       */
+      subscribe: function subscribe(observer) {
+        if (typeof observer !== 'object' || observer === null) {
+          throw new Error( false ? 0 : "Expected the observer to be an object. Instead, received: '" + kindOf(observer) + "'");
+        }
+
+        function observeState() {
+          if (observer.next) {
+            observer.next(getState());
+          }
+        }
+
+        observeState();
+        var unsubscribe = outerSubscribe(observeState);
+        return {
+          unsubscribe: unsubscribe
+        };
+      }
+    }, _ref[$$observable] = function () {
+      return this;
+    }, _ref;
+  } // When a store is created, an "INIT" action is dispatched so that every
+  // reducer returns their initial state. This effectively populates
+  // the initial state tree.
+
+
+  dispatch({
+    type: ActionTypes.INIT
+  });
+  return _ref2 = {
+    dispatch: dispatch,
+    subscribe: subscribe,
+    getState: getState,
+    replaceReducer: replaceReducer
+  }, _ref2[$$observable] = observable, _ref2;
+}
+/**
+ * Creates a Redux store that holds the state tree.
+ *
+ * **We recommend using `configureStore` from the
+ * `@reduxjs/toolkit` package**, which replaces `createStore`:
+ * **https://redux.js.org/introduction/why-rtk-is-redux-today**
+ *
+ * The only way to change the data in the store is to call `dispatch()` on it.
+ *
+ * There should only be a single store in your app. To specify how different
+ * parts of the state tree respond to actions, you may combine several reducers
+ * into a single reducer function by using `combineReducers`.
+ *
+ * @param {Function} reducer A function that returns the next state tree, given
+ * the current state tree and the action to handle.
+ *
+ * @param {any} [preloadedState] The initial state. You may optionally specify it
+ * to hydrate the state from the server in universal apps, or to restore a
+ * previously serialized user session.
+ * If you use `combineReducers` to produce the root reducer function, this must be
+ * an object with the same shape as `combineReducers` keys.
+ *
+ * @param {Function} [enhancer] The store enhancer. You may optionally specify it
+ * to enhance the store with third-party capabilities such as middleware,
+ * time travel, persistence, etc. The only store enhancer that ships with Redux
+ * is `applyMiddleware()`.
+ *
+ * @returns {Store} A Redux store that lets you read the state, dispatch actions
+ * and subscribe to changes.
+ */
+
+var legacy_createStore = createStore;
+
+/**
+ * Prints a warning in the console if it exists.
+ *
+ * @param {String} message The warning message.
+ * @returns {void}
+ */
+function warning(message) {
+  /* eslint-disable no-console */
+  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+    console.error(message);
+  }
+  /* eslint-enable no-console */
+
+
+  try {
+    // This error was thrown as a convenience so that if you enable
+    // "break on all exceptions" in your console,
+    // it would pause the execution at this line.
+    throw new Error(message);
+  } catch (e) {} // eslint-disable-line no-empty
+
+}
+
+function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, unexpectedKeyCache) {
+  var reducerKeys = Object.keys(reducers);
+  var argumentName = action && action.type === ActionTypes.INIT ? 'preloadedState argument passed to createStore' : 'previous state received by the reducer';
+
+  if (reducerKeys.length === 0) {
+    return 'Store does not have a valid reducer. Make sure the argument passed ' + 'to combineReducers is an object whose values are reducers.';
+  }
+
+  if (!isPlainObject(inputState)) {
+    return "The " + argumentName + " has unexpected type of \"" + kindOf(inputState) + "\". Expected argument to be an object with the following " + ("keys: \"" + reducerKeys.join('", "') + "\"");
+  }
+
+  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
+    return !reducers.hasOwnProperty(key) && !unexpectedKeyCache[key];
+  });
+  unexpectedKeys.forEach(function (key) {
+    unexpectedKeyCache[key] = true;
+  });
+  if (action && action.type === ActionTypes.REPLACE) return;
+
+  if (unexpectedKeys.length > 0) {
+    return "Unexpected " + (unexpectedKeys.length > 1 ? 'keys' : 'key') + " " + ("\"" + unexpectedKeys.join('", "') + "\" found in " + argumentName + ". ") + "Expected to find one of the known reducer keys instead: " + ("\"" + reducerKeys.join('", "') + "\". Unexpected keys will be ignored.");
+  }
+}
+
+function assertReducerShape(reducers) {
+  Object.keys(reducers).forEach(function (key) {
+    var reducer = reducers[key];
+    var initialState = reducer(undefined, {
+      type: ActionTypes.INIT
+    });
+
+    if (typeof initialState === 'undefined') {
+      throw new Error( false ? 0 : "The slice reducer for key \"" + key + "\" returned undefined during initialization. " + "If the state passed to the reducer is undefined, you must " + "explicitly return the initial state. The initial state may " + "not be undefined. If you don't want to set a value for this reducer, " + "you can use null instead of undefined.");
+    }
+
+    if (typeof reducer(undefined, {
+      type: ActionTypes.PROBE_UNKNOWN_ACTION()
+    }) === 'undefined') {
+      throw new Error( false ? 0 : "The slice reducer for key \"" + key + "\" returned undefined when probed with a random type. " + ("Don't try to handle '" + ActionTypes.INIT + "' or other actions in \"redux/*\" ") + "namespace. They are considered private. Instead, you must return the " + "current state for any unknown actions, unless it is undefined, " + "in which case you must return the initial state, regardless of the " + "action type. The initial state may not be undefined, but can be null.");
+    }
+  });
+}
+/**
+ * Turns an object whose values are different reducer functions, into a single
+ * reducer function. It will call every child reducer, and gather their results
+ * into a single state object, whose keys correspond to the keys of the passed
+ * reducer functions.
+ *
+ * @param {Object} reducers An object whose values correspond to different
+ * reducer functions that need to be combined into one. One handy way to obtain
+ * it is to use ES6 `import * as reducers` syntax. The reducers may never return
+ * undefined for any action. Instead, they should return their initial state
+ * if the state passed to them was undefined, and the current state for any
+ * unrecognized action.
+ *
+ * @returns {Function} A reducer function that invokes every reducer inside the
+ * passed object, and builds a state object with the same shape.
+ */
+
+
+function combineReducers(reducers) {
+  var reducerKeys = Object.keys(reducers);
+  var finalReducers = {};
+
+  for (var i = 0; i < reducerKeys.length; i++) {
+    var key = reducerKeys[i];
+
+    if (true) {
+      if (typeof reducers[key] === 'undefined') {
+        warning("No reducer provided for key \"" + key + "\"");
+      }
+    }
+
+    if (typeof reducers[key] === 'function') {
+      finalReducers[key] = reducers[key];
+    }
+  }
+
+  var finalReducerKeys = Object.keys(finalReducers); // This is used to make sure we don't warn about the same
+  // keys multiple times.
+
+  var unexpectedKeyCache;
+
+  if (true) {
+    unexpectedKeyCache = {};
+  }
+
+  var shapeAssertionError;
+
+  try {
+    assertReducerShape(finalReducers);
+  } catch (e) {
+    shapeAssertionError = e;
+  }
+
+  return function combination(state, action) {
+    if (state === void 0) {
+      state = {};
+    }
+
+    if (shapeAssertionError) {
+      throw shapeAssertionError;
+    }
+
+    if (true) {
+      var warningMessage = getUnexpectedStateShapeWarningMessage(state, finalReducers, action, unexpectedKeyCache);
+
+      if (warningMessage) {
+        warning(warningMessage);
+      }
+    }
+
+    var hasChanged = false;
+    var nextState = {};
+
+    for (var _i = 0; _i < finalReducerKeys.length; _i++) {
+      var _key = finalReducerKeys[_i];
+      var reducer = finalReducers[_key];
+      var previousStateForKey = state[_key];
+      var nextStateForKey = reducer(previousStateForKey, action);
+
+      if (typeof nextStateForKey === 'undefined') {
+        var actionType = action && action.type;
+        throw new Error( false ? 0 : "When called with an action of type " + (actionType ? "\"" + String(actionType) + "\"" : '(unknown type)') + ", the slice reducer for key \"" + _key + "\" returned undefined. " + "To ignore an action, you must explicitly return the previous state. " + "If you want this reducer to hold no value, you can return null instead of undefined.");
+      }
+
+      nextState[_key] = nextStateForKey;
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
+    }
+
+    hasChanged = hasChanged || finalReducerKeys.length !== Object.keys(state).length;
+    return hasChanged ? nextState : state;
+  };
+}
+
+function bindActionCreator(actionCreator, dispatch) {
+  return function () {
+    return dispatch(actionCreator.apply(this, arguments));
+  };
+}
+/**
+ * Turns an object whose values are action creators, into an object with the
+ * same keys, but with every function wrapped into a `dispatch` call so they
+ * may be invoked directly. This is just a convenience method, as you can call
+ * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.
+ *
+ * For convenience, you can also pass an action creator as the first argument,
+ * and get a dispatch wrapped function in return.
+ *
+ * @param {Function|Object} actionCreators An object whose values are action
+ * creator functions. One handy way to obtain it is to use ES6 `import * as`
+ * syntax. You may also pass a single function.
+ *
+ * @param {Function} dispatch The `dispatch` function available on your Redux
+ * store.
+ *
+ * @returns {Function|Object} The object mimicking the original object, but with
+ * every action creator wrapped into the `dispatch` call. If you passed a
+ * function as `actionCreators`, the return value will also be a single
+ * function.
+ */
+
+
+function bindActionCreators(actionCreators, dispatch) {
+  if (typeof actionCreators === 'function') {
+    return bindActionCreator(actionCreators, dispatch);
+  }
+
+  if (typeof actionCreators !== 'object' || actionCreators === null) {
+    throw new Error( false ? 0 : "bindActionCreators expected an object or a function, but instead received: '" + kindOf(actionCreators) + "'. " + "Did you write \"import ActionCreators from\" instead of \"import * as ActionCreators from\"?");
+  }
+
+  var boundActionCreators = {};
+
+  for (var key in actionCreators) {
+    var actionCreator = actionCreators[key];
+
+    if (typeof actionCreator === 'function') {
+      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch);
+    }
+  }
+
+  return boundActionCreators;
+}
+
+/**
+ * Composes single-argument functions from right to left. The rightmost
+ * function can take multiple arguments as it provides the signature for
+ * the resulting composite function.
+ *
+ * @param {...Function} funcs The functions to compose.
+ * @returns {Function} A function obtained by composing the argument functions
+ * from right to left. For example, compose(f, g, h) is identical to doing
+ * (...args) => f(g(h(...args))).
+ */
+function compose() {
+  for (var _len = arguments.length, funcs = new Array(_len), _key = 0; _key < _len; _key++) {
+    funcs[_key] = arguments[_key];
+  }
+
+  if (funcs.length === 0) {
+    return function (arg) {
+      return arg;
+    };
+  }
+
+  if (funcs.length === 1) {
+    return funcs[0];
+  }
+
+  return funcs.reduce(function (a, b) {
+    return function () {
+      return a(b.apply(void 0, arguments));
+    };
+  });
+}
+
+/**
+ * Creates a store enhancer that applies middleware to the dispatch method
+ * of the Redux store. This is handy for a variety of tasks, such as expressing
+ * asynchronous actions in a concise manner, or logging every action payload.
+ *
+ * See `redux-thunk` package as an example of the Redux middleware.
+ *
+ * Because middleware is potentially asynchronous, this should be the first
+ * store enhancer in the composition chain.
+ *
+ * Note that each middleware will be given the `dispatch` and `getState` functions
+ * as named arguments.
+ *
+ * @param {...Function} middlewares The middleware chain to be applied.
+ * @returns {Function} A store enhancer applying the middleware.
+ */
+
+function applyMiddleware() {
+  for (var _len = arguments.length, middlewares = new Array(_len), _key = 0; _key < _len; _key++) {
+    middlewares[_key] = arguments[_key];
+  }
+
+  return function (createStore) {
+    return function () {
+      var store = createStore.apply(void 0, arguments);
+
+      var _dispatch = function dispatch() {
+        throw new Error( false ? 0 : 'Dispatching while constructing your middleware is not allowed. ' + 'Other middleware would not be applied to this dispatch.');
+      };
+
+      var middlewareAPI = {
+        getState: store.getState,
+        dispatch: function dispatch() {
+          return _dispatch.apply(void 0, arguments);
+        }
+      };
+      var chain = middlewares.map(function (middleware) {
+        return middleware(middlewareAPI);
+      });
+      _dispatch = compose.apply(void 0, chain)(store.dispatch);
+      return (0,_babel_runtime_helpers_esm_objectSpread2__WEBPACK_IMPORTED_MODULE_0__["default"])((0,_babel_runtime_helpers_esm_objectSpread2__WEBPACK_IMPORTED_MODULE_0__["default"])({}, store), {}, {
+        dispatch: _dispatch
+      });
+    };
+  };
+}
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/scheduler/cjs/scheduler.development.js":
 /*!*************************************************************!*\
   !*** ./node_modules/scheduler/cjs/scheduler.development.js ***!
@@ -62613,6 +80620,71 @@ function useCallbackRef(initialValue, callback) {
 
 /***/ }),
 
+/***/ "./node_modules/use-memo-one/dist/use-memo-one.esm.js":
+/*!************************************************************!*\
+  !*** ./node_modules/use-memo-one/dist/use-memo-one.esm.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useCallback: () => (/* binding */ useCallback),
+/* harmony export */   useCallbackOne: () => (/* binding */ useCallbackOne),
+/* harmony export */   useMemo: () => (/* binding */ useMemo),
+/* harmony export */   useMemoOne: () => (/* binding */ useMemoOne)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function areInputsEqual(newInputs, lastInputs) {
+  if (newInputs.length !== lastInputs.length) {
+    return false;
+  }
+
+  for (var i = 0; i < newInputs.length; i++) {
+    if (newInputs[i] !== lastInputs[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function useMemoOne(getResult, inputs) {
+  var initial = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(function () {
+    return {
+      inputs: inputs,
+      result: getResult()
+    };
+  })[0];
+  var isFirstRun = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(true);
+  var committed = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(initial);
+  var useCache = isFirstRun.current || Boolean(inputs && committed.current.inputs && areInputsEqual(inputs, committed.current.inputs));
+  var cache = useCache ? committed.current : {
+    inputs: inputs,
+    result: getResult()
+  };
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    isFirstRun.current = false;
+    committed.current = cache;
+  }, [cache]);
+  return cache.result;
+}
+function useCallbackOne(callback, inputs) {
+  return useMemoOne(function () {
+    return callback;
+  }, inputs);
+}
+var useMemo = useMemoOne;
+var useCallback = useCallbackOne;
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/use-sidecar/dist/es2015/exports.js":
 /*!*********************************************************!*\
   !*** ./node_modules/use-sidecar/dist/es2015/exports.js ***!
@@ -62744,6 +80816,464 @@ function createSidecarMedium(options) {
 
 /***/ }),
 
+/***/ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js":
+/*!**********************************************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+/**
+ * @license React
+ * use-sync-external-store-shim.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+
+          'use strict';
+
+/* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
+}
+          var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+function error(format) {
+  {
+    {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
+      printWarning('error', format, args);
+    }
+  }
+}
+
+function printWarning(level, format, args) {
+  // When changing this logic, you might want to also
+  // update consoleWithStackDev.www.js as well.
+  {
+    var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+    var stack = ReactDebugCurrentFrame.getStackAddendum();
+
+    if (stack !== '') {
+      format += '%s';
+      args = args.concat([stack]);
+    } // eslint-disable-next-line react-internal/safe-string-coercion
+
+
+    var argsWithFormat = args.map(function (item) {
+      return String(item);
+    }); // Careful: RN currently depends on this prefix
+
+    argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
+    // breaks IE9: https://github.com/facebook/react/issues/13610
+    // eslint-disable-next-line react-internal/no-production-logging
+
+    Function.prototype.apply.call(console[level], console, argsWithFormat);
+  }
+}
+
+/**
+ * inlined Object.is polyfill to avoid requiring consumers ship their own
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ */
+function is(x, y) {
+  return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y // eslint-disable-line no-self-compare
+  ;
+}
+
+var objectIs = typeof Object.is === 'function' ? Object.is : is;
+
+// dispatch for CommonJS interop named imports.
+
+var useState = React.useState,
+    useEffect = React.useEffect,
+    useLayoutEffect = React.useLayoutEffect,
+    useDebugValue = React.useDebugValue;
+var didWarnOld18Alpha = false;
+var didWarnUncachedGetSnapshot = false; // Disclaimer: This shim breaks many of the rules of React, and only works
+// because of a very particular set of implementation details and assumptions
+// -- change any one of them and it will break. The most important assumption
+// is that updates are always synchronous, because concurrent rendering is
+// only available in versions of React that also have a built-in
+// useSyncExternalStore API. And we only use this shim when the built-in API
+// does not exist.
+//
+// Do not assume that the clever hacks used by this hook also work in general.
+// The point of this shim is to replace the need for hacks by other libraries.
+
+function useSyncExternalStore(subscribe, getSnapshot, // Note: The shim does not use getServerSnapshot, because pre-18 versions of
+// React do not expose a way to check if we're hydrating. So users of the shim
+// will need to track that themselves and return the correct value
+// from `getSnapshot`.
+getServerSnapshot) {
+  {
+    if (!didWarnOld18Alpha) {
+      if (React.startTransition !== undefined) {
+        didWarnOld18Alpha = true;
+
+        error('You are using an outdated, pre-release alpha of React 18 that ' + 'does not support useSyncExternalStore. The ' + 'use-sync-external-store shim will not work correctly. Upgrade ' + 'to a newer pre-release.');
+      }
+    }
+  } // Read the current snapshot from the store on every render. Again, this
+  // breaks the rules of React, and only works here because of specific
+  // implementation details, most importantly that updates are
+  // always synchronous.
+
+
+  var value = getSnapshot();
+
+  {
+    if (!didWarnUncachedGetSnapshot) {
+      var cachedValue = getSnapshot();
+
+      if (!objectIs(value, cachedValue)) {
+        error('The result of getSnapshot should be cached to avoid an infinite loop');
+
+        didWarnUncachedGetSnapshot = true;
+      }
+    }
+  } // Because updates are synchronous, we don't queue them. Instead we force a
+  // re-render whenever the subscribed state changes by updating an some
+  // arbitrary useState hook. Then, during render, we call getSnapshot to read
+  // the current value.
+  //
+  // Because we don't actually use the state returned by the useState hook, we
+  // can save a bit of memory by storing other stuff in that slot.
+  //
+  // To implement the early bailout, we need to track some things on a mutable
+  // object. Usually, we would put that in a useRef hook, but we can stash it in
+  // our useState hook instead.
+  //
+  // To force a re-render, we call forceUpdate({inst}). That works because the
+  // new object always fails an equality check.
+
+
+  var _useState = useState({
+    inst: {
+      value: value,
+      getSnapshot: getSnapshot
+    }
+  }),
+      inst = _useState[0].inst,
+      forceUpdate = _useState[1]; // Track the latest getSnapshot function with a ref. This needs to be updated
+  // in the layout phase so we can access it during the tearing check that
+  // happens on subscribe.
+
+
+  useLayoutEffect(function () {
+    inst.value = value;
+    inst.getSnapshot = getSnapshot; // Whenever getSnapshot or subscribe changes, we need to check in the
+    // commit phase if there was an interleaved mutation. In concurrent mode
+    // this can happen all the time, but even in synchronous mode, an earlier
+    // effect may have mutated the store.
+
+    if (checkIfSnapshotChanged(inst)) {
+      // Force a re-render.
+      forceUpdate({
+        inst: inst
+      });
+    }
+  }, [subscribe, value, getSnapshot]);
+  useEffect(function () {
+    // Check for changes right before subscribing. Subsequent changes will be
+    // detected in the subscription handler.
+    if (checkIfSnapshotChanged(inst)) {
+      // Force a re-render.
+      forceUpdate({
+        inst: inst
+      });
+    }
+
+    var handleStoreChange = function () {
+      // TODO: Because there is no cross-renderer API for batching updates, it's
+      // up to the consumer of this library to wrap their subscription event
+      // with unstable_batchedUpdates. Should we try to detect when this isn't
+      // the case and print a warning in development?
+      // The store changed. Check if the snapshot changed since the last time we
+      // read from the store.
+      if (checkIfSnapshotChanged(inst)) {
+        // Force a re-render.
+        forceUpdate({
+          inst: inst
+        });
+      }
+    }; // Subscribe to the store and return a clean-up function.
+
+
+    return subscribe(handleStoreChange);
+  }, [subscribe]);
+  useDebugValue(value);
+  return value;
+}
+
+function checkIfSnapshotChanged(inst) {
+  var latestGetSnapshot = inst.getSnapshot;
+  var prevValue = inst.value;
+
+  try {
+    var nextValue = latestGetSnapshot();
+    return !objectIs(prevValue, nextValue);
+  } catch (error) {
+    return true;
+  }
+}
+
+function useSyncExternalStore$1(subscribe, getSnapshot, getServerSnapshot) {
+  // Note: The shim does not use getServerSnapshot, because pre-18 versions of
+  // React do not expose a way to check if we're hydrating. So users of the shim
+  // will need to track that themselves and return the correct value
+  // from `getSnapshot`.
+  return getSnapshot();
+}
+
+var canUseDOM = !!(typeof window !== 'undefined' && typeof window.document !== 'undefined' && typeof window.document.createElement !== 'undefined');
+
+var isServerEnvironment = !canUseDOM;
+
+var shim = isServerEnvironment ? useSyncExternalStore$1 : useSyncExternalStore;
+var useSyncExternalStore$2 = React.useSyncExternalStore !== undefined ? React.useSyncExternalStore : shim;
+
+exports.useSyncExternalStore = useSyncExternalStore$2;
+          /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
+}
+        
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js":
+/*!************************************************************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js ***!
+  \************************************************************************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+/**
+ * @license React
+ * use-sync-external-store-shim/with-selector.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+if (true) {
+  (function() {
+
+          'use strict';
+
+/* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
+}
+          var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var shim = __webpack_require__(/*! use-sync-external-store/shim */ "./node_modules/use-sync-external-store/shim/index.js");
+
+/**
+ * inlined Object.is polyfill to avoid requiring consumers ship their own
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ */
+function is(x, y) {
+  return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y // eslint-disable-line no-self-compare
+  ;
+}
+
+var objectIs = typeof Object.is === 'function' ? Object.is : is;
+
+var useSyncExternalStore = shim.useSyncExternalStore;
+
+// for CommonJS interop.
+
+var useRef = React.useRef,
+    useEffect = React.useEffect,
+    useMemo = React.useMemo,
+    useDebugValue = React.useDebugValue; // Same as useSyncExternalStore, but supports selector and isEqual arguments.
+
+function useSyncExternalStoreWithSelector(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
+  // Use this to track the rendered snapshot.
+  var instRef = useRef(null);
+  var inst;
+
+  if (instRef.current === null) {
+    inst = {
+      hasValue: false,
+      value: null
+    };
+    instRef.current = inst;
+  } else {
+    inst = instRef.current;
+  }
+
+  var _useMemo = useMemo(function () {
+    // Track the memoized state using closure variables that are local to this
+    // memoized instance of a getSnapshot function. Intentionally not using a
+    // useRef hook, because that state would be shared across all concurrent
+    // copies of the hook/component.
+    var hasMemo = false;
+    var memoizedSnapshot;
+    var memoizedSelection;
+
+    var memoizedSelector = function (nextSnapshot) {
+      if (!hasMemo) {
+        // The first time the hook is called, there is no memoized result.
+        hasMemo = true;
+        memoizedSnapshot = nextSnapshot;
+
+        var _nextSelection = selector(nextSnapshot);
+
+        if (isEqual !== undefined) {
+          // Even if the selector has changed, the currently rendered selection
+          // may be equal to the new selection. We should attempt to reuse the
+          // current value if possible, to preserve downstream memoizations.
+          if (inst.hasValue) {
+            var currentSelection = inst.value;
+
+            if (isEqual(currentSelection, _nextSelection)) {
+              memoizedSelection = currentSelection;
+              return currentSelection;
+            }
+          }
+        }
+
+        memoizedSelection = _nextSelection;
+        return _nextSelection;
+      } // We may be able to reuse the previous invocation's result.
+
+
+      // We may be able to reuse the previous invocation's result.
+      var prevSnapshot = memoizedSnapshot;
+      var prevSelection = memoizedSelection;
+
+      if (objectIs(prevSnapshot, nextSnapshot)) {
+        // The snapshot is the same as last time. Reuse the previous selection.
+        return prevSelection;
+      } // The snapshot has changed, so we need to compute a new selection.
+
+
+      // The snapshot has changed, so we need to compute a new selection.
+      var nextSelection = selector(nextSnapshot); // If a custom isEqual function is provided, use that to check if the data
+      // has changed. If it hasn't, return the previous selection. That signals
+      // to React that the selections are conceptually equal, and we can bail
+      // out of rendering.
+
+      // If a custom isEqual function is provided, use that to check if the data
+      // has changed. If it hasn't, return the previous selection. That signals
+      // to React that the selections are conceptually equal, and we can bail
+      // out of rendering.
+      if (isEqual !== undefined && isEqual(prevSelection, nextSelection)) {
+        return prevSelection;
+      }
+
+      memoizedSnapshot = nextSnapshot;
+      memoizedSelection = nextSelection;
+      return nextSelection;
+    }; // Assigning this to a constant so that Flow knows it can't change.
+
+
+    // Assigning this to a constant so that Flow knows it can't change.
+    var maybeGetServerSnapshot = getServerSnapshot === undefined ? null : getServerSnapshot;
+
+    var getSnapshotWithSelector = function () {
+      return memoizedSelector(getSnapshot());
+    };
+
+    var getServerSnapshotWithSelector = maybeGetServerSnapshot === null ? undefined : function () {
+      return memoizedSelector(maybeGetServerSnapshot());
+    };
+    return [getSnapshotWithSelector, getServerSnapshotWithSelector];
+  }, [getSnapshot, getServerSnapshot, selector, isEqual]),
+      getSelection = _useMemo[0],
+      getServerSelection = _useMemo[1];
+
+  var value = useSyncExternalStore(subscribe, getSelection, getServerSelection);
+  useEffect(function () {
+    inst.hasValue = true;
+    inst.value = value;
+  }, [value]);
+  useDebugValue(value);
+  return value;
+}
+
+exports.useSyncExternalStoreWithSelector = useSyncExternalStoreWithSelector;
+          /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+if (
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
+  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop ===
+    'function'
+) {
+  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
+}
+        
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/shim/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/shim/index.js ***!
+  \************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ../cjs/use-sync-external-store-shim.development.js */ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/use-sync-external-store/shim/with-selector.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/use-sync-external-store/shim/with-selector.js ***!
+  \********************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ../cjs/use-sync-external-store-shim/with-selector.development.js */ "./node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js");
+}
+
+
+/***/ }),
+
 /***/ "./resources/js/Pages sync recursive ^\\.\\/.*$":
 /*!*******************************************!*\
   !*** ./resources/js/Pages/ sync ^\.\/.*$ ***!
@@ -62799,6 +81329,36 @@ webpackContext.id = "./resources/js/Pages sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _defineProperty)
+/* harmony export */ });
+/* harmony import */ var _toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toPropertyKey.js */ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js");
+
+function _defineProperty(obj, key, value) {
+  key = (0,_toPropertyKey_js__WEBPACK_IMPORTED_MODULE_0__["default"])(key);
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/extends.js":
 /*!************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/extends.js ***!
@@ -62823,6 +81383,140 @@ function _extends() {
     return target;
   };
   return _extends.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/objectSpread2.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectSpread2.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _objectSpread2)
+/* harmony export */ });
+/* harmony import */ var _defineProperty_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./defineProperty.js */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+
+function ownKeys(e, r) {
+  var t = Object.keys(e);
+  if (Object.getOwnPropertySymbols) {
+    var o = Object.getOwnPropertySymbols(e);
+    r && (o = o.filter(function (r) {
+      return Object.getOwnPropertyDescriptor(e, r).enumerable;
+    })), t.push.apply(t, o);
+  }
+  return t;
+}
+function _objectSpread2(e) {
+  for (var r = 1; r < arguments.length; r++) {
+    var t = null != arguments[r] ? arguments[r] : {};
+    r % 2 ? ownKeys(Object(t), !0).forEach(function (r) {
+      (0,_defineProperty_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e, r, t[r]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
+      Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+    });
+  }
+  return e;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _objectWithoutPropertiesLoose)
+/* harmony export */ });
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+  return target;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _toPrimitive)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+
+function _toPrimitive(input, hint) {
+  if ((0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(input) !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if ((0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(res) !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (hint === "string" ? String : Number)(input);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _toPropertyKey)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toPrimitive.js */ "./node_modules/@babel/runtime/helpers/esm/toPrimitive.js");
+
+
+function _toPropertyKey(arg) {
+  var key = (0,_toPrimitive_js__WEBPACK_IMPORTED_MODULE_1__["default"])(arg, "string");
+  return (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(key) === "symbol" ? key : String(key);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/typeof.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _typeof)
+/* harmony export */ });
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
 }
 
 /***/ }),
@@ -68342,6 +87036,373 @@ const $6cc32821e9371a1c$export$6d4de93b380beddf = $6cc32821e9371a1c$export$e7142
 
 /***/ }),
 
+/***/ "./node_modules/@radix-ui/react-popover/dist/index.mjs":
+/*!*************************************************************!*\
+  !*** ./node_modules/@radix-ui/react-popover/dist/index.mjs ***!
+  \*************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Anchor: () => (/* binding */ $cb5cc270b50c6fcd$export$b688253958b8dfe7),
+/* harmony export */   Arrow: () => (/* binding */ $cb5cc270b50c6fcd$export$21b07c8f274aebd5),
+/* harmony export */   Close: () => (/* binding */ $cb5cc270b50c6fcd$export$f39c2d165cd861fe),
+/* harmony export */   Content: () => (/* binding */ $cb5cc270b50c6fcd$export$7c6e2c02157bb7d2),
+/* harmony export */   Popover: () => (/* binding */ $cb5cc270b50c6fcd$export$5b6b19405a83ff9d),
+/* harmony export */   PopoverAnchor: () => (/* binding */ $cb5cc270b50c6fcd$export$96e5381f42521a79),
+/* harmony export */   PopoverArrow: () => (/* binding */ $cb5cc270b50c6fcd$export$3152841115e061b2),
+/* harmony export */   PopoverClose: () => (/* binding */ $cb5cc270b50c6fcd$export$d6ac43ebaa40d53e),
+/* harmony export */   PopoverContent: () => (/* binding */ $cb5cc270b50c6fcd$export$d7e1f420b25549ff),
+/* harmony export */   PopoverPortal: () => (/* binding */ $cb5cc270b50c6fcd$export$dd679ffb4362d2d4),
+/* harmony export */   PopoverTrigger: () => (/* binding */ $cb5cc270b50c6fcd$export$7dacb05d26466c3),
+/* harmony export */   Portal: () => (/* binding */ $cb5cc270b50c6fcd$export$602eac185826482c),
+/* harmony export */   Root: () => (/* binding */ $cb5cc270b50c6fcd$export$be92b6f5f03c0fe9),
+/* harmony export */   Trigger: () => (/* binding */ $cb5cc270b50c6fcd$export$41fb9f06171c75f4),
+/* harmony export */   createPopoverScope: () => (/* binding */ $cb5cc270b50c6fcd$export$c8393c9e73286932)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _radix_ui_primitive__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @radix-ui/primitive */ "./node_modules/@radix-ui/primitive/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @radix-ui/react-compose-refs */ "./node_modules/@radix-ui/react-compose-refs/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_context__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-context */ "./node_modules/@radix-ui/react-context/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_dismissable_layer__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @radix-ui/react-dismissable-layer */ "./node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_focus_guards__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @radix-ui/react-focus-guards */ "./node_modules/@radix-ui/react-focus-guards/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_focus_scope__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @radix-ui/react-focus-scope */ "./node_modules/@radix-ui/react-focus-scope/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_id__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @radix-ui/react-id */ "./node_modules/@radix-ui/react-id/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_popper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-popper */ "./node_modules/@radix-ui/react-popper/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_portal__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @radix-ui/react-portal */ "./node_modules/@radix-ui/react-portal/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_presence__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @radix-ui/react-presence */ "./node_modules/@radix-ui/react-presence/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @radix-ui/react-primitive */ "./node_modules/@radix-ui/react-primitive/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_slot__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @radix-ui/react-slot */ "./node_modules/@radix-ui/react-slot/dist/index.mjs");
+/* harmony import */ var _radix_ui_react_use_controllable_state__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @radix-ui/react-use-controllable-state */ "./node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs");
+/* harmony import */ var aria_hidden__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! aria-hidden */ "./node_modules/aria-hidden/dist/es2015/index.js");
+/* harmony import */ var react_remove_scroll__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-remove-scroll */ "./node_modules/react-remove-scroll/dist/es2015/Combination.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* -------------------------------------------------------------------------------------------------
+ * Popover
+ * -----------------------------------------------------------------------------------------------*/ const $cb5cc270b50c6fcd$var$POPOVER_NAME = 'Popover';
+const [$cb5cc270b50c6fcd$var$createPopoverContext, $cb5cc270b50c6fcd$export$c8393c9e73286932] = (0,_radix_ui_react_context__WEBPACK_IMPORTED_MODULE_2__.createContextScope)($cb5cc270b50c6fcd$var$POPOVER_NAME, [
+    _radix_ui_react_popper__WEBPACK_IMPORTED_MODULE_3__.createPopperScope
+]);
+const $cb5cc270b50c6fcd$var$usePopperScope = (0,_radix_ui_react_popper__WEBPACK_IMPORTED_MODULE_3__.createPopperScope)();
+const [$cb5cc270b50c6fcd$var$PopoverProvider, $cb5cc270b50c6fcd$var$usePopoverContext] = $cb5cc270b50c6fcd$var$createPopoverContext($cb5cc270b50c6fcd$var$POPOVER_NAME);
+const $cb5cc270b50c6fcd$export$5b6b19405a83ff9d = (props)=>{
+    const { __scopePopover: __scopePopover , children: children , open: openProp , defaultOpen: defaultOpen , onOpenChange: onOpenChange , modal: modal = false  } = props;
+    const popperScope = $cb5cc270b50c6fcd$var$usePopperScope(__scopePopover);
+    const triggerRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const [hasCustomAnchor, setHasCustomAnchor] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+    const [open = false, setOpen] = (0,_radix_ui_react_use_controllable_state__WEBPACK_IMPORTED_MODULE_4__.useControllableState)({
+        prop: openProp,
+        defaultProp: defaultOpen,
+        onChange: onOpenChange
+    });
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_popper__WEBPACK_IMPORTED_MODULE_3__.Root, popperScope, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($cb5cc270b50c6fcd$var$PopoverProvider, {
+        scope: __scopePopover,
+        contentId: (0,_radix_ui_react_id__WEBPACK_IMPORTED_MODULE_5__.useId)(),
+        triggerRef: triggerRef,
+        open: open,
+        onOpenChange: setOpen,
+        onOpenToggle: (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(()=>setOpen((prevOpen)=>!prevOpen
+            )
+        , [
+            setOpen
+        ]),
+        hasCustomAnchor: hasCustomAnchor,
+        onCustomAnchorAdd: (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(()=>setHasCustomAnchor(true)
+        , []),
+        onCustomAnchorRemove: (0,react__WEBPACK_IMPORTED_MODULE_1__.useCallback)(()=>setHasCustomAnchor(false)
+        , []),
+        modal: modal
+    }, children));
+};
+/*#__PURE__*/ Object.assign($cb5cc270b50c6fcd$export$5b6b19405a83ff9d, {
+    displayName: $cb5cc270b50c6fcd$var$POPOVER_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * PopoverAnchor
+ * -----------------------------------------------------------------------------------------------*/ const $cb5cc270b50c6fcd$var$ANCHOR_NAME = 'PopoverAnchor';
+const $cb5cc270b50c6fcd$export$96e5381f42521a79 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopePopover: __scopePopover , ...anchorProps } = props;
+    const context = $cb5cc270b50c6fcd$var$usePopoverContext($cb5cc270b50c6fcd$var$ANCHOR_NAME, __scopePopover);
+    const popperScope = $cb5cc270b50c6fcd$var$usePopperScope(__scopePopover);
+    const { onCustomAnchorAdd: onCustomAnchorAdd , onCustomAnchorRemove: onCustomAnchorRemove  } = context;
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        onCustomAnchorAdd();
+        return ()=>onCustomAnchorRemove()
+        ;
+    }, [
+        onCustomAnchorAdd,
+        onCustomAnchorRemove
+    ]);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_popper__WEBPACK_IMPORTED_MODULE_3__.Anchor, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, popperScope, anchorProps, {
+        ref: forwardedRef
+    }));
+});
+/*#__PURE__*/ Object.assign($cb5cc270b50c6fcd$export$96e5381f42521a79, {
+    displayName: $cb5cc270b50c6fcd$var$ANCHOR_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * PopoverTrigger
+ * -----------------------------------------------------------------------------------------------*/ const $cb5cc270b50c6fcd$var$TRIGGER_NAME = 'PopoverTrigger';
+const $cb5cc270b50c6fcd$export$7dacb05d26466c3 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopePopover: __scopePopover , ...triggerProps } = props;
+    const context = $cb5cc270b50c6fcd$var$usePopoverContext($cb5cc270b50c6fcd$var$TRIGGER_NAME, __scopePopover);
+    const popperScope = $cb5cc270b50c6fcd$var$usePopperScope(__scopePopover);
+    const composedTriggerRef = (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_6__.useComposedRefs)(forwardedRef, context.triggerRef);
+    const trigger = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_7__.Primitive.button, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        type: "button",
+        "aria-haspopup": "dialog",
+        "aria-expanded": context.open,
+        "aria-controls": context.contentId,
+        "data-state": $cb5cc270b50c6fcd$var$getState(context.open)
+    }, triggerProps, {
+        ref: composedTriggerRef,
+        onClick: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_8__.composeEventHandlers)(props.onClick, context.onOpenToggle)
+    }));
+    return context.hasCustomAnchor ? trigger : /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_popper__WEBPACK_IMPORTED_MODULE_3__.Anchor, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        asChild: true
+    }, popperScope), trigger);
+});
+/*#__PURE__*/ Object.assign($cb5cc270b50c6fcd$export$7dacb05d26466c3, {
+    displayName: $cb5cc270b50c6fcd$var$TRIGGER_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * PopoverPortal
+ * -----------------------------------------------------------------------------------------------*/ const $cb5cc270b50c6fcd$var$PORTAL_NAME = 'PopoverPortal';
+const [$cb5cc270b50c6fcd$var$PortalProvider, $cb5cc270b50c6fcd$var$usePortalContext] = $cb5cc270b50c6fcd$var$createPopoverContext($cb5cc270b50c6fcd$var$PORTAL_NAME, {
+    forceMount: undefined
+});
+const $cb5cc270b50c6fcd$export$dd679ffb4362d2d4 = (props)=>{
+    const { __scopePopover: __scopePopover , forceMount: forceMount , children: children , container: container  } = props;
+    const context = $cb5cc270b50c6fcd$var$usePopoverContext($cb5cc270b50c6fcd$var$PORTAL_NAME, __scopePopover);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($cb5cc270b50c6fcd$var$PortalProvider, {
+        scope: __scopePopover,
+        forceMount: forceMount
+    }, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_presence__WEBPACK_IMPORTED_MODULE_9__.Presence, {
+        present: forceMount || context.open
+    }, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_portal__WEBPACK_IMPORTED_MODULE_10__.Portal, {
+        asChild: true,
+        container: container
+    }, children)));
+};
+/*#__PURE__*/ Object.assign($cb5cc270b50c6fcd$export$dd679ffb4362d2d4, {
+    displayName: $cb5cc270b50c6fcd$var$PORTAL_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * PopoverContent
+ * -----------------------------------------------------------------------------------------------*/ const $cb5cc270b50c6fcd$var$CONTENT_NAME = 'PopoverContent';
+const $cb5cc270b50c6fcd$export$d7e1f420b25549ff = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const portalContext = $cb5cc270b50c6fcd$var$usePortalContext($cb5cc270b50c6fcd$var$CONTENT_NAME, props.__scopePopover);
+    const { forceMount: forceMount = portalContext.forceMount , ...contentProps } = props;
+    const context = $cb5cc270b50c6fcd$var$usePopoverContext($cb5cc270b50c6fcd$var$CONTENT_NAME, props.__scopePopover);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_presence__WEBPACK_IMPORTED_MODULE_9__.Presence, {
+        present: forceMount || context.open
+    }, context.modal ? /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($cb5cc270b50c6fcd$var$PopoverContentModal, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, contentProps, {
+        ref: forwardedRef
+    })) : /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($cb5cc270b50c6fcd$var$PopoverContentNonModal, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, contentProps, {
+        ref: forwardedRef
+    })));
+});
+/*#__PURE__*/ Object.assign($cb5cc270b50c6fcd$export$d7e1f420b25549ff, {
+    displayName: $cb5cc270b50c6fcd$var$CONTENT_NAME
+});
+/* -----------------------------------------------------------------------------------------------*/ const $cb5cc270b50c6fcd$var$PopoverContentModal = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const context = $cb5cc270b50c6fcd$var$usePopoverContext($cb5cc270b50c6fcd$var$CONTENT_NAME, props.__scopePopover);
+    const contentRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
+    const composedRefs = (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_6__.useComposedRefs)(forwardedRef, contentRef);
+    const isRightClickOutsideRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(false); // aria-hide everything except the content (better supported equivalent to setting aria-modal)
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        const content = contentRef.current;
+        if (content) return (0,aria_hidden__WEBPACK_IMPORTED_MODULE_11__.hideOthers)(content);
+    }, []);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_remove_scroll__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        as: _radix_ui_react_slot__WEBPACK_IMPORTED_MODULE_13__.Slot,
+        allowPinchZoom: true
+    }, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($cb5cc270b50c6fcd$var$PopoverContentImpl, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, props, {
+        ref: composedRefs // we make sure we're not trapping once it's been closed
+        ,
+        trapFocus: context.open,
+        disableOutsidePointerEvents: true,
+        onCloseAutoFocus: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_8__.composeEventHandlers)(props.onCloseAutoFocus, (event)=>{
+            var _context$triggerRef$c;
+            event.preventDefault();
+            if (!isRightClickOutsideRef.current) (_context$triggerRef$c = context.triggerRef.current) === null || _context$triggerRef$c === void 0 || _context$triggerRef$c.focus();
+        }),
+        onPointerDownOutside: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_8__.composeEventHandlers)(props.onPointerDownOutside, (event)=>{
+            const originalEvent = event.detail.originalEvent;
+            const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;
+            const isRightClick = originalEvent.button === 2 || ctrlLeftClick;
+            isRightClickOutsideRef.current = isRightClick;
+        }, {
+            checkForDefaultPrevented: false
+        }) // When focus is trapped, a `focusout` event may still happen.
+        ,
+        onFocusOutside: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_8__.composeEventHandlers)(props.onFocusOutside, (event)=>event.preventDefault()
+        , {
+            checkForDefaultPrevented: false
+        })
+    })));
+});
+const $cb5cc270b50c6fcd$var$PopoverContentNonModal = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const context = $cb5cc270b50c6fcd$var$usePopoverContext($cb5cc270b50c6fcd$var$CONTENT_NAME, props.__scopePopover);
+    const hasInteractedOutsideRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(false);
+    const hasPointerDownOutsideRef = (0,react__WEBPACK_IMPORTED_MODULE_1__.useRef)(false);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)($cb5cc270b50c6fcd$var$PopoverContentImpl, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, props, {
+        ref: forwardedRef,
+        trapFocus: false,
+        disableOutsidePointerEvents: false,
+        onCloseAutoFocus: (event)=>{
+            var _props$onCloseAutoFoc;
+            (_props$onCloseAutoFoc = props.onCloseAutoFocus) === null || _props$onCloseAutoFoc === void 0 || _props$onCloseAutoFoc.call(props, event);
+            if (!event.defaultPrevented) {
+                var _context$triggerRef$c2;
+                if (!hasInteractedOutsideRef.current) (_context$triggerRef$c2 = context.triggerRef.current) === null || _context$triggerRef$c2 === void 0 || _context$triggerRef$c2.focus(); // Always prevent auto focus because we either focus manually or want user agent focus
+                event.preventDefault();
+            }
+            hasInteractedOutsideRef.current = false;
+            hasPointerDownOutsideRef.current = false;
+        },
+        onInteractOutside: (event)=>{
+            var _props$onInteractOuts, _context$triggerRef$c3;
+            (_props$onInteractOuts = props.onInteractOutside) === null || _props$onInteractOuts === void 0 || _props$onInteractOuts.call(props, event);
+            if (!event.defaultPrevented) {
+                hasInteractedOutsideRef.current = true;
+                if (event.detail.originalEvent.type === 'pointerdown') hasPointerDownOutsideRef.current = true;
+            } // Prevent dismissing when clicking the trigger.
+            // As the trigger is already setup to close, without doing so would
+            // cause it to close and immediately open.
+            const target = event.target;
+            const targetIsTrigger = (_context$triggerRef$c3 = context.triggerRef.current) === null || _context$triggerRef$c3 === void 0 ? void 0 : _context$triggerRef$c3.contains(target);
+            if (targetIsTrigger) event.preventDefault(); // On Safari if the trigger is inside a container with tabIndex={0}, when clicked
+            // we will get the pointer down outside event on the trigger, but then a subsequent
+            // focus outside event on the container, we ignore any focus outside event when we've
+            // already had a pointer down outside event.
+            if (event.detail.originalEvent.type === 'focusin' && hasPointerDownOutsideRef.current) event.preventDefault();
+        }
+    }));
+});
+/* -----------------------------------------------------------------------------------------------*/ const $cb5cc270b50c6fcd$var$PopoverContentImpl = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopePopover: __scopePopover , trapFocus: trapFocus , onOpenAutoFocus: onOpenAutoFocus , onCloseAutoFocus: onCloseAutoFocus , disableOutsidePointerEvents: disableOutsidePointerEvents , onEscapeKeyDown: onEscapeKeyDown , onPointerDownOutside: onPointerDownOutside , onFocusOutside: onFocusOutside , onInteractOutside: onInteractOutside , ...contentProps } = props;
+    const context = $cb5cc270b50c6fcd$var$usePopoverContext($cb5cc270b50c6fcd$var$CONTENT_NAME, __scopePopover);
+    const popperScope = $cb5cc270b50c6fcd$var$usePopperScope(__scopePopover); // Make sure the whole tree has focus guards as our `Popover` may be
+    // the last element in the DOM (beacuse of the `Portal`)
+    (0,_radix_ui_react_focus_guards__WEBPACK_IMPORTED_MODULE_14__.useFocusGuards)();
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_focus_scope__WEBPACK_IMPORTED_MODULE_15__.FocusScope, {
+        asChild: true,
+        loop: true,
+        trapped: trapFocus,
+        onMountAutoFocus: onOpenAutoFocus,
+        onUnmountAutoFocus: onCloseAutoFocus
+    }, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_dismissable_layer__WEBPACK_IMPORTED_MODULE_16__.DismissableLayer, {
+        asChild: true,
+        disableOutsidePointerEvents: disableOutsidePointerEvents,
+        onInteractOutside: onInteractOutside,
+        onEscapeKeyDown: onEscapeKeyDown,
+        onPointerDownOutside: onPointerDownOutside,
+        onFocusOutside: onFocusOutside,
+        onDismiss: ()=>context.onOpenChange(false)
+    }, /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_popper__WEBPACK_IMPORTED_MODULE_3__.Content, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        "data-state": $cb5cc270b50c6fcd$var$getState(context.open),
+        role: "dialog",
+        id: context.contentId
+    }, popperScope, contentProps, {
+        ref: forwardedRef,
+        style: {
+            ...contentProps.style,
+            '--radix-popover-content-transform-origin': 'var(--radix-popper-transform-origin)',
+            '--radix-popover-content-available-width': 'var(--radix-popper-available-width)',
+            '--radix-popover-content-available-height': 'var(--radix-popper-available-height)',
+            '--radix-popover-trigger-width': 'var(--radix-popper-anchor-width)',
+            '--radix-popover-trigger-height': 'var(--radix-popper-anchor-height)'
+        }
+    }))));
+});
+/* -------------------------------------------------------------------------------------------------
+ * PopoverClose
+ * -----------------------------------------------------------------------------------------------*/ const $cb5cc270b50c6fcd$var$CLOSE_NAME = 'PopoverClose';
+const $cb5cc270b50c6fcd$export$d6ac43ebaa40d53e = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopePopover: __scopePopover , ...closeProps } = props;
+    const context = $cb5cc270b50c6fcd$var$usePopoverContext($cb5cc270b50c6fcd$var$CLOSE_NAME, __scopePopover);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_7__.Primitive.button, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        type: "button"
+    }, closeProps, {
+        ref: forwardedRef,
+        onClick: (0,_radix_ui_primitive__WEBPACK_IMPORTED_MODULE_8__.composeEventHandlers)(props.onClick, ()=>context.onOpenChange(false)
+        )
+    }));
+});
+/*#__PURE__*/ Object.assign($cb5cc270b50c6fcd$export$d6ac43ebaa40d53e, {
+    displayName: $cb5cc270b50c6fcd$var$CLOSE_NAME
+});
+/* -------------------------------------------------------------------------------------------------
+ * PopoverArrow
+ * -----------------------------------------------------------------------------------------------*/ const $cb5cc270b50c6fcd$var$ARROW_NAME = 'PopoverArrow';
+const $cb5cc270b50c6fcd$export$3152841115e061b2 = /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((props, forwardedRef)=>{
+    const { __scopePopover: __scopePopover , ...arrowProps } = props;
+    const popperScope = $cb5cc270b50c6fcd$var$usePopperScope(__scopePopover);
+    return /*#__PURE__*/ (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_radix_ui_react_popper__WEBPACK_IMPORTED_MODULE_3__.Arrow, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, popperScope, arrowProps, {
+        ref: forwardedRef
+    }));
+});
+/*#__PURE__*/ Object.assign($cb5cc270b50c6fcd$export$3152841115e061b2, {
+    displayName: $cb5cc270b50c6fcd$var$ARROW_NAME
+});
+/* -----------------------------------------------------------------------------------------------*/ function $cb5cc270b50c6fcd$var$getState(open) {
+    return open ? 'open' : 'closed';
+}
+const $cb5cc270b50c6fcd$export$be92b6f5f03c0fe9 = $cb5cc270b50c6fcd$export$5b6b19405a83ff9d;
+const $cb5cc270b50c6fcd$export$b688253958b8dfe7 = $cb5cc270b50c6fcd$export$96e5381f42521a79;
+const $cb5cc270b50c6fcd$export$41fb9f06171c75f4 = $cb5cc270b50c6fcd$export$7dacb05d26466c3;
+const $cb5cc270b50c6fcd$export$602eac185826482c = $cb5cc270b50c6fcd$export$dd679ffb4362d2d4;
+const $cb5cc270b50c6fcd$export$7c6e2c02157bb7d2 = $cb5cc270b50c6fcd$export$d7e1f420b25549ff;
+const $cb5cc270b50c6fcd$export$f39c2d165cd861fe = $cb5cc270b50c6fcd$export$d6ac43ebaa40d53e;
+const $cb5cc270b50c6fcd$export$21b07c8f274aebd5 = $cb5cc270b50c6fcd$export$3152841115e061b2;
+
+
+
+
+
+//# sourceMappingURL=index.mjs.map
+
+
+/***/ }),
+
 /***/ "./node_modules/@radix-ui/react-popper/dist/index.mjs":
 /*!************************************************************!*\
   !*** ./node_modules/@radix-ui/react-popper/dist/index.mjs ***!
@@ -69757,6 +88818,35 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e))for(t=0;t<e.length;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);else for(t in e)e[t]&&(n&&(n+=" "),n+=t);return n}function clsx(){for(var e,t,f=0,n="";f<arguments.length;)(e=arguments[f++])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (clsx);
+
+/***/ }),
+
+/***/ "./node_modules/cmdk/dist/index.mjs":
+/*!******************************************!*\
+  !*** ./node_modules/cmdk/dist/index.mjs ***!
+  \******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Command: () => (/* binding */ Le),
+/* harmony export */   CommandDialog: () => (/* binding */ be),
+/* harmony export */   CommandEmpty: () => (/* binding */ he),
+/* harmony export */   CommandGroup: () => (/* binding */ pe),
+/* harmony export */   CommandInput: () => (/* binding */ ve),
+/* harmony export */   CommandItem: () => (/* binding */ me),
+/* harmony export */   CommandList: () => (/* binding */ Re),
+/* harmony export */   CommandLoading: () => (/* binding */ Ee),
+/* harmony export */   CommandRoot: () => (/* binding */ oe),
+/* harmony export */   CommandSeparator: () => (/* binding */ ge),
+/* harmony export */   useCommandState: () => (/* binding */ T)
+/* harmony export */ });
+/* harmony import */ var _radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-dialog */ "./node_modules/cmdk/node_modules/@radix-ui/react-dialog/dist/index.module.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var command_score__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! command-score */ "./node_modules/command-score/index.js");
+var ue='[cmdk-list-sizer=""]',M='[cmdk-group=""]',N='[cmdk-group-items=""]',de='[cmdk-group-heading=""]',ee='[cmdk-item=""]',Z=`${ee}:not([aria-disabled="true"])`,z="cmdk-item-select",S="data-value",fe=(n,a)=>command_score__WEBPACK_IMPORTED_MODULE_1__(n,a),te=react__WEBPACK_IMPORTED_MODULE_0__.createContext(void 0),k=()=>react__WEBPACK_IMPORTED_MODULE_0__.useContext(te),re=react__WEBPACK_IMPORTED_MODULE_0__.createContext(void 0),U=()=>react__WEBPACK_IMPORTED_MODULE_0__.useContext(re),ne=react__WEBPACK_IMPORTED_MODULE_0__.createContext(void 0),oe=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((n,a)=>{let r=react__WEBPACK_IMPORTED_MODULE_0__.useRef(null),o=x(()=>({search:"",value:"",filtered:{count:0,items:new Map,groups:new Set}})),u=x(()=>new Set),l=x(()=>new Map),p=x(()=>new Map),f=x(()=>new Set),d=ae(n),{label:v,children:E,value:R,onValueChange:w,filter:O,shouldFilter:ie,...D}=n,F=react__WEBPACK_IMPORTED_MODULE_0__.useId(),g=react__WEBPACK_IMPORTED_MODULE_0__.useId(),A=react__WEBPACK_IMPORTED_MODULE_0__.useId(),y=ye();L(()=>{if(R!==void 0){let e=R.trim().toLowerCase();o.current.value=e,y(6,W),h.emit()}},[R]);let h=react__WEBPACK_IMPORTED_MODULE_0__.useMemo(()=>({subscribe:e=>(f.current.add(e),()=>f.current.delete(e)),snapshot:()=>o.current,setState:(e,c,i)=>{var s,m,b;if(!Object.is(o.current[e],c)){if(o.current[e]=c,e==="search")j(),G(),y(1,V);else if(e==="value")if(((s=d.current)==null?void 0:s.value)!==void 0){(b=(m=d.current).onValueChange)==null||b.call(m,c);return}else i||y(5,W);h.emit()}},emit:()=>{f.current.forEach(e=>e())}}),[]),K=react__WEBPACK_IMPORTED_MODULE_0__.useMemo(()=>({value:(e,c)=>{c!==p.current.get(e)&&(p.current.set(e,c),o.current.filtered.items.set(e,B(c)),y(2,()=>{G(),h.emit()}))},item:(e,c)=>(u.current.add(e),c&&(l.current.has(c)?l.current.get(c).add(e):l.current.set(c,new Set([e]))),y(3,()=>{j(),G(),o.current.value||V(),h.emit()}),()=>{p.current.delete(e),u.current.delete(e),o.current.filtered.items.delete(e),y(4,()=>{j(),V(),h.emit()})}),group:e=>(l.current.has(e)||l.current.set(e,new Set),()=>{p.current.delete(e),l.current.delete(e)}),filter:()=>d.current.shouldFilter,label:v||n["aria-label"],listId:F,inputId:A,labelId:g}),[]);function B(e){var i;let c=((i=d.current)==null?void 0:i.filter)??fe;return e?c(e,o.current.search):0}function G(){if(!r.current||!o.current.search||d.current.shouldFilter===!1)return;let e=o.current.filtered.items,c=[];o.current.filtered.groups.forEach(s=>{let m=l.current.get(s),b=0;m.forEach(P=>{let ce=e.get(P);b=Math.max(ce,b)}),c.push([s,b])});let i=r.current.querySelector(ue);I().sort((s,m)=>{let b=s.getAttribute(S),P=m.getAttribute(S);return(e.get(P)??0)-(e.get(b)??0)}).forEach(s=>{let m=s.closest(N);m?m.appendChild(s.parentElement===m?s:s.closest(`${N} > *`)):i.appendChild(s.parentElement===i?s:s.closest(`${N} > *`))}),c.sort((s,m)=>m[1]-s[1]).forEach(s=>{let m=r.current.querySelector(`${M}[${S}="${s[0]}"]`);m==null||m.parentElement.appendChild(m)})}function V(){let e=I().find(i=>!i.ariaDisabled),c=e==null?void 0:e.getAttribute(S);h.setState("value",c||void 0)}function j(){if(!o.current.search||d.current.shouldFilter===!1){o.current.filtered.count=u.current.size;return}o.current.filtered.groups=new Set;let e=0;for(let c of u.current){let i=p.current.get(c),s=B(i);o.current.filtered.items.set(c,s),s>0&&e++}for(let[c,i]of l.current)for(let s of i)if(o.current.filtered.items.get(s)>0){o.current.filtered.groups.add(c);break}o.current.filtered.count=e}function W(){var c,i,s;let e=_();e&&(((c=e.parentElement)==null?void 0:c.firstChild)===e&&((s=(i=e.closest(M))==null?void 0:i.querySelector(de))==null||s.scrollIntoView({block:"nearest"})),e.scrollIntoView({block:"nearest"}))}function _(){return r.current.querySelector(`${ee}[aria-selected="true"]`)}function I(){return Array.from(r.current.querySelectorAll(Z))}function q(e){let i=I()[e];i&&h.setState("value",i.getAttribute(S))}function $(e){var b;let c=_(),i=I(),s=i.findIndex(P=>P===c),m=i[s+e];(b=d.current)!=null&&b.loop&&(m=s+e<0?i[i.length-1]:s+e===i.length?i[0]:i[s+e]),m&&h.setState("value",m.getAttribute(S))}function J(e){let c=_(),i=c==null?void 0:c.closest(M),s;for(;i&&!s;)i=e>0?Se(i,M):Ce(i,M),s=i==null?void 0:i.querySelector(Z);s?h.setState("value",s.getAttribute(S)):$(e)}let Q=()=>q(I().length-1),X=e=>{e.preventDefault(),e.metaKey?Q():e.altKey?J(1):$(1)},Y=e=>{e.preventDefault(),e.metaKey?q(0):e.altKey?J(-1):$(-1)};return react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{ref:H([r,a]),...D,"cmdk-root":"",onKeyDown:e=>{var c;if((c=D.onKeyDown)==null||c.call(D,e),!e.defaultPrevented)switch(e.key){case"n":case"j":{e.ctrlKey&&X(e);break}case"ArrowDown":{X(e);break}case"p":case"k":{e.ctrlKey&&Y(e);break}case"ArrowUp":{Y(e);break}case"Home":{e.preventDefault(),q(0);break}case"End":{e.preventDefault(),Q();break}case"Enter":{e.preventDefault();let i=_();if(i){let s=new Event(z);i.dispatchEvent(s)}}}}},react__WEBPACK_IMPORTED_MODULE_0__.createElement("label",{"cmdk-label":"",htmlFor:K.inputId,id:K.labelId,style:xe},v),react__WEBPACK_IMPORTED_MODULE_0__.createElement(re.Provider,{value:h},react__WEBPACK_IMPORTED_MODULE_0__.createElement(te.Provider,{value:K},E)))}),me=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((n,a)=>{let r=react__WEBPACK_IMPORTED_MODULE_0__.useId(),o=react__WEBPACK_IMPORTED_MODULE_0__.useRef(null),u=react__WEBPACK_IMPORTED_MODULE_0__.useContext(ne),l=k(),p=ae(n);L(()=>l.item(r,u),[]);let f=se(r,o,[n.value,n.children,o]),d=U(),v=T(g=>g.value&&g.value===f.current),E=T(g=>l.filter()===!1?!0:g.search?g.filtered.items.get(r)>0:!0);react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{let g=o.current;if(!(!g||n.disabled))return g.addEventListener(z,R),()=>g.removeEventListener(z,R)},[E,n.onSelect,n.disabled]);function R(){var g,A;(A=(g=p.current).onSelect)==null||A.call(g,f.current)}function w(){d.setState("value",f.current,!0)}if(!E)return null;let{disabled:O,value:ie,onSelect:D,...F}=n;return react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{ref:H([o,a]),...F,"cmdk-item":"",role:"option","aria-disabled":O||void 0,"aria-selected":v||void 0,"data-selected":v||void 0,onPointerMove:O?void 0:w,onClick:O?void 0:R},n.children)}),pe=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((n,a)=>{let{heading:r,children:o,...u}=n,l=react__WEBPACK_IMPORTED_MODULE_0__.useId(),p=react__WEBPACK_IMPORTED_MODULE_0__.useRef(null),f=react__WEBPACK_IMPORTED_MODULE_0__.useRef(null),d=react__WEBPACK_IMPORTED_MODULE_0__.useId(),v=k(),E=T(w=>v.filter()===!1?!0:w.search?w.filtered.groups.has(l):!0);L(()=>v.group(l),[]),se(l,p,[n.value,n.heading,f]);let R=react__WEBPACK_IMPORTED_MODULE_0__.createElement(ne.Provider,{value:l},o);return react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{ref:H([p,a]),...u,"cmdk-group":"",role:"presentation",hidden:E?void 0:!0},r&&react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{ref:f,"cmdk-group-heading":"","aria-hidden":!0,id:d},r),react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{"cmdk-group-items":"",role:"group","aria-labelledby":r?d:void 0},R))}),ge=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((n,a)=>{let{alwaysRender:r,...o}=n,u=react__WEBPACK_IMPORTED_MODULE_0__.useRef(null),l=T(p=>!p.search);return!r&&!l?null:react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{ref:H([u,a]),...o,"cmdk-separator":"",role:"separator"})}),ve=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((n,a)=>{let{onValueChange:r,...o}=n,u=n.value!=null,l=U(),p=T(d=>d.search),f=k();return react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{n.value!=null&&l.setState("search",n.value)},[n.value]),react__WEBPACK_IMPORTED_MODULE_0__.createElement("input",{ref:a,...o,"cmdk-input":"",autoComplete:"off",autoCorrect:"off",spellCheck:!1,"aria-autocomplete":"list",role:"combobox","aria-expanded":!0,"aria-controls":f.listId,"aria-labelledby":f.labelId,id:f.inputId,type:"text",value:u?n.value:p,onChange:d=>{u||l.setState("search",d.target.value),r==null||r(d.target.value)}})}),Re=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((n,a)=>{let{children:r,...o}=n,u=react__WEBPACK_IMPORTED_MODULE_0__.useRef(null),l=react__WEBPACK_IMPORTED_MODULE_0__.useRef(null),p=k();return react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{if(l.current&&u.current){let f=l.current,d=u.current,v,E=new ResizeObserver(()=>{v=requestAnimationFrame(()=>{let R=f.getBoundingClientRect().height;d.style.setProperty("--cmdk-list-height",R.toFixed(1)+"px")})});return E.observe(f),()=>{cancelAnimationFrame(v),E.unobserve(f)}}},[]),react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{ref:H([u,a]),...o,"cmdk-list":"",role:"listbox","aria-label":"Suggestions",id:p.listId,"aria-labelledby":p.inputId},react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{ref:l,"cmdk-list-sizer":""},r))}),be=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((n,a)=>{let{open:r,onOpenChange:o,container:u,...l}=n;return react__WEBPACK_IMPORTED_MODULE_0__.createElement(_radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_2__.Root,{open:r,onOpenChange:o},react__WEBPACK_IMPORTED_MODULE_0__.createElement(_radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_2__.Portal,{container:u},react__WEBPACK_IMPORTED_MODULE_0__.createElement(_radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_2__.Overlay,{"cmdk-overlay":""}),react__WEBPACK_IMPORTED_MODULE_0__.createElement(_radix_ui_react_dialog__WEBPACK_IMPORTED_MODULE_2__.Content,{"aria-label":n.label,"cmdk-dialog":""},react__WEBPACK_IMPORTED_MODULE_0__.createElement(oe,{ref:a,...l}))))}),he=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((n,a)=>{let r=react__WEBPACK_IMPORTED_MODULE_0__.useRef(!0),o=T(u=>u.filtered.count===0);return react__WEBPACK_IMPORTED_MODULE_0__.useEffect(()=>{r.current=!1},[]),r.current||!o?null:react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{ref:a,...n,"cmdk-empty":"",role:"presentation"})}),Ee=react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((n,a)=>{let{progress:r,children:o,...u}=n;return react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{ref:a,...u,"cmdk-loading":"",role:"progressbar","aria-valuenow":r,"aria-valuemin":0,"aria-valuemax":100,"aria-label":"Loading..."},react__WEBPACK_IMPORTED_MODULE_0__.createElement("div",{"aria-hidden":!0},o))}),Le=Object.assign(oe,{List:Re,Item:me,Input:ve,Group:pe,Separator:ge,Dialog:be,Empty:he,Loading:Ee});function Se(n,a){let r=n.nextElementSibling;for(;r;){if(r.matches(a))return r;r=r.nextElementSibling}}function Ce(n,a){let r=n.previousElementSibling;for(;r;){if(r.matches(a))return r;r=r.previousElementSibling}}function ae(n){let a=react__WEBPACK_IMPORTED_MODULE_0__.useRef(n);return L(()=>{a.current=n}),a}var L=typeof window>"u"?react__WEBPACK_IMPORTED_MODULE_0__.useEffect:react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect;function x(n){let a=react__WEBPACK_IMPORTED_MODULE_0__.useRef();return a.current===void 0&&(a.current=n()),a}function H(n){return a=>{n.forEach(r=>{typeof r=="function"?r(a):r!=null&&(r.current=a)})}}function T(n){let a=U(),r=()=>n(a.snapshot());return react__WEBPACK_IMPORTED_MODULE_0__.useSyncExternalStore(a.subscribe,r,r)}function se(n,a,r){let o=react__WEBPACK_IMPORTED_MODULE_0__.useRef(),u=k();return L(()=>{var p;let l=(()=>{var f;for(let d of r){if(typeof d=="string")return d.trim().toLowerCase();if(typeof d=="object"&&"current"in d&&d.current)return(f=d.current.textContent)==null?void 0:f.trim().toLowerCase()}})();u.value(n,l),(p=a.current)==null||p.setAttribute(S,l),o.current=l}),o}var ye=()=>{let[n,a]=react__WEBPACK_IMPORTED_MODULE_0__.useState(),r=x(()=>new Map);return L(()=>{r.current.forEach(o=>o()),r.current=new Map},[n]),(o,u)=>{r.current.set(o,u),a({})}},xe={position:"absolute",width:"1px",height:"1px",padding:"0",margin:"-1px",overflow:"hidden",clip:"rect(0, 0, 0, 0)",whiteSpace:"nowrap",borderWidth:"0"};
+
 
 /***/ }),
 
@@ -72352,6 +91442,36 @@ function extendTailwindMerge(configExtension, ...createConfig) {
 const twMerge = /*#__PURE__*/createTailwindMerge(getDefaultConfig);
 
 //# sourceMappingURL=bundle-mjs.mjs.map
+
+
+/***/ }),
+
+/***/ "./node_modules/tiny-invariant/dist/esm/tiny-invariant.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/tiny-invariant/dist/esm/tiny-invariant.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ invariant)
+/* harmony export */ });
+var isProduction = "development" === 'production';
+var prefix = 'Invariant failed';
+function invariant(condition, message) {
+    if (condition) {
+        return;
+    }
+    if (isProduction) {
+        throw new Error(prefix);
+    }
+    var provided = typeof message === 'function' ? message() : message;
+    var value = provided ? "".concat(prefix, ": ").concat(provided) : prefix;
+    throw new Error(value);
+}
+
+
 
 
 /***/ }),

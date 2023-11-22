@@ -17,4 +17,14 @@ class Course extends Model
     public function attachments(){
         return $this->hasMany(Attachment::class);
     }
+
+    public function chapters(){
+        return $this->hasMany(Chapter::class);
+    }
+
+    public function getImageAttribute($value){
+        if($value && str_contains( strtolower($value),'http')){return $value;}
+        if(!$value){return null;}
+        return url('/').'/public/'. $value;
+    }
 }

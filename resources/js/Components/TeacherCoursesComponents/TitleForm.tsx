@@ -29,7 +29,8 @@ const TitleForm:FC<Props> = ({course}) => {
     return (
         <div className='mt-5 border bg-secondary rounded-md p-3.5'>
             <div className='font-medium flex items-center justify-between'>
-                Course Title
+                <p>Course Title <span className='text-destructive text-[0.75rem] italic font-extralight'>*required</span></p>
+                
                 <Button onClick={toggleEdit} variant='ghost'>
                     {editing ? <>Cancel</>: <><Pencil className='w-4 h-4 mx-2' />Edit Title</>}
                 </Button>
@@ -41,7 +42,7 @@ const TitleForm:FC<Props> = ({course}) => {
                 editing &&(
                     <form onSubmit={onSubmit} className='flex flex-col space-y-3.5 mt-3.5'>
                         <div className='flex flex-col  space-y-1.5'>
-                            <Textarea placeholder='e.g. This  course is about....' required value={data.title}  onChange={({target})=>setData('title',target.value)} disabled={processing} autoFocus autoComplete='off' />
+                            <Input required value={data.title}  onChange={({target})=>setData('title',target.value)} disabled={processing} autoFocus autoComplete='off' />
                             <Button size='sm' className='ml-auto' disabled={processing} type='submit'>Save</Button>
                         </div>
                         
