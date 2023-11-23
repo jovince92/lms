@@ -34,7 +34,7 @@ const TeacherCoursesCreate = () => {
                         </div>
                         <div className='flex items-center gap-x-2'>
                             <Button onClick={()=>Inertia.get(route('teacher.courses.index'))} disabled={processing} type='button' variant='secondary'>Cancel</Button>
-                            <Button disabled={processing} type='submit' >Submit</Button>
+                            <Button variant='ddc' disabled={processing} type='submit' >Submit</Button>
                         </div>
                     </form>
                 </div>

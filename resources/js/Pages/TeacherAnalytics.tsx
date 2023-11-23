@@ -1,11 +1,15 @@
 import DashboardLayout from '@/Layouts/DashboardLayout'
+import { Head } from '@inertiajs/inertia-react'
 import React from 'react'
 
 const TeacherAnalytics = () => {
     return (
-        <DashboardLayout>
-            teacher analytics
-        </DashboardLayout>
+        <>
+            <Head title='Analytics' />
+            <DashboardLayout>
+                teacher analytics
+            </DashboardLayout>
+        </>
     )
 }
 

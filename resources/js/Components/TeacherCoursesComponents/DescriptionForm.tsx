@@ -44,7 +44,7 @@ const DescriptionForm:FC<Props> = ({course}) => {
                     <form onSubmit={onSubmit} className='flex flex-col space-y-3.5 mt-3.5'>
                         <div className='flex   items-center    space-x-1.5'>
                             <Textarea placeholder='e.g. This  course is about....'  required value={data.description}  onChange={({target})=>setData('description',target.value)} disabled={processing} autoFocus autoComplete='off' />
-                            <Button size='sm' disabled={processing} type='submit'>Save</Button>
+                            <Button variant='ddc' size='sm' disabled={processing} type='submit'>Save</Button>
                         </div>
                         
                     </form>

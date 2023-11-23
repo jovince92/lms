@@ -15,11 +15,11 @@ const studentRoutes:SideBarRoute[] = [
     {
         icon: Layout,
         label:'Dashboard',
-        href: route('dashboard.index')
+        href: 'dashboard.index'
     },{
         icon: Compass,
         label:'Browse',
-        href: route('search.index')
+        href: 'search.index'
     }
 ];
 
@@ -27,11 +27,11 @@ const teacherRoutes:SideBarRoute[]=[
     {
         icon: List,
         label:'Courses',
-        href: route('teacher.courses.index')
+        href: 'teacher.courses'
     },{
         icon: BarChart2,
         label:'Analytics',
-        href: route('teacher.analytics')
+        href: 'teacher.analytics'
     }
 ]
 

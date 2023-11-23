@@ -11,12 +11,11 @@ interface Props{
 }
 
 const SidebarItem:FC<Props> = ({item}) => {
-    
     const {base_url,full_url} = usePage<Page<PageProps>>().props;
     const {href,label,icon:Icon} = item;
-    const isActive = useMemo(()=> full_url===href || base_url.startsWith(href),[href,base_url,full_url] )
+    const isActive = useMemo(()=> route().current()?.includes(href) ,[href] )
     const onClick = () =>{
-        Inertia.get(href);
+        Inertia.get(route(href));
     }
     
 

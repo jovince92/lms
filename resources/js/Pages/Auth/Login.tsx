@@ -42,7 +42,7 @@ const Login:FC = () => {
                     
                 </CardContent>
                 <CardFooter className="flex items-center">
-                    <Button type='submit' className='w-full md:w-auto md:ml-auto'>
+                    <Button variant='ddc' type='submit' className='w-full md:w-auto md:ml-auto'>
                         {processing&&<Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                         Sign In
                     </Button>

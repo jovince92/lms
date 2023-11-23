@@ -120,9 +120,9 @@ class AttachmentController extends Controller
 
 
     private function removeSpecialChars($string) {
-    // Use a regular expression to replace any character that is not a letter, a number, or a period with an empty string
-    $newString = preg_replace('/[^a-zA-Z0-9.]/', '', $string);
-    // Return the new string
-    return $newString;
+        // Use a regular expression to replace any character that is not a letter, a number, or a period with an empty string
+        $newString = preg_replace('/[^a-zA-Z0-9.]/', '', $string);
+        // Return the new string
+        return $newString;
     }
 }

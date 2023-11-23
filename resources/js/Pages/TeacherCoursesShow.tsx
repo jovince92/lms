@@ -1,7 +1,9 @@
+import Banner from '@/Components/Banner'
 import IconBadge from '@/Components/IconBadge'
 import AttachmentForm from '@/Components/TeacherCoursesComponents/AttachmentForm'
 import CategoryForm from '@/Components/TeacherCoursesComponents/CategoryForm'
 import ChapterForm from '@/Components/TeacherCoursesComponents/ChapterForm'
+import CourseActions from '@/Components/TeacherCoursesComponents/CourseActions'
 import DescriptionForm from '@/Components/TeacherCoursesComponents/DescriptionForm'
 import ImageForm from '@/Components/TeacherCoursesComponents/ImageForm'
 import TitleForm from '@/Components/TeacherCoursesComponents/TitleForm'
@@ -26,10 +28,15 @@ const TeacherCoursesShow:FC<Props> = ({course}) => {
         return completedFields;
     },[course]);
 
+    
+
     return (
         <>
             <Head title={course.title} />
             <DashboardLayout>
+                {
+                    course.is_published!==1 && <Banner variant='warning' label='This Course is not Published. It will not be visible to Students' />
+                }
                 <div className='p-5'>
                     <div className='flex items-center justify-between'>
                         <div className='flex flex-col gap-y-1.5'>
@@ -40,6 +47,7 @@ const TeacherCoursesShow:FC<Props> = ({course}) => {
                                 Complete All Required Parts ({completedFields.toString()}/5)
                             </span>
                         </div>
+                        <CourseActions course={course} />
                     </div>
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-16'>
                         <div>

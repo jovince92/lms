@@ -43,7 +43,7 @@ const TitleForm:FC<Props> = ({course}) => {
                     <form onSubmit={onSubmit} className='flex flex-col space-y-3.5 mt-3.5'>
                         <div className='flex flex-col  space-y-1.5'>
                             <Input required value={data.title}  onChange={({target})=>setData('title',target.value)} disabled={processing} autoFocus autoComplete='off' />
-                            <Button size='sm' className='ml-auto' disabled={processing} type='submit'>Save</Button>
+                            <Button variant='ddc' size='sm' className='ml-auto' disabled={processing} type='submit'>Save</Button>
                         </div>
                         
                     </form>

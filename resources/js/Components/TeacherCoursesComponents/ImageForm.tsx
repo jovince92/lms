@@ -38,7 +38,7 @@ const ImageForm:FC<Props> = ({course}) => {
         });
     }
 
-    const label = useMemo(()=>!course.image ?<><PlusCircle className='h-4 w-4 mr-2' />Add an Image</>:<><Pencil className='w-4 h-4 mx-2' />Edit Image</>,[course.image,editing]);
+    const label = useMemo(()=>!course.image ?<><PlusCircle className='h-4 w-4 mr-2' />Add an Image</>:<><Pencil className='w-4 h-4 mx-2' />Edit Image</>,[course.image]);
 
     return (
         <div className='mt-5 border bg-secondary rounded-md p-3.5'>

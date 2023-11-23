@@ -1,17 +1,28 @@
+import { DataTable } from '@/Components/DataTable'
+import { CourseColumns } from '@/Components/TeacherCoursesComponents/CourseColumns'
 import { Button } from '@/Components/ui/button'
 import DashboardLayout from '@/Layouts/DashboardLayout'
-import { Link } from '@inertiajs/inertia-react'
-import React, { FC } from 'react'
+import { Course } from '@/types'
+import { Head, Link } from '@inertiajs/inertia-react'
+import  { FC } from 'react'
 
-const TeacherCourses:FC = () => {
+interface Props{
+    courses:Course[];
+}
+
+const TeacherCourses:FC<Props> = ({courses}) => {
     return (
-        <DashboardLayout>
-            <div className='p-6'>
-                <Link href={route('teacher.courses.create')}>
-                    <Button>New Course</Button>
-                </Link>
-            </div>
-        </DashboardLayout>
+        <>
+            <Head title='Courses' />
+            <DashboardLayout>
+                <div className='p-6'>
+                    {/* <Link href={route('teacher.courses.create')}>
+                        <Button variant='ddc'>New Course</Button>
+                    </Link> */}
+                    <DataTable columns={CourseColumns} data={courses} />
+                </div>
+            </DashboardLayout>
+        </>
     )
 }
 

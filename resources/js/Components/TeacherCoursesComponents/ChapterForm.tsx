@@ -29,7 +29,8 @@ const ChapterForm:FC<Props> = ({course}) => {
                 toast.success('Chapter Created!');
                 setCreating(false);
             },
-            onError:()=>toast.error('Something   Went Wrong. Please Try again!')
+            onError:()=>toast.error('Something   Went Wrong. Please Try again!'),
+            preserveState:false
         });
     }
 
@@ -65,7 +66,7 @@ const ChapterForm:FC<Props> = ({course}) => {
                     <form onSubmit={onSubmit} className='flex flex-col space-y-3.5 mt-3.5'>
                         <div className='flex flex-col  space-y-1.5'>
                             <Input required value={data.title} placeholder='e.g. Introduction to Microsoft Office' onChange={({target})=>setData('title',target.value)} disabled={processing} autoFocus autoComplete='off' />
-                            <Button size='sm' className='ml-auto' disabled={processing} type='submit'>Create</Button>
+                            <Button size='sm' className='ml-auto' variant='ddc' disabled={processing} type='submit'>Create</Button>
                         </div>
                         
                     </form>

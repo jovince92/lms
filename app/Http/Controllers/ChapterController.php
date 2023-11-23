@@ -6,6 +6,7 @@ use App\Models\Chapter;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 
 class ChapterController extends Controller
@@ -50,7 +51,8 @@ class ChapterController extends Controller
             'title'=>$request->title,
             'position'=>$position
         ]);
-
+        
+        
         return redirect()->back();
     }
 
@@ -88,9 +90,37 @@ class ChapterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$course_id, $id)
     {
-        //
+        $request->validate([
+            'video' => 'mimes:mp4'
+        ]);
+
+        $course=Course::findOrFail($course_id);
+        if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
+        $chapter = Chapter::findOrFail($id);
+        $video = $request->file('video') ;
+        if($video){
+            if($chapter->video){
+                @unlink(public_path($chapter->getAttributes()['video']));
+            }
+            $video_name=strval($id).'_'.$this->removeSpecialChars($video->getClientOriginalName());
+            $location='uploads/courses/course_'.strval($course_id).'/chapter_'.strval($id).'/';
+            $path=public_path($location);
+            if (!file_exists($path)) {
+                File::makeDirectory($path,0777,true);
+            }
+            $new_video = $location.$video_name;
+            $request->file('video')->move($path, $new_video);
+            $chapter->update([
+                'video'=>$new_video
+            ]);
+        }
+        
+        $input = $request->except(['video']);
+        $chapter->update($input);
+        $course->update(['is_published'=>0]);
+        return redirect()->back();
     }
 
     /**
@@ -99,9 +129,17 @@ class ChapterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($course_id,$id)
     {
-        //
+        $course=Course::findOrFail($course_id);
+        if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
+        $chapter = Chapter::findOrFail($id);
+        if($chapter->video){
+            @unlink(public_path($chapter->getAttributes()['video']));
+        }
+        $chapter->delete();
+        $course->update(['is_published'=>0]);
+        return redirect()->to(route('teacher.courses.show',['id'=>$course_id]));
     }
 
     public function reorder(Request $request,$course_id){
@@ -114,5 +152,12 @@ class ChapterController extends Controller
             $chapter->update(['position'=>$c['position']]);
         }
         return redirect()->back();
+    }
+
+    private function removeSpecialChars($string) {
+        // Use a regular expression to replace any character that is not a letter, a number, or a period with an empty string
+        $newString = preg_replace('/[^a-zA-Z0-9.]/', '', $string);
+        // Return the new string
+        return $newString;
     }
 }

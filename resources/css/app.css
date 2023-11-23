@@ -82,3 +82,12 @@
 #app{
   height: 100%;
 }
+
+
+#nprogress .bar {
+  @apply !shadow-lg !shadow-pink-600  !rounded-r-sm min-h-[0.4rem]
+}
+
+.ql-container {
+  @apply !text-base
+}

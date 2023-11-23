@@ -46,10 +46,13 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('teacher')->name('teacher.')->group(function(){
+        Route::get('/', fn()=>redirect()->route('teacher.courses.index'))->name('courses');
         Route::prefix('courses')->name('courses.')->group(function(){
+            
             Route::get('/', [TeacherCoursesController::class, 'index'])->name('index');
             Route::get('/create', [TeacherCoursesController::class, 'create'])->name('create');
             Route::get('/show/{id}', [TeacherCoursesController::class, 'show'])->name('show');
+            Route::post('/destroy/{id}', [TeacherCoursesController::class, 'destroy'])->name('destroy');
             Route::post('/store', [TeacherCoursesController::class, 'store'])->name('store');
             Route::post('/{id}/update', [TeacherCoursesController::class, 'update'])->name('update');
 
@@ -61,7 +64,10 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('chapters')->name('chapters.')->group(function(){        
                 Route::post('/{course_id}/store', [ChapterController::class, 'store'])->name('store');
-                Route::get('/{course_id}/chapter/{id}', [ChapterController::class, 'show'])->name('show');
+                Route::get('/{course_id}/show/{id}', [ChapterController::class, 'show'])->name('show');
+                Route::post('/{course_id}/update/{id}', [ChapterController::class, 'update'])->name('update');
+                
+                Route::post('/{course_id}/destroy/{id}', [ChapterController::class, 'destroy'])->name('destroy');
                 Route::post('/{course_id}/reorder', [ChapterController::class, 'reorder'])->name('reorder');
             });
         });

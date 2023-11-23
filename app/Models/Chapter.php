@@ -22,4 +22,10 @@ class Chapter extends Model
     public function course(){
         return  $this->belongsTo(Course::class);
     }
+
+    public function getVideoAttribute($value){
+        if($value && str_contains( strtolower($value),'http')){return $value;}
+        if(!$value){return null;}
+        return url('/').'/public/'. $value;
+    }
 }

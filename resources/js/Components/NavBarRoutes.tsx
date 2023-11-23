@@ -15,7 +15,7 @@ const NavBarRoutes = () => {
     return (
         <div className='flex gap-x-2 ml-auto items-center'>
             {
-                isTeacherPage || isPlayerPage ? <Button className='text-idcsi' size='sm' variant='outline' onClick={()=>Inertia.get(route('dashboard.index'))}> <LogOut className='h-4 w-4 mr-2'/>Exit Teacher Mode</Button>: <Link className='text-idcsi' href={route('teacher.courses.index')} > <Button size='sm' variant='outline'>Teacher Mode</Button> </Link>
+                isTeacherPage || isPlayerPage ? <Button  size='sm' variant='ddc' onClick={()=>Inertia.get(route('dashboard.index'))}> <LogOut className='h-4 w-4 mr-2'/>Exit Teacher Mode</Button>: <Link  href={route('teacher.courses.index')} > <Button size='sm' variant='ddc'>Enter Teacher Mode</Button> </Link>
             }
             <ModeToggle />
             <UserButton />
