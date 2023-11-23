@@ -11108,6 +11108,7 @@ var CategoryForm = function CategoryForm(_ref) {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: 'flex   items-center    space-x-1.5',
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_ComboBox__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          side: 'top',
           value: data.category_id,
           onChange: function onChange(val) {
             return setData('category_id', val);
@@ -11149,18 +11150,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _ui_button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ui/button */ "./resources/js/Components/ui/button.tsx");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/plus-circle.js");
-/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
-/* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
-/* harmony import */ var _ui_input__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../ui/input */ "./resources/js/Components/ui/input.tsx");
-/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
-/* harmony import */ var _ChapterList__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ChapterList */ "./resources/js/Components/TeacherCoursesComponents/ChapterList.tsx");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/loader-2.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/plus-circle.js");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+/* harmony import */ var sonner__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! sonner */ "./node_modules/sonner/dist/index.mjs");
+/* harmony import */ var _ui_input__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../ui/input */ "./resources/js/Components/ui/input.tsx");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+/* harmony import */ var _ChapterList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ChapterList */ "./resources/js/Components/TeacherCoursesComponents/ChapterList.tsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -11183,7 +11187,11 @@ var ChapterForm = function ChapterForm(_ref) {
       return !current;
     });
   };
-  var _useForm = (0,_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_3__.useForm)({
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false),
+    _useState4 = _slicedToArray(_useState3, 2),
+    loading = _useState4[0],
+    setLoading = _useState4[1];
+  var _useForm = (0,_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_4__.useForm)({
       title: ""
     }),
     data = _useForm.data,
@@ -11197,17 +11205,43 @@ var ChapterForm = function ChapterForm(_ref) {
       course_id: id
     }), {
       onSuccess: function onSuccess() {
-        sonner__WEBPACK_IMPORTED_MODULE_4__.toast.success('Chapter Created!');
+        sonner__WEBPACK_IMPORTED_MODULE_5__.toast.success('Chapter Created!');
         setCreating(false);
       },
       onError: function onError() {
-        return sonner__WEBPACK_IMPORTED_MODULE_4__.toast.error('Something   Went Wrong. Please Try again!');
+        return sonner__WEBPACK_IMPORTED_MODULE_5__.toast.error('Something   Went Wrong. Please Try again!');
+      }
+    });
+  };
+  var onReorder = function onReorder(reordered_chapters) {
+    _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia.post(route('teacher.courses.chapters.reorder', {
+      course_id: id
+    }), {
+      //@ts-ignore
+      reordered_chapters: reordered_chapters
+    }, {
+      onStart: function onStart() {
+        return setLoading(true);
+      },
+      onSuccess: function onSuccess() {
+        return sonner__WEBPACK_IMPORTED_MODULE_5__.toast.success('Chapters Reordered!');
+      },
+      onError: function onError() {
+        return sonner__WEBPACK_IMPORTED_MODULE_5__.toast.error('Something   Went Wrong. Please Try again!');
+      },
+      onFinish: function onFinish() {
+        return setLoading(false);
       }
     });
   };
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: 'mt-5 border bg-secondary rounded-md p-3.5',
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: 'relative mt-5 border bg-secondary rounded-md p-3.5',
+    children: [loading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: 'absolute inset-0 h-full w-full bg-black/30 p-4 flex items-center justify-center',
+      children: [" ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        className: 'animate-spin h-7 w-7 text-sky-500'
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: 'font-medium flex items-center justify-between',
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("p", {
         children: ["Course Chapters ", (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
@@ -11220,7 +11254,7 @@ var ChapterForm = function ChapterForm(_ref) {
         children: creating ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           children: "Cancel"
         }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_8__["default"], {
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_10__["default"], {
             className: 'w-4 h-4 mx-2'
           }), "Add a Chapter"]
         })
@@ -11230,7 +11264,7 @@ var ChapterForm = function ChapterForm(_ref) {
       className: 'flex flex-col space-y-3.5 mt-3.5',
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: 'flex flex-col  space-y-1.5',
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_input__WEBPACK_IMPORTED_MODULE_5__.Input, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_input__WEBPACK_IMPORTED_MODULE_6__.Input, {
           required: true,
           value: data.title,
           placeholder: 'e.g. Introduction to Microsoft Office',
@@ -11250,11 +11284,10 @@ var ChapterForm = function ChapterForm(_ref) {
         })]
       })
     }), !creating && course.chapters.length < 1 && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_6__.cn)('text-sm mt-2', course.chapters.length < 1 && 'italic text-primary/75'),
+      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_7__.cn)('text-sm mt-2', course.chapters.length < 1 && 'italic text-primary/75'),
       children: "No Chapters"
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ChapterList__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      onEdit: function onEdit() {},
-      onReorder: function onReorder() {},
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ChapterList__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      onReorder: onReorder,
       chapters: chapters
     }), !creating && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
       className: 'text-xs text-muted-foreground mt-3.5',
@@ -11278,52 +11311,101 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
-/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/grip.js");
-/* harmony import */ var _ui_badge__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ui/badge */ "./resources/js/Components/ui/badge.tsx");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @hello-pangea/dnd */ "./node_modules/@hello-pangea/dnd/dist/dnd.esm.js");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/lib/utils */ "./resources/js/lib/utils.ts");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/grip.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/pencil.js");
+/* harmony import */ var _ui_badge__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ui/badge */ "./resources/js/Components/ui/badge.tsx");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 
 
 
 
 
 var ChapterList = function ChapterList(_ref) {
-  var onEdit = _ref.onEdit,
-    onReorder = _ref.onReorder,
+  var onReorder = _ref.onReorder,
     chapters = _ref.chapters;
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__.DragDropContext, {
-    onDragEnd: function onDragEnd(e) {
-      return console.log(e);
-    },
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__.Droppable, {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(chapters),
+    _useState2 = _slicedToArray(_useState, 2),
+    draggableChapters = _useState2[0],
+    setDraggableChapters = _useState2[1];
+  var onDragEnd = function onDragEnd(e) {
+    if (!e.destination) return;
+    var items = Array.from(draggableChapters);
+    var _items$splice = items.splice(e.source.index, 1),
+      _items$splice2 = _slicedToArray(_items$splice, 1),
+      reorderedItem = _items$splice2[0];
+    items.splice(e.destination.index, 0, reorderedItem);
+    var startIndex = Math.min(e.source.index, e.destination.index);
+    var endIndex = Math.max(e.source.index, e.destination.index);
+    var updatedChapters = items.slice(startIndex, endIndex + 1);
+    setDraggableChapters(items);
+    var bulkUpdateData = updatedChapters.map(function (_ref2) {
+      var id = _ref2.id;
+      return {
+        id: id,
+        position: items.findIndex(function (item) {
+          return item.id === id;
+        }) + 1
+      };
+    });
+    onReorder(bulkUpdateData);
+  };
+  var onEdit = function onEdit(course_id, id) {
+    return _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__.Inertia.get(route('teacher.courses.chapters.show', {
+      course_id: course_id,
+      id: id
+    }));
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_5__.DragDropContext, {
+    onDragEnd: onDragEnd,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_5__.Droppable, {
       droppableId: 'chapters',
       children: function children(provided) {
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({}, provided.droppableProps, {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({}, provided.droppableProps, {
           ref: provided.innerRef,
-          children: chapters.map(function (chapter, index) {
-            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_3__.Draggable, {
+          children: [draggableChapters.map(function (chapter, index) {
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_hello_pangea_dnd__WEBPACK_IMPORTED_MODULE_5__.Draggable, {
               draggableId: chapter.id.toString(),
               index: index,
               children: function children(provided) {
                 return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", Object.assign({}, provided.draggableProps, {
                   ref: provided.innerRef,
-                  className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)('flex items-center gap-x-2 bg-neutral-200 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-primary rounded-md mb-3.5 text-sm', chapter.is_published === 1 && 'bg-sky-200 dark:bg-sky-900 border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300'),
+                  className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)('flex items-center gap-x-2 bg-neutral-200 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-primary rounded-md mb-3.5 text-sm', chapter.is_published === 1 && 'bg-sky-200 dark:bg-sky-900 border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300'),
                   children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", Object.assign({}, provided.dragHandleProps, {
-                    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)('text-primary px-2 py-3 border-r border--r-primary hover:bg-secondary rounded-l-md transition duration-300', chapter.is_published === 1 && "border-r-sky-200 dark:border-r-sky-800 hover:bg-sky-200 dark:hover:bg-sky-800"),
-                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                    className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)('text-primary px-2 py-3 border-r border--r-primary hover:bg-secondary rounded-l-md transition duration-300', chapter.is_published === 1 && "border-r-sky-200 dark:border-r-sky-800 hover:bg-sky-200 dark:hover:bg-sky-800"),
+                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_6__["default"], {
                       className: 'h-5 w-5'
                     })
-                  })), chapter.title, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                  })), chapter.title, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
                     className: 'ml-auto pr-2 flex items-center gap-x-1.5',
-                    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_badge__WEBPACK_IMPORTED_MODULE_2__.Badge, {
-                      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_1__.cn)('bg-secondary text-primary ', chapter.is_published === 1 && 'bg-sky-700 text-white'),
+                    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_ui_badge__WEBPACK_IMPORTED_MODULE_3__.Badge, {
+                      className: (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.cn)('bg-secondary text-primary ', chapter.is_published === 1 && 'bg-sky-700 text-white'),
                       children: chapter.is_published === 1 ? 'Published' : 'Draft'
-                    })
+                    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                      onClick: function onClick() {
+                        return onEdit(chapter.course_id, chapter.id);
+                      },
+                      className: 'p-3 hover:opacity-70 transition duration-300',
+                      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_7__["default"], {
+                        className: 'w-4 h-4'
+                      })
+                    })]
                   })]
                 }));
               }
             }, chapter.id);
-          })
+          }), provided.placeholder]
         }));
       }
     })
@@ -11812,7 +11894,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var ComboBox = function ComboBox(_ref) {
   var options = _ref.options,
     value = _ref.value,
-    onChange = _ref.onChange;
+    onChange = _ref.onChange,
+    side = _ref.side;
   var _a;
   var _React$useState = react__WEBPACK_IMPORTED_MODULE_1__.useState(false),
     _React$useState2 = _slicedToArray(_React$useState, 2),
@@ -11835,7 +11918,8 @@ var ComboBox = function ComboBox(_ref) {
         })]
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_popover__WEBPACK_IMPORTED_MODULE_5__.PopoverContent, {
-      className: "w-full p-0",
+      className: "w-full p-0 max-h-48 overflow-y-auto",
+      side: side,
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_command__WEBPACK_IMPORTED_MODULE_4__.Command, {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_command__WEBPACK_IMPORTED_MODULE_4__.CommandInput, {
           placeholder: "Search option..."
@@ -11844,7 +11928,7 @@ var ComboBox = function ComboBox(_ref) {
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_ui_command__WEBPACK_IMPORTED_MODULE_4__.CommandGroup, {
           children: options.map(function (option) {
             return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_command__WEBPACK_IMPORTED_MODULE_4__.CommandItem, {
-              value: option.value.toString(),
+              value: option.label,
               onSelect: function onSelect() {
                 onChange(option.value);
                 setOpen(false);
@@ -13018,6 +13102,92 @@ var removeHTMLTags = function removeHTMLTags(str) {
   var strippedString = doc.body.textContent || "";
   return strippedString;
 };
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Chapter.tsx":
+/*!****************************************!*\
+  !*** ./resources/js/Pages/Chapter.tsx ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _Components_IconBadge__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/IconBadge */ "./resources/js/Components/IconBadge.tsx");
+/* harmony import */ var _Components_ui_button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/ui/button */ "./resources/js/Components/ui/button.tsx");
+/* harmony import */ var _Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Layouts/DashboardLayout */ "./resources/js/Layouts/DashboardLayout.tsx");
+/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/arrow-left.js");
+/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/layout-dashboard.js");
+
+
+
+
+
+
+var Chapter = function Chapter(_ref) {
+  var chapter = _ref.chapter;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_4__.Head, {
+      title: "Chapter: ".concat(chapter.title)
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Layouts_DashboardLayout__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: 'p-5',
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: 'flex items-center justify-between',
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: 'w-full',
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_4__.Link, {
+              href: route('teacher.courses.show', {
+                id: chapter.course_id
+              }),
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Components_ui_button__WEBPACK_IMPORTED_MODULE_2__.Button, {
+                variant: 'ghost',
+                size: 'sm',
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], {
+                  className: 'h-4 w-4 mr-2'
+                }), " Back To ", chapter.course.title, " Course Setup"]
+              })
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: 'flex items-center justify-between w-full',
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: 'flex flex-col gap-y-2',
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h1", {
+                  className: 'text-2xl font-medium',
+                  children: "Chapter SetUp"
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                  className: 'text-sm text-muted-foreground',
+                  children: "Complete All Required Parts (1/5)"
+                })]
+              })
+            })]
+          })
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: 'grid grid-cols-1 md:grid-cols-2 gap-5 mt-16',
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: 'flex flex-col space-y-3.5',
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: 'flex items-center gap-x-2',
+                children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Components_IconBadge__WEBPACK_IMPORTED_MODULE_1__["default"], {
+                  Icon: lucide_react__WEBPACK_IMPORTED_MODULE_6__["default"]
+                }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("h2", {
+                  className: 'text-xl',
+                  children: "Customize Your Chapter"
+                })]
+              })
+            })
+          })
+        })]
+      })
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chapter);
 
 /***/ }),
 
@@ -36698,6 +36868,35 @@ var defaultAttributes = {
 
 
 //# sourceMappingURL=defaultAttributes.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/lucide-react/dist/esm/icons/arrow-left.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/lucide-react/dist/esm/icons/arrow-left.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ArrowLeft)
+/* harmony export */ });
+/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
+/**
+ * lucide-react v0.292.0 - ISC
+ */
+
+
+
+const ArrowLeft = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("ArrowLeft", [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+]);
+
+
+//# sourceMappingURL=arrow-left.js.map
 
 
 /***/ }),
@@ -81283,6 +81482,8 @@ if (false) {} else {
 var map = {
 	"./Auth/Login": "./resources/js/Pages/Auth/Login.tsx",
 	"./Auth/Login.tsx": "./resources/js/Pages/Auth/Login.tsx",
+	"./Chapter": "./resources/js/Pages/Chapter.tsx",
+	"./Chapter.tsx": "./resources/js/Pages/Chapter.tsx",
 	"./Dashboard": "./resources/js/Pages/Dashboard.tsx",
 	"./Dashboard.tsx": "./resources/js/Pages/Dashboard.tsx",
 	"./SearchPage": "./resources/js/Pages/SearchPage.tsx",

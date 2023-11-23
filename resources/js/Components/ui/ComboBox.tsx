@@ -22,9 +22,10 @@ interface Props{
   options:{label:string;value:number;}[]
   value?:number;
   onChange:(value:number)=>void;
+  side?:'top'|'left'|'right'|'bottom'
 }
 
-const ComboBox:React.FC<Props> = ({options,value,onChange}) =>  {
+const ComboBox:React.FC<Props> = ({options,value,onChange,side}) =>  {
   const [open, setOpen] = React.useState(false)
 
   return (
@@ -42,7 +43,7 @@ const ComboBox:React.FC<Props> = ({options,value,onChange}) =>  {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0">
+      <PopoverContent className="w-full p-0 max-h-48 overflow-y-auto" side={side}>
         <Command>
           <CommandInput placeholder="Search option..." />
           <CommandEmpty>No option found.</CommandEmpty>
@@ -50,7 +51,7 @@ const ComboBox:React.FC<Props> = ({options,value,onChange}) =>  {
             {options.map((option) => (
               <CommandItem
                 key={option.value}
-                value={option.value.toString()}
+                value={option.label}
                 onSelect={() => {
                   onChange(option.value)
                   setOpen(false)

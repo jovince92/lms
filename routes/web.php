@@ -61,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('chapters')->name('chapters.')->group(function(){        
                 Route::post('/{course_id}/store', [ChapterController::class, 'store'])->name('store');
+                Route::get('/{course_id}/chapter/{id}', [ChapterController::class, 'show'])->name('show');
+                Route::post('/{course_id}/reorder', [ChapterController::class, 'reorder'])->name('reorder');
             });
         });
 

@@ -1,7 +1,7 @@
 import { Course } from '@/types';
 import React, { FC, FormEventHandler, useState } from 'react'
 import { Button } from '../ui/button';
-import { Pencil, PlusCircle } from 'lucide-react';
+import { Loader2, Pencil, PlusCircle } from 'lucide-react';
 import { Inertia } from '@inertiajs/inertia';
 import { useForm } from '@inertiajs/inertia-react';
 import { toast } from 'sonner';
@@ -18,6 +18,7 @@ const ChapterForm:FC<Props> = ({course}) => {
     const {chapters,id} = course;
     const [creating,setCreating] = useState(false);
     const toggleCreating = () =>setCreating(current=>!current);
+    const [loading,setLoading]  = useState(false);
 
     const {data,setData,processing,post,errors} = useForm({title:""});
 
@@ -32,8 +33,24 @@ const ChapterForm:FC<Props> = ({course}) => {
         });
     }
 
+    const onReorder = (reordered_chapters:{id:number;position:number}[]) =>{
+        
+        Inertia.post(route('teacher.courses.chapters.reorder',{course_id:id}),{
+            //@ts-ignore
+            reordered_chapters
+        },{
+            onStart:()=>setLoading(true),
+            onSuccess:()=>toast.success('Chapters Reordered!'),
+            onError:()=>toast.error('Something   Went Wrong. Please Try again!'),
+            onFinish:()=>setLoading(false)
+        });
+    }
+
     return (
-        <div className='mt-5 border bg-secondary rounded-md p-3.5'>
+        <div className='relative mt-5 border bg-secondary rounded-md p-3.5'>
+            {
+                loading && <div className='absolute inset-0 h-full w-full bg-black/30 p-4 flex items-center justify-center'> <Loader2 className='animate-spin h-7 w-7 text-sky-500' /></div>
+            }
             <div className='font-medium flex items-center justify-between'>
                 <p>Course Chapters <span className='text-destructive text-[0.75rem] italic font-extralight'>*required</span></p>
                 
@@ -63,7 +80,7 @@ const ChapterForm:FC<Props> = ({course}) => {
                     </div>
                 )
             }
-            <ChapterList onEdit={()=>{}} onReorder={()=>{}} chapters={chapters} />
+            <ChapterList onReorder={onReorder} chapters={chapters} />
             {
                 !creating && <p className='text-xs text-muted-foreground mt-3.5'>Drag and drop to reorder the chapters</p>
             }

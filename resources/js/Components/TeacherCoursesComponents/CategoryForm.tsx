@@ -48,7 +48,7 @@ const CategoryForm:FC<Props> = ({course}) => {
                 editing &&(
                     <form onSubmit={onSubmit} className='flex flex-col space-y-3.5 mt-3.5'>
                         <div className='flex   items-center    space-x-1.5'>
-                            <ComboBox value={data.category_id} onChange={(val)=>setData('category_id',val)} options={categories.map(({id,category})=>({value:id,label:category}))} />
+                            <ComboBox side='top' value={data.category_id} onChange={(val)=>setData('category_id',val)} options={categories.map(({id,category})=>({value:id,label:category}))} />
                             <Button size='sm' disabled={processing} type='submit'>Save</Button>
                         </div>
                         

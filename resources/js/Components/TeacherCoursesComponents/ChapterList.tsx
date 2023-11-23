@@ -1,26 +1,47 @@
 import { Chapter } from '@/types';
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 
-import {DragDropContext,Droppable,Draggable,DropResult} from '@hello-pangea/dnd';
+import {DragDropContext,Droppable,Draggable,DropResult, OnDragEndResponder} from '@hello-pangea/dnd';
 import { cn } from '@/lib/utils';
-import { Grip } from 'lucide-react';
+import { Grip, Pencil } from 'lucide-react';
 import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Inertia } from '@inertiajs/inertia';
 
 interface Props{
-    onEdit:()=>void;
-    onReorder:()=>void;
+    onReorder:(data:{id:number;position:number}[])=>void;
     chapters:Chapter[];
 }
 
-const ChapterList:FC<Props> = ({onEdit,onReorder,chapters}) => {
+const ChapterList:FC<Props> = ({onReorder,chapters}) => {
+    const [draggableChapters,setDraggableChapters] = useState(chapters);
+
+    const onDragEnd:OnDragEndResponder  = (e) =>{
+        if(!e.destination) return;
+        const items  = Array.from(draggableChapters);
+        const [reorderedItem] = items.splice(e.source.index,1);
+        items.splice(e.destination.index,0,reorderedItem);
+
+        const startIndex = Math.min(e.source.index,e.destination.index);
+        const endIndex = Math.max(e.source.index,e.destination.index);
+
+        const updatedChapters = items.slice(startIndex,(endIndex+1));
+        setDraggableChapters(items);
+
+        const bulkUpdateData  =updatedChapters.map(({id})=>({id,position:(items.findIndex(item=>item.id===id)+1)}))
+        onReorder(bulkUpdateData);
+    }
+
+    const onEdit = (course_id:number,id:number) => Inertia.get(route('teacher.courses.chapters.show',{course_id,id}));
+
     return (
-        <DragDropContext onDragEnd={(e)=>console.log(e)}>
+        <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId='chapters'>
                 {
                     provided=>(
                         <div {...provided.droppableProps} ref={provided.innerRef}>
                             {
-                                chapters.map((chapter,index)=>(
+                                draggableChapters.map((chapter,index)=>(
                                     <Draggable key={chapter.id} draggableId={chapter.id.toString()} index={index}>
                                         {
                                             provided=>(
@@ -39,13 +60,19 @@ const ChapterList:FC<Props> = ({onEdit,onReorder,chapters}) => {
                                                             )}>
                                                             {chapter.is_published===1?'Published':'Draft'}
                                                         </Badge>
+                                                        <button onClick={()=>onEdit(chapter.course_id,chapter.id)} className='p-3 hover:opacity-70 transition duration-300'>
+                                                            <Pencil className='w-4 h-4' />
+                                                        </button>
                                                     </div>
+                                                    
                                                 </div>
                                             )
                                         }
                                     </Draggable>
                                 ))
+                                
                             }
+                            {provided.placeholder}
                         </div>
                     )
                 }

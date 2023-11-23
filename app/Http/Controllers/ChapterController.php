@@ -6,6 +6,7 @@ use App\Models\Chapter;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ChapterController extends Controller
 {
@@ -59,9 +60,14 @@ class ChapterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($course_id,$id)
     {
-        //
+        $course=Course::findOrFail($course_id);
+        if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
+        $chapter=Chapter::findOrFail($id);
+        return Inertia::render('Chapter',[
+            'chapter'=>$chapter->load(['course'])
+        ]);
     }
 
     /**
@@ -96,5 +102,17 @@ class ChapterController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function reorder(Request $request,$course_id){
+        $course=Course::findOrFail($course_id);
+        if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
+        
+        foreach ($request->reordered_chapters as $c){
+            
+            $chapter=Chapter::findORfail($c['id']);
+            $chapter->update(['position'=>$c['position']]);
+        }
+        return redirect()->back();
     }
 }
