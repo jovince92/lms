@@ -38,6 +38,7 @@ export interface Attachment extends timestamps{
 export interface Category  extends timestamps{
     id:number;
     category:string;
+    icon_map_number:number;
     courses:Course[];
 }
 

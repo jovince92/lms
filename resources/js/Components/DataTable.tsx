@@ -48,7 +48,7 @@ export function DataTable<TData, TValue>({columns,data,}: DataTableProps<TData, 
         state: {
             sorting,
             columnFilters,
-            columnVisibility
+            columnVisibility,
         },
     })
 
@@ -58,8 +58,8 @@ export function DataTable<TData, TValue>({columns,data,}: DataTableProps<TData, 
                 <Input placeholder="Filter title" value={(table.getColumn("title")?.getFilterValue() as string) ?? ""} onChange={(event) =>table.getColumn("title")?.setFilterValue(event.target.value)} className="max-w-sm" />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
-                            Columns
+                        <Button variant='ddc' className="ml-auto">
+                            Show/Hide Columns
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -69,7 +69,6 @@ export function DataTable<TData, TValue>({columns,data,}: DataTableProps<TData, 
                             (column) => column.getCanHide()
                         )
                         .map((column) => {
-                            console.log(column);
                             return (
                                 <DropdownMenuCheckboxItem
                                     key={column.id}

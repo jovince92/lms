@@ -16,9 +16,9 @@ const TeacherCourses:FC<Props> = ({courses}) => {
             <Head title='Courses' />
             <DashboardLayout>
                 <div className='p-6'>
-                    {/* <Link href={route('teacher.courses.create')}>
+                    <Link href={route('teacher.courses.create')}>
                         <Button variant='ddc'>New Course</Button>
-                    </Link> */}
+                    </Link>
                     <DataTable columns={CourseColumns} data={courses} />
                 </div>
             </DashboardLayout>

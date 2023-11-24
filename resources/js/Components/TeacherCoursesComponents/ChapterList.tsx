@@ -55,7 +55,7 @@ const ChapterList:FC<Props> = ({onReorder,chapters}) => {
                                                     </div>
                                                     {chapter.title}
                                                     <div className='ml-auto pr-2 flex items-center gap-x-1.5'>
-                                                        <Badge className={cn('bg-secondary text-primary ',
+                                                        <Badge className={cn('bg-secondary text-primary pointer-events-none ',
                                                                 chapter.is_published===1 && 'bg-sky-700 text-white'
                                                             )}>
                                                             {chapter.is_published===1?'Published':'Draft'}

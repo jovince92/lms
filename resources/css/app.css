@@ -78,6 +78,10 @@
     @apply focus:!border-input focus:!outline-0 focus:!ring-0 focus:!ring-offset-0
   }
 
+  input{
+    @apply !ring-idcsi !ring-offset-0 
+  }
+
 }
 #app{
   height: 100%;

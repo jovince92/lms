@@ -4,6 +4,7 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\HRMSController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TeacherCoursesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -40,9 +41,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('search')->name('search.')->group(function(){
-        Route::get('/', function () {
-            return Inertia::render('SearchPage');
-        })->name('index');
+        Route::get('/', [SearchController::class,'index'])->name('index');
     });
 
     Route::prefix('teacher')->name('teacher.')->group(function(){
@@ -51,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
             
             Route::get('/', [TeacherCoursesController::class, 'index'])->name('index');
             Route::get('/create', [TeacherCoursesController::class, 'create'])->name('create');
-            Route::get('/show/{id}', [TeacherCoursesController::class, 'show'])->name('show');
+            Route::get('/{id}', [TeacherCoursesController::class, 'show'])->name('show');
             Route::post('/destroy/{id}', [TeacherCoursesController::class, 'destroy'])->name('destroy');
             Route::post('/store', [TeacherCoursesController::class, 'store'])->name('store');
             Route::post('/{id}/update', [TeacherCoursesController::class, 'update'])->name('update');
