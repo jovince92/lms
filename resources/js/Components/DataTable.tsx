@@ -53,8 +53,8 @@ export function DataTable<TData, TValue>({columns,data,}: DataTableProps<TData, 
     })
 
     return (
-        <div>
-            <div className="flex items-center py-4">
+        <div className="h-full flex flex-col ">
+            <div className="flex items-center py-4 h-auto">
                 <Input placeholder="Filter title" value={(table.getColumn("title")?.getFilterValue() as string) ?? ""} onChange={(event) =>table.getColumn("title")?.setFilterValue(event.target.value)} className="max-w-sm" />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -85,9 +85,9 @@ export function DataTable<TData, TValue>({columns,data,}: DataTableProps<TData, 
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div className="rounded-md border">
+            <div className="rounded-md border flex-1 overflow-y-auto relative flex">
                 <Table>
-                    <TableHeader>
+                    <TableHeader className="z-50 sticky top-0 bg-secondary ">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                         {headerGroup.headers.map((header) => {
@@ -105,7 +105,7 @@ export function DataTable<TData, TValue>({columns,data,}: DataTableProps<TData, 
                         </TableRow>
                     ))}
                     </TableHeader>
-                    <TableBody>
+                    <TableBody  className="z-40">
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
                             <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} >
@@ -126,22 +126,22 @@ export function DataTable<TData, TValue>({columns,data,}: DataTableProps<TData, 
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="h-auto flex items-center justify-end space-x-2 py-4">
                 <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                >
-                Previous
+                    variant="outline"
+                    size="sm"
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                    >
+                    Previous
                 </Button>
                 <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                >
-                Next
+                    variant="outline"
+                    size="sm"
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                    >
+                    Next
                 </Button>
             </div>
         </div>

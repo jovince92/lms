@@ -1,17 +1,19 @@
 import Navbar from '@/Components/DashboardComponents/Navbar';
 import Sidebar from '@/Components/DashboardComponents/Sidebar';
 import ConfettiProvider from '@/Providers/ConfettiProvider';
+import { cn } from '@/lib/utils';
 import React, { FC, ReactNode } from 'react'
 
 interface Props{
     children:ReactNode;
+    className?:string;
 }
 
-const DashboardLayout:FC<Props> = ({children}) => {
+const DashboardLayout:FC<Props> = ({children,className}) => {
     return (
         <>
             <ConfettiProvider />
-            <div className='h-full'>
+            <div className={cn('h-full',className)}>
                 <div className='h-[5rem] md:pl-56 fixed inset-y-0 w-full z-50'>
                     <Navbar />
                 </div>

@@ -1,3 +1,4 @@
+import Logo from '@/Components/DashboardComponents/Logo'
 import { Button } from '@/Components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card'
 import { Input } from '@/Components/ui/input'
@@ -21,10 +22,11 @@ const Login:FC = () => {
         <form onSubmit={onSubmit} className='w-full h-full flex py-12 md:pt-0 md:items-center justify-center px-2.5'>
             <Card className='w-full md:max-w-md h-fit'>
                 <CardHeader>
-                    <CardTitle className={cn(processing&&'animate-pulse')}>{`${processing?'Signing In. Please wait...':'Sign In'}`}</CardTitle>
-                    <CardDescription>
-                        Sign in with your HRMS Credentials
-                    </CardDescription>
+                    <CardDescription   className={cn(processing&&'animate-pulse')}><Logo /></CardDescription>
+                    <CardTitle >
+                        {`${processing?'Signing In To LMS. Please wait...':'Sign In'}`}
+                        
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     

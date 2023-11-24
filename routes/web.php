@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\HRMSController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\StudentCourseController;
 use App\Http\Controllers\TeacherCoursesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('teacher')->name('teacher.')->group(function(){
+        
         Route::get('/', fn()=>redirect()->route('teacher.courses.index'))->name('courses');
         Route::prefix('courses')->name('courses.')->group(function(){
             
@@ -80,6 +82,11 @@ Route::middleware(['auth'])->group(function () {
     
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+    Route::prefix('course')->name('course.')->group(function(){        
+        Route::get('/{id}', [StudentCourseController::class, 'index'])->name('index');
+    });
+
 });
 
 

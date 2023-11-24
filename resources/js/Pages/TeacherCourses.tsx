@@ -14,12 +14,15 @@ const TeacherCourses:FC<Props> = ({courses}) => {
     return (
         <>
             <Head title='Courses' />
-            <DashboardLayout>
-                <div className='p-6'>
+            <DashboardLayout className='overflow-y-hidden'>
+                <div className='p-6 flex flex-col h-full'>
+                
                     <Link href={route('teacher.courses.create')}>
                         <Button variant='ddc'>New Course</Button>
                     </Link>
+                
                     <DataTable columns={CourseColumns} data={courses} />
+                    
                 </div>
             </DashboardLayout>
         </>

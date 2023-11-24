@@ -79,7 +79,7 @@
   }
 
   input{
-    @apply !ring-idcsi !ring-offset-0 
+    @apply !ring-idcsi !ring-offset-0  !outline-idcsi !border-border
   }
 
 }

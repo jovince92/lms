@@ -42,4 +42,8 @@ class User extends Authenticatable
         if(!$value){return null;}
         return url('/').'/public/'. $value;
     }
+
+    public function progresses(){
+        return $this->hasMany(Progress::class);
+    }
 }
