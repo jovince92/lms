@@ -25,7 +25,7 @@ class TeacherCoursesController extends Controller
         $level=Auth::user()->level;
         $user_id=Auth::id();
         return Inertia::render('TeacherCourses',[
-            'courses'=>Course::with(['user','category'])->when($level==0,function($q) use($user_id) {
+            'courses'=>Course::with(['user','category'])->when($level!=0,function($q) use($user_id) {
                 $q->where('user_id',$user_id);
             })->get()
         ]);

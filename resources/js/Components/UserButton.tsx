@@ -13,9 +13,9 @@ const UserButton = () => {
         <DropdownMenu >
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8">
+                <Avatar className="h-8 w-8 border border-idcsi">
                     <AvatarImage src={user.photo} alt="Photo" />
-                    <AvatarFallback>{user.first_name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{`${user.first_name.charAt(0)+user.last_name.charAt(0)}`}</AvatarFallback>
                 </Avatar>
                 </Button>
             </DropdownMenuTrigger>

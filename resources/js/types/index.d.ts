@@ -77,7 +77,29 @@ export interface Progress extends timestamps{
     course:Course;
 }
 
+export interface HrmsResponse{
+    job_job_company : string;
+    job_job_title : string;
+    idno : string;
+    last_name : string;
+    first_name : string;
+    middle_name : string;
+    date_of_birth : string;
+    age : string;
+    picture_location : string;
+    myaddress : string;
+    contacts_home_telephone: string;
+    contacts_mobile : string;
+    work_email :string;
+    other_email : string;
+    jobcode : string;
+    jobrole : string;
+    department : string;
+}
+
 declare global {
     var route: typeof ziggy;
 }
+
+
 

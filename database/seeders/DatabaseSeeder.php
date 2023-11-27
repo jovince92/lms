@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\User;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,8 +16,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        
+        $faker = Factory::create();
+
+        for($i=0;$i<=25;$i++){
+            User::create([
+                'first_name'=>$faker->firstName(),
+                'last_name'=>$faker->lastName(),
+                'company_id'=>$faker->bothify('??#?'),
+                'photo'=>'https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?',
+                'position'=>$faker->jobTitle(),
+                'department'=>$faker->company(),
+                'password'=>bcrypt('1234')
+            ]);
+        }
+
         $categories = array(
-            "Programming",
+            "Programming", 
             "Web Development",
             "Mobile App Development",
             "Data Science",
@@ -57,7 +74,7 @@ class DatabaseSeeder extends Seeder
             "Sociology"
         );
         foreach ($categories as  $cat){
-            Category::create(['category'=>$cat]);
+            Category::create(['category'=>$cat,'icon_map_number'=>$faker->numberBetween(1,12)]);
         }
     }
 }

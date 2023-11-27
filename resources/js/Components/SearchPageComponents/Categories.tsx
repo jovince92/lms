@@ -40,13 +40,14 @@ const Categories:FC<Props> = ({selected_categories}) => {
             catIds:catIds.join(','),
             title
         }),{},{
-            preserveScroll:true
+            preserveScroll:true,
+            preserveState:true
         });
         
     }
 
     return (
-        <div className='flex items-center gap-x-2 overflow-x-auto py-2'>
+        <div className='flex items-center px-3.5 space-x-2 overflow-x-auto py-2'>
             {
                 categories.map(cat=><CategoryItem onClick={onClick} isSelected={selected_categories.findIndex(selectedCat=>selectedCat.id===cat.id)>-1} key={cat.id} category={cat} />)
             }

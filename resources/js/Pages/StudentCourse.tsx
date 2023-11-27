@@ -1,3 +1,4 @@
+import DashboardLayout from '@/Layouts/DashboardLayout';
 import StudentCourseLayout from '@/Layouts/StudentCourseLayout';
 import { Course } from '@/types'
 import React, { FC } from 'react'
@@ -8,9 +9,9 @@ interface Props{
 
 const StudentCourse:FC<Props> = ({course}) => {
     return (
-        <StudentCourseLayout course={course}>
+        <DashboardLayout >
             <div>Course</div>
-        </StudentCourseLayout>
+        </DashboardLayout>
     )
 }
 

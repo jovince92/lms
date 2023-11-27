@@ -13,7 +13,7 @@ class SearchController extends Controller
 
         
         $selected_categories = Category::whereIn('id',$request->catIds?explode(',',$request->catIds):[])->get();
-        $courses = Course::where('title','like','%'.$request->title??""."%")->where('is_published',1)
+        $courses = Course::where('title','like','%'.$request->title."%")->where('is_published',1)
             ->when($request->catIds,function($q) use($selected_categories){
                 $q->whereIn('category_id',$selected_categories->pluck('id'));
             })

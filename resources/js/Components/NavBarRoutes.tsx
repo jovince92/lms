@@ -11,7 +11,7 @@ import SearchInput from './SearchInput';
 const NavBarRoutes = () => {
     const {base_url} = usePage<Page<PageProps>>().props;
     const isTeacherPage = base_url.includes('/teacher');
-    const isPlayerPage = base_url.includes('/chapter');
+    const isPlayerPage = route().current()?.includes('course.');
     const isSearchPage = base_url.includes('/search');
 
     return (
@@ -24,7 +24,7 @@ const NavBarRoutes = () => {
             
             <div className='flex gap-x-2 ml-auto items-center'>
                 {
-                    isTeacherPage || isPlayerPage ? <Button  size='sm' variant='ddc' onClick={()=>Inertia.get(route('dashboard.index'))}> <LogOut className='h-4 w-4 mr-2'/>Exit Teacher Mode</Button>: <Link  href={route('teacher.courses.index')} > <Button size='sm' variant='ddc'>Enter Teacher Mode</Button> </Link>
+                    isTeacherPage || isPlayerPage ? <Button  size='sm' variant='ddc' onClick={()=>Inertia.get(route('dashboard.index'))}> <LogOut className='h-4 w-4 mr-2'/>Go Back</Button>: <Link  href={route('teacher.courses.index')} > <Button size='sm' variant='ddc'>Enter Teacher Mode</Button> </Link>
                 }
                 <ModeToggle />
                 <UserButton />

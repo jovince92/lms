@@ -34,7 +34,7 @@ export const CourseColumns: ColumnDef<Course>[] = [
         header: ({column})=><Button  className='text-primary'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Published?<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
         cell:({row})=>(
             <Badge className={cn('bg-secondary text-primary pointer-events-none',
-                    row.original.is_published===1 && 'bg-sky-700 text-primary'
+                    row.original.is_published===1 && 'bg-sky-700 text-white'
                 )}>
                 {row.original.is_published===1?'Published':'Draft'}
             </Badge>

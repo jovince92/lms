@@ -27,7 +27,11 @@ use Inertia\Inertia;
 Route::middleware('guest')->group(function () {
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('login', [HRMSController::class, 'store'])->name('login');
+    Route::post('login/store', [AuthenticatedSessionController::class, 'store'])->name('login.store');
+    
+    Route::get('signup', fn()=>redirect()->to(route('login')));
+    Route::post('signup', [HRMSController::class, 'signup'])->name('signup');
+    Route::post('hrms/store', [HRMSController::class, 'store'])->name('hrms.store');
 
 
 });
@@ -85,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('course')->name('course.')->group(function(){        
         Route::get('/{id}', [StudentCourseController::class, 'index'])->name('index');
+        Route::get('/{course_id}/chapter/{id}', [StudentCourseController::class, 'chapter'])->name('chapter');
     });
 
 });
@@ -93,5 +98,9 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/public', function () {
     return null;
 })->name('public_route');
+
+Route::get('/test', function () {
+    return Inertia::render('Auth/SignUpPage');
+})->name('test');
 
 

@@ -115,7 +115,9 @@ class CourseSeeder extends Seeder
                 'is_published'=>1
             ]);
 
-            for($i=1;$i<=12;$i++){
+            $limit = intval($faker->numberBetween(5,12));
+
+            for($i=1;$i<=$limit;$i++){
                 Chapter::create([
                     'course_id'=>$course->id,
                     'title'=>'Chapter '.strval($i),

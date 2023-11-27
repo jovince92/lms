@@ -1,3 +1,8 @@
+import Logo from '@/Components/DashboardComponents/Logo';
+import MobileSidebar from '@/Components/DashboardComponents/MobileSidebar';
+import Navbar from '@/Components/DashboardComponents/Navbar';
+import NavBarRoutes from '@/Components/NavBarRoutes';
+import CourseNavBar from '@/Components/StudentCourseComponents/CourseNavBar';
 import CourseSideBar from '@/Components/StudentCourseComponents/CourseSideBar';
 import { Course } from '@/types';
 import React, { FC, ReactNode } from 'react'
@@ -10,10 +15,13 @@ interface Props{
 const StudentCourseLayout:FC<Props> = ({children,course}) => {
     return (
         <div className='h-full'>
-            <div className='h-full hidden  md:flex w-80 flex-col fixed inset-y-0 z-50'>
+            <div className='h-[5rem] fixed inset-y-0 w-full z-50'>
+                <CourseNavBar course={course} />
+            </div>
+            <div className='h-full hidden  md:flex w-80 pt-[5rem] flex-col fixed inset-y-0 z-50 '>
                 <CourseSideBar course={course} />
             </div>
-            <main className='h-full md:pl-80'>
+            <main className='h-full md:pl-80 pt-[5rem]'>
                 {children}
             </main>
         </div>
