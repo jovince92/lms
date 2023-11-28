@@ -6,7 +6,7 @@ const ConfettiProvider = () => {
     const {isOpen,onClose} = useConfettiStore();
     if(!isOpen) return;
     return (
-        <Confetti className='pointer-events-none z-[100]' numberOfPieces={500} recycle={false} onConfettiComplete={onClose} />
+        <Confetti className='pointer-events-none z-[250]' numberOfPieces={500} recycle={false} onConfettiComplete={onClose} />
     )
 }
 

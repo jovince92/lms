@@ -108,7 +108,12 @@ const HRMS:FC<HRMSProps> = ({onClose,isOpen}) => {
                     </form>
                     <AlertDialogFooter>
                         <AlertDialogCancel type='button'>Cancel</AlertDialogCancel>
-                        <Button variant='ddc' form='hrms' type='submit'>Continue</Button>
+                        <Button variant='ddc' form='hrms' type='submit'>
+                            {
+                                processing && <Loader2 className='h-4 w-4 mr-2 animate-spin' />
+                            }
+                            Continue
+                        </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
         </AlertDialog>

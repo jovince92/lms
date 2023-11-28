@@ -45,9 +45,7 @@ Route::middleware(['auth'])->group(function () {
         })->name('index');
     });
 
-    Route::prefix('search')->name('search.')->group(function(){
-        Route::get('/', [SearchController::class,'index'])->name('index');
-    });
+    
 
     Route::prefix('teacher')->name('teacher.')->group(function(){
         
@@ -85,13 +83,17 @@ Route::middleware(['auth'])->group(function () {
     
     
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
-    Route::prefix('course')->name('course.')->group(function(){        
-        Route::get('/{id}', [StudentCourseController::class, 'index'])->name('index');
-        Route::get('/{course_id}/chapter/{id}', [StudentCourseController::class, 'chapter'])->name('chapter');
+    Route::prefix('search')->name('search.')->group(function(){
+        Route::get('/', [SearchController::class,'index'])->name('index');
+        Route::get('/course/{id}', [SearchController::class, 'course'])->name('course');
     });
 
+    
+    Route::prefix('course')->name('course.')->group(function(){
+        Route::get('/{course_id}/chapter/{id}', [StudentCourseController::class, 'chapter'])->name('chapter');
+    });
+    
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
 

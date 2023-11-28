@@ -5,6 +5,7 @@ import { createInertiaApp } from '@inertiajs/inertia-react';
 import { InertiaProgress } from '@inertiajs/progress';
 import { Toaster } from 'sonner';
 import { ThemeProvider } from './Providers/ThemeProvider';
+import ConfettiProvider from './Providers/ConfettiProvider';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -16,6 +17,7 @@ createInertiaApp({
 
         root.render(
             <ThemeProvider defaultTheme='dark'>
+                <ConfettiProvider />
                 <Toaster richColors theme='dark' position='top-center' closeButton duration={1500} />
                 <App {...props} />
             </ThemeProvider>            

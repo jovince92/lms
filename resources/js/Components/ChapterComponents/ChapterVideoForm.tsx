@@ -21,8 +21,31 @@ const ChapterVideoForm:FC<Props> = ({chapter}) => {
 
     const onChange = (file?:File) =>{
         if(!file) return;
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = () => {
+            //@ts-ignore
+            const blob = new Blob([reader.result], { type: file.type });
+            const url = URL.createObjectURL(blob);
+            const video = document.createElement("video");
+            video.src = url;
+            video.addEventListener("loadedmetadata", () => {
+            URL.revokeObjectURL(url);
+            submit(file,tohhmmss(video.duration))
+            });
+        }
+        
+    }
+
+    const submit = (file:File,duration:string) =>{
         const loader = toast.loading('Uploading Video... Do Not Leave or Close This Page...');
-        Inertia.post(route('teacher.courses.chapters.update',{course_id,id}),{video:file},{
+        Inertia.post(route('teacher.courses.chapters.update',{
+            course_id,
+            id
+        }),{
+            video:file,
+            duration
+        },{
             onStart:()=>setLoading(true),
             onSuccess:()=>{
                 toast.success('Chapter Video Updated!')
@@ -73,4 +96,17 @@ const ChapterVideoForm:FC<Props> = ({chapter}) => {
     )
 }
 
-export default ChapterVideoForm
+export default ChapterVideoForm;
+
+const tohhmmss = (seconds:number):string =>{
+    const padZero = (num:number):string =>num < 10 ? `0${num}` : `${num}`;
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds =Math.floor( seconds % 60);
+
+    const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(remainingSeconds)}`;
+    return formattedTime;
+
+
+}

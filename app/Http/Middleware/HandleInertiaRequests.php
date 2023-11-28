@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Category;
+use App\Models\Language;
 use App\Models\Progress;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -48,7 +49,9 @@ class HandleInertiaRequests extends Middleware
             
             'full_url'=>URL::full(),
             'base_url'=>URL::current(),
-            'categories'=>Category::orderBy('category','asc')->get()
+            'categories'=>Category::orderBy('category','asc')->get(),
+            'my_progress'=>Progress::with(['chapter'])->where('user_id',$request->user()->id)->get(),
+            'languages'=>Language::all()
         ]);
     }
 }

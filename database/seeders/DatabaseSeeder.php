@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Language;
 use App\Models\User;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
@@ -19,6 +20,8 @@ class DatabaseSeeder extends Seeder
         
         $faker = Factory::create();
 
+        Language::create(['name'=>'English']);
+        Language::create(['name'=>'Filipino']);
         for($i=0;$i<=25;$i++){
             User::create([
                 'first_name'=>$faker->firstName(),

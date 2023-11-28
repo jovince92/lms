@@ -6,6 +6,7 @@ import ChapterForm from '@/Components/TeacherCoursesComponents/ChapterForm'
 import CourseActions from '@/Components/TeacherCoursesComponents/CourseActions'
 import DescriptionForm from '@/Components/TeacherCoursesComponents/DescriptionForm'
 import ImageForm from '@/Components/TeacherCoursesComponents/ImageForm'
+import LanguageForm from '@/Components/TeacherCoursesComponents/LanguageForm'
 import TitleForm from '@/Components/TeacherCoursesComponents/TitleForm'
 import DashboardLayout from '@/Layouts/DashboardLayout'
 import { Course } from '@/types'
@@ -24,6 +25,7 @@ const TeacherCoursesShow:FC<Props> = ({course}) => {
         if(course.description&&course.description?.length>0) completedFields=completedFields+1;
         if(course.image&&course.image?.length>0) completedFields=completedFields+1;
         if(course.category_id&&course.category) completedFields=completedFields+1;
+        if(course.language_id&&course.language) completedFields=completedFields+1;
         if(course.chapters.some(chapter=>chapter.is_published===1)) completedFields=completedFields+1;
         return completedFields;
     },[course]);
@@ -34,22 +36,23 @@ const TeacherCoursesShow:FC<Props> = ({course}) => {
         <>
             <Head title={course.title} />
             <DashboardLayout>
-                {
-                    course.is_published!==1 && <Banner variant='warning' label='This Course is not Published. It will not be visible to Students' />
-                }
-                <div className='p-5'>
-                    <div className='flex items-center justify-between'>
+                
+                <div className='p-5 flex flex-col h-full overflow-y-hidden'>
+                    {
+                        course.is_published!==1 && <Banner variant='warning' label='This Course is not Published. It will not be visible to Students' />
+                    }
+                    <div className='flex items-center justify-between h-auto'>
                         <div className='flex flex-col gap-y-1.5'>
                             <h1 className='text-2xl font-medium'>
                                 Course Setup
                             </h1>
                             <span className='text-sm text-muted-foreground'>
-                                Complete All Required Parts ({completedFields.toString()}/5)
+                                Complete All Required Parts ({completedFields.toString()}/6)
                             </span>
                         </div>
                         <CourseActions course={course} />
                     </div>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-16'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mt-16 flex-1 overflow-y-auto'>
                         <div>
                             <div className='flex items-center gap-x-1.5'>
                                 <IconBadge Icon={LayoutDashboard}  />
@@ -57,6 +60,7 @@ const TeacherCoursesShow:FC<Props> = ({course}) => {
                             </div>
                             <TitleForm  course={course} />
                             <DescriptionForm course={course} />
+                            <LanguageForm course={course} />
                             <ImageForm course={course} />
                             <CategoryForm course={course} />
                         </div>

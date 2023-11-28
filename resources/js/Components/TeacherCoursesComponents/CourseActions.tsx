@@ -16,8 +16,9 @@ const CourseActions:FC<Props> = ({course}) => {
     const {onOpen} = useConfettiStore();
     const {id,is_published} = course;
     const isComplete = useMemo(()=>{
+        if(!course.title||course.title?.length<0) return false;
         if(!course.description||course.description?.length<0) return false;
-        if(!course.description||course.description?.length<0) return false;
+        if(!course.language_id||!course.language) return false;
         if(!course.image||course.image?.length<0) return false;
         if(!course.category_id||!course.category) return false;
         if(!course.chapters.some(chapter=>chapter.is_published===1)) return false;
@@ -31,7 +32,7 @@ const CourseActions:FC<Props> = ({course}) => {
         },{
             onSuccess:()=>{
                 toast.success(`Course ${label}`);
-                onOpen();
+                if(is_published===0)onOpen();
             },
             onError:e=>{
                 toast.error('Something   Went Wrong. Please Try again!');

@@ -24,6 +24,8 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     full_url:string;
     base_url:string;
     categories:Category[];
+    my_progress:Progress[];
+    languages:Language[];
 };
 
 export interface Attachment extends timestamps{
@@ -42,17 +44,24 @@ export interface Category  extends timestamps{
     courses:Course[];
 }
 
+export interface Language  extends timestamps{
+    id:number;
+    name:string;
+}
+
 export interface Course extends timestamps{
     id:number;
     user_id:number;
     category_id:number;
+    
+    language_id?:number
     title:string;
     description?:string;
     image?:string;
     is_published:0|1;
     attachments:Attachment[];
     user:User;
-    
+    language?:Language;
     category:Category;
     chapters:Chapter[];
 }
@@ -65,16 +74,17 @@ export interface Chapter extends timestamps{
     video?:string;
     position:number;
     is_published:1|0;
+    duration:string;
     course:Course;
 }
 
 export interface Progress extends timestamps{
     id:number;
     user_id:number;
-    course_id:number;
+    chapter_id:number;
     is_completed:0|1;
     user:User;
-    course:Course;
+    chapter:Chapter;
 }
 
 export interface HrmsResponse{
