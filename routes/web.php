@@ -3,6 +3,7 @@
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ChapterController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HRMSController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StudentCourseController;
@@ -40,9 +41,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::name('dashboard.')->group(function(){
-        Route::get('/', function () {
-            return Inertia::render('Dashboard');
-        })->name('index');
+        Route::get('/', [DashboardController::class, 'index'])->name('index');
     });
 
     
@@ -91,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::prefix('course')->name('course.')->group(function(){
         Route::get('/{course_id}/chapter/{id}', [StudentCourseController::class, 'chapter'])->name('chapter');
+        Route::post('/{course_id}/chapter/{id}/toggle-complete', [StudentCourseController::class, 'toggle'])->name('toggle');
     });
     
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

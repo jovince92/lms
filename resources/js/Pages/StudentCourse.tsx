@@ -8,9 +8,9 @@ import { BadgeInfo, BookOpen, FileIcon, Globe, Timer } from 'lucide-react';
 import React, { FC, ReactNode, useCallback, useMemo } from 'react'
 import Editor from './Editor';
 import { Inertia, Page } from '@inertiajs/inertia';
-import { Progress as ProgressBar } from '@/Components/ui/progress';
 import { Button } from '@/Components/ui/button';
 import { Badge } from '@/Components/ui/badge';
+import CourseProgressBar from './CourseProgressBar';
 
 interface Props{
     course:Course;
@@ -23,13 +23,7 @@ const StudentCourse:FC<Props> = ({course}) => {
     const totalSecords = chapters.reduce((accumulator=0, currentValue)=>accumulator+convertTimeToSeconds(currentValue.duration),0);
     const Icon = IconMap[category.icon_map_number];
 
-    const hasStartedCourse = useMemo(()=>my_progress.findIndex(progress=>progress.chapter.course_id===id)>-1,[id])
-    const courseProgress:Progress[] = useMemo(()=>my_progress.filter(progress=>progress.chapter.course_id===id),[id,my_progress]);
-
-    const completedChapter = courseProgress.length>0?courseProgress.reduce((accumulator=0, currentValue)=>accumulator+(currentValue.is_completed===1?1:0),0):0;
-    const percentage = Math.floor((completedChapter/chapters.length)*100);
-    
-
+    const hasStartedCourse = useMemo(()=>my_progress.findIndex(progress=>progress.chapter.course_id===id)>-1,[id]);
     const onStart = useCallback(() =>{
         const completedIds = my_progress.filter(progress=>progress.is_completed===1&&progress.chapter.course_id===id).map(progress=>(progress.chapter_id));
         const nonCompletedIds = chapters.filter(chapter=> !completedIds.includes(chapter.id)).map(chapter=>(chapter.id));
@@ -67,14 +61,11 @@ const StudentCourse:FC<Props> = ({course}) => {
                         </span>
                     </p>
                     <div className='text-sm'>
-                        <p>Your Progress: {`${hasStartedCourse? percentage.toString()+'%':'' }`}</p>
+                        <p>Your Progress:</p>
+                        {hasStartedCourse?<CourseProgressBar className='h-3' course={course}  />:<p className='text-base md:text-sm font-medium text-muted-foreground'>Course not Started</p>}
                             
-                        {hasStartedCourse?
-                        <ProgressBar className='h-3'  value={percentage}  />:<p className='text-base md:text-sm font-medium text-muted-foreground'>Course not Started</p>
-                    
-                        }
                     </div>
-                    <Button onClick={onStart} className=' absolute top-3 right-3 md:static md:ml-auto' variant='ddc'>{`${hasStartedCourse?'Continue Course':'Start this Course'}`}</Button>
+                    <Button onClick={onStart} className=' absolute top-3 right-3 md:static md:mr-auto' variant='ddc'>{`${hasStartedCourse?'Continue Course':'Start this Course'}`}</Button>
                 </div>
                 <div className='md:h-full w-full md:w-1/2 flex flex-col gap-y-3.5 p-3.5 md:overflow-y-auto'>
                     <h1 className='text-2xl font-bold tracking-wide text-primary'>Course Contents</h1>

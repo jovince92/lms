@@ -13,25 +13,29 @@ import { Badge } from "../ui/badge";
 
 export const CourseColumns: ColumnDef<Course>[] = [
     {
+        accessorKey: "id",
+        header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>ID<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
+    },
+    {
         accessorKey: "title",
-        header: ({column})=><Button  className='text-primary'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Title<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
+        header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Title<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
     },
     
     {
         accessorKey: "user_id",
         id:'user',
-        header: ({column})=><Button  className='text-primary'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Creator<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
+        header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Creator<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
         cell: ({row})=><span className="capitalize">{`${row.original.user.first_name} ${row.original.user.last_name}`}</span>
     },
     {
         accessorKey: "category_id",
         id:'Category',
-        header: ({column})=><Button  className='text-primary'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Category<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
+        header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Category<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
         cell: ({row})=><span>{row.original.category?.category||""}</span>
     },
     {
         accessorKey: "is_published",
-        header: ({column})=><Button  className='text-primary'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Published?<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
+        header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Published?<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
         cell:({row})=>(
             <Badge className={cn('bg-secondary text-primary pointer-events-none',
                     row.original.is_published===1 && 'bg-sky-700 text-white'
@@ -43,7 +47,7 @@ export const CourseColumns: ColumnDef<Course>[] = [
     {
         accessorKey: "created_at",
         id:'Create Date',
-        header: ({column})=><Button className='text-primary'   variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Create Date<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
+        header: ({column})=><Button className='text-primary px-0'   variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Create Date<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
         cell:({row})=><span>{format(new Date(row.original.created_at),'PPp')}</span>
     },
     {

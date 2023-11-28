@@ -6,6 +6,7 @@ import { Link, usePage } from '@inertiajs/inertia-react';
 import { Page } from '@inertiajs/inertia';
 import { Progress as ProgressBar } from './ui/progress';
 import { cn } from '@/lib/utils';
+import CourseProgressBar from '@/Pages/CourseProgressBar';
 
 interface Props{
     course:Course;
@@ -17,10 +18,7 @@ const CourseCard:FC<Props> = ({course}) => {
     const {user} = usePage<Page<PageProps>>().props.auth;
     const {image,title,category,chapters,id}=course;
     const hasStartedCourse = useMemo(()=>my_progress.findIndex(progress=>progress.chapter.course_id===id)>-1,[id])
-    const courseProgress:Progress[] = useMemo(()=>my_progress.filter(progress=>progress.chapter.course_id===id),[id,my_progress]);
-
-    const completedChapter = courseProgress.length>0?courseProgress.reduce((accumulator=0, currentValue)=>accumulator+(currentValue.is_completed===1?1:0),0):0;
-    const percentage = Math.floor((completedChapter/chapters.length)*100);
+    
 
     // const ownCourse = user.id===course.user_id;
     // const courseRoute = ownCourse?'#':route('search.chapter',{id});
@@ -41,13 +39,7 @@ const CourseCard:FC<Props> = ({course}) => {
                         </div>
                     </div>
                     <div  className='mt-auto'>
-                        <p className='text-sm'>Progress: {`${hasStartedCourse? percentage.toString()+'%':'' }`}</p>
-
-                        {hasStartedCourse?
-                            <ProgressBar className='h-3'  value={percentage}  />:<p className='text-base md:text-sm font-medium text-muted-foreground'>Course not Started</p>
-                        
-                        }
-                        
+                        {hasStartedCourse?<CourseProgressBar className='h-2'  course={course}  />:<p className='text-base md:text-sm font-medium text-muted-foreground'>Course not Started</p>}
                     </div>
                 </div>
             </div>
