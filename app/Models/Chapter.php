@@ -28,4 +28,8 @@ class Chapter extends Model
         if(!$value){return null;}
         return url('/').'/public/'. $value;
     }
+
+    public function progress(){
+        return $this->hasMany(Progress::class);
+    }
 }

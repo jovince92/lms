@@ -23,7 +23,7 @@ class StudentCourseController extends Controller
         
         $chapter = Chapter::where('id',$id)->where('course_id',$course_id)->firstOrFail();
         $next_position  = intval($chapter->position)+1;
-        $next_chapter_id=Chapter::select(['id'])->where('position',$next_position)->first();
+        $next_chapter_id=Chapter::select(['id'])->where('course_id',$course_id)->where('position',$next_position)->first();
         $last_chapter = Chapter::where('course_id',$course_id)->orderBy('position','desc')->first();
         $is_last_chapter=$chapter->id==$last_chapter->id?1:0;
         return Inertia::render('StudentChapter',[

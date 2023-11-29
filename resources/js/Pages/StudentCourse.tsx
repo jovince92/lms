@@ -28,7 +28,7 @@ const StudentCourse:FC<Props> = ({course}) => {
         const completedIds = my_progress.filter(progress=>progress.is_completed===1&&progress.chapter.course_id===id).map(progress=>(progress.chapter_id));
         const nonCompletedIds = chapters.filter(chapter=> !completedIds.includes(chapter.id)).map(chapter=>(chapter.id));
 
-        Inertia.get(route('course.chapter',{course_id:id,id:nonCompletedIds[0]}));
+        Inertia.get(route('course.chapter',{course_id:id,id:nonCompletedIds[0]||chapters[0].id}));
 
     },[my_progress,chapters,id]);
 
