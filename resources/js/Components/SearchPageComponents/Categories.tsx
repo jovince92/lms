@@ -47,7 +47,7 @@ const Categories:FC<Props> = ({selected_categories}) => {
     }
 
     return (
-        <div className='flex items-center px-3.5 space-x-2 overflow-x-auto py-2'>
+        <div className='flex items-center px-3.5 space-x-2 overflow-x-auto pt-0.5 pb-3.5'>
             {
                 categories.map(cat=><CategoryItem onClick={onClick} isSelected={selected_categories.findIndex(selectedCat=>selectedCat.id===cat.id)>-1} key={cat.id} category={cat} />)
             }

@@ -8,7 +8,12 @@ use App\Http\Controllers\HRMSController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StudentCourseController;
 use App\Http\Controllers\TeacherCoursesController;
+use App\Models\Chapter;
+use App\Models\Course;
+use App\Models\Progress;
+use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -46,7 +51,7 @@ Route::middleware(['auth'])->group(function () {
 
     
 
-    Route::prefix('teacher')->name('teacher.')->group(function(){
+    Route::middleware(['is_teacher'])->prefix('teacher')->name('teacher.')->group(function(){
         
         Route::get('/', fn()=>redirect()->route('teacher.courses.index'))->name('courses');
         Route::prefix('courses')->name('courses.')->group(function(){
@@ -75,7 +80,44 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::get('/analytics', function () {
-            return Inertia::render('TeacherAnalytics');
+            $user_id = Auth::id();
+            
+
+            $students = User::with(['progresses'])->has('progresses')->get();
+
+            $student_progress=[];
+
+            foreach($students as $student){
+                $progress = Progress::where('user_id',$student->id)->get();
+                $started_chapters = Chapter::whereIn('id',$progress->pluck(['chapter_id']))->get();
+                $started_courses = Course::with(['user','attachments','category','chapters'=>fn($q)=>$q->where('is_published',1)])
+                    ->whereIn('id',$started_chapters->pluck(['course_id']))
+                    ->when(Auth::user()->level!=0,function ($q) use($user_id){
+                        $q->where('user_id',$user_id);
+                    })
+                    ->get();
+    
+    
+                foreach($started_courses as $course){
+                    $len = count($course->chapters);
+                    $sum = Progress::whereIn('chapter_id',$course->chapters->pluck(['id']))->sum('is_completed');
+                    array_push($student_progress,[
+                        'user'=>$student,
+                        'user_id'=>$student->id,
+                        'course'=>$course,
+                        'course_id'=>$course->id,
+                        'chapter_count'=>$len,
+                        'completed_chapters'=>intval($sum),
+                        'date_started'=>Progress::select(['created_at'])->whereIn('chapter_id',$course->chapters->pluck(['id']))->first()->created_at
+                    ]);
+                }
+            }
+
+           
+
+            return Inertia::render('TeacherAnalytics',[
+                'progress'=>$student_progress
+            ]);
         })->name('analytics');
     });
 

@@ -79,7 +79,7 @@
   }
 
   input{
-    @apply !ring-idcsi !ring-offset-0  !outline-idcsi !border-border
+    @apply !ring-idcsi focus:!outline-none focus:!outline-offset-0 focus:!ring-2 focus:!ring-offset-0  !outline-idcsi !border-border
   }
 
 }

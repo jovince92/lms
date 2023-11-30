@@ -14,7 +14,7 @@ export interface User extends timestamps{
     last_name:string;
     company_id:string;
     photo?:string;
-    level: 0|1|2;
+    level: 0|1|2|3;
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {

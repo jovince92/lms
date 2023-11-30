@@ -25,7 +25,7 @@ export const CourseColumns: ColumnDef<Course>[] = [
         accessorKey: "user_id",
         id:'user',
         header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Creator<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
-        cell: ({row})=><span className="capitalize">{`${row.original.user.first_name} ${row.original.user.last_name}`}</span>
+        cell: ({row})=><p className="capitalize">{`${row.original.user.first_name} ${row.original.user.last_name}`}</p>
     },
     {
         accessorKey: "category_id",

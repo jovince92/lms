@@ -17,7 +17,7 @@ const TeacherCourses:FC<Props> = ({courses}) => {
             <DashboardLayout className='overflow-y-hidden'>
                 <div className='p-6 flex flex-col h-full'>
                 
-                    <Link href={route('teacher.courses.create')}>
+                    <Link className='mr-auto' href={route('teacher.courses.create')}>
                         <Button variant='ddc'>New Course</Button>
                     </Link>
                 

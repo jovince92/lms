@@ -15,7 +15,6 @@ interface Props{
 const CourseCard:FC<Props> = ({course}) => {
     
     const {my_progress} = usePage<Page<PageProps>>().props;
-    const {user} = usePage<Page<PageProps>>().props.auth;
     const {image,title,category,chapters,id}=course;
     const hasStartedCourse = useMemo(()=>my_progress.findIndex(progress=>progress.chapter.course_id===id)>-1,[id])
     

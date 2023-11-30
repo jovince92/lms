@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { PageProps } from '@/types'
 import { Inertia, Page } from '@inertiajs/inertia'
 import { usePage } from '@inertiajs/inertia-react'
+import { LogOutIcon } from 'lucide-react'
 
 const UserButton = () => {
     
@@ -29,8 +30,8 @@ const UserButton = () => {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={()=>Inertia.post(route('logout'))}>
-                    Log out
+                <DropdownMenuItem className='cursor-pointer' onClick={()=>Inertia.post(route('logout'))}>
+                    <LogOutIcon className='h-5 w-5 mr-2' /> Log out
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

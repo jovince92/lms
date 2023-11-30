@@ -1,4 +1,4 @@
-import { Moon, Sun } from "lucide-react";
+import { Lightbulb, Moon, Sun } from "lucide-react";
 
 import { Button } from "@/Components/ui/button";
 import {
@@ -15,8 +15,8 @@ export function ModeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger  asChild>
-        <Button variant="ddc" size="sm" className="">
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 duration-500" />
+        <Button variant="ddc" size="icon" className="">
+          <Lightbulb className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 duration-500" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 duration-500" />
           <span className="sr-only">Toggle theme</span>
         </Button>

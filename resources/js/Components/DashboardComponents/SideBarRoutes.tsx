@@ -14,7 +14,7 @@ export type SideBarRoute = {
 const studentRoutes:SideBarRoute[] = [
     {
         icon: Layout,
-        label:'Dashboard',
+        label:'My Dashboard',
         href: 'dashboard.index'
     },{
         icon: Compass,
@@ -26,7 +26,7 @@ const studentRoutes:SideBarRoute[] = [
 const teacherRoutes:SideBarRoute[]=[
     {
         icon: List,
-        label:'Courses',
+        label:'My Courses',
         href: 'teacher.courses'
     },{
         icon: BarChart2,

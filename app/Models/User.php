@@ -6,7 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use Illuminate\Support\Str;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -45,5 +45,20 @@ class User extends Authenticatable
 
     public function progresses(){
         return $this->hasMany(Progress::class);
+    }
+
+    public function getFirstNameAttribute($value)
+    {
+        return ucfirst(Str::of($value)->lower());
+    }
+
+    public function getLastNameAttribute($value)
+    {
+        return ucfirst(Str::of($value)->lower());
+    }
+
+    public function getCompanyIdAttribute($value)
+    {
+        return Str::of($value)->upper();
     }
 }
