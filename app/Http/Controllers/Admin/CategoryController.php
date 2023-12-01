@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -25,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return redirect()->back();
     }
 
     /**
@@ -36,7 +37,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->except(['id']);
+        Category::create($input);
+        
+        return redirect()->back();
     }
 
     /**
@@ -68,9 +72,13 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $category=Category::findOrFail($request->id);
+        $input = $request->except(['id']);
+        $category->update($input);
+        
+        return redirect()->back();
     }
 
     /**

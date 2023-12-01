@@ -51,6 +51,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['is_admin'])->name('categories.')->prefix('categories')->group(function(){
         Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::post('/store', [CategoryController::class, 'store'])->name('store');
+        Route::post('/update', [CategoryController::class, 'update'])->name('update');
     });
 
 

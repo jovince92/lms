@@ -47,7 +47,7 @@ export const AdminCategoryColumns: ColumnDef<Category>[] = [
         header:({column})=><span className="text-primary">Actions</span>,
         id:'Actions',
         cell:({row})=> {
-            const {id} = row.original;
+            const {onOpen} = useCategoryModal();
             return(
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -58,7 +58,7 @@ export const AdminCategoryColumns: ColumnDef<Category>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         
-                        <DropdownMenuItem onClick={()=>{}}>
+                        <DropdownMenuItem onClick={()=>onOpen(row.original)}>
                             <Pencil className="h-4 w-4 mr-2" />Edit
                         </DropdownMenuItem>
                     </DropdownMenuContent>

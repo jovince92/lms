@@ -4,7 +4,7 @@ import { useCategoryModal } from '@/Hooks/useCategoryModal';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Check, ChevronsUpDown, Command, } from 'lucide-react';
+import { Check, ChevronsUpDown, Command, Loader2, } from 'lucide-react';
 import { IconMap } from '../SearchPageComponents/Categories';
 import { useForm } from '@inertiajs/inertia-react';
 import { CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../ui/command';
@@ -13,15 +13,16 @@ import { Button } from '../ui/button';
 import { IconType } from 'react-icons';
 import { FcSearch } from 'react-icons/fc';
 import { PopoverClose } from '@radix-ui/react-popover';
+import { toast } from 'sonner';
 
 const CategoryModal = () => {
-    const {data,setData,processing,errors,reset} = useForm({
+    const {data,setData,processing,errors,reset,post} = useForm({
         category:"",
         icon_map_number:0,
         id:0,
     })
     const {isOpen,data:categoryModalData,onClose} =useCategoryModal();
-    const hasData = !!data;
+    const hasData = !!data.id || data.id!==0;
 
     const icons:{iconNo:number;icon:IconType}[] = useMemo(()=>{
         let icons:{iconNo:number;icon:IconType}[]=[];
@@ -42,7 +43,16 @@ const CategoryModal = () => {
         setData(val=>({...val,id:categoryModalData.id,category:categoryModalData.category,icon_map_number:categoryModalData.icon_map_number}));
     },[categoryModalData,isOpen]);
 
+    const onSubmit = () =>{
+        const href= !hasData?route('categories.store'):route('categories.update');
 
+        if(data.category==="" || data.category.length<3) return toast.error('Category Name is Too Short');
+        if(data.icon_map_number===0|| !data.icon_map_number) return toast.error('Please select an Icon');
+        post(href,{
+            onSuccess:()=>toast.success('Success'),
+            onError:()=>toast.error('Something Went Wrong. Please Try Again')
+        });
+    }
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -56,13 +66,13 @@ const CategoryModal = () => {
                 <div className='flex items-center space-x-1'>
                     <div className='flex flex-col space-y-1 flex-1'>
                         <Label>Category Name:</Label>
-                        <Input />
+                        <Input value={data.category||""} onChange={({target})=>setData('category',target.value)} disabled={processing} />
                     </div>
                     <div className='flex flex-col space-y-1 w-32'>
                         <Label>Category Icon:</Label>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="outline"  role="combobox" className="w-32 justify-between">
+                                <Button disabled={processing} variant="outline"  role="combobox" className="w-32 justify-between">
                                     {data.icon_map_number!==0
                                         ? <Icon size={20} />
                                         : <span>Select Icon...</span>
@@ -91,7 +101,10 @@ const CategoryModal = () => {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button>Save changes</Button>
+                    <Button onClick={onSubmit} disabled={processing}>
+                        {processing&& <Loader2 className='h-5 w-5 mr-2 animate-spin' />}
+                        Save changes
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
