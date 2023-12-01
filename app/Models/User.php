@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-
+    protected $appends = ['role'];
     /**
      * The attributes that are mass assignable.
      *
@@ -60,5 +60,22 @@ class User extends Authenticatable
     public function getCompanyIdAttribute($value)
     {
         return Str::of($value)->upper();
+    }
+
+    public function getRoleAttribute()
+    {
+        // Use a switch statement to return the role name based on the level value
+        switch ($this->level) {
+            case 0:
+            return 'Admin';
+            case 3:
+            return 'Student';
+            default:
+            return 'Instructor';
+        }
+    }
+
+    public function favorites(){
+        return $this->belongsToMany(Course::class,Favorite::class);
     }
 }

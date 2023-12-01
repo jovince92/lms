@@ -22,7 +22,7 @@ const SidebarItem:FC<Props> = ({item}) => {
 
     return (
         <button onClick={onClick} type='button' className={cn(' flex items-center  gap-x-1.5 text-idcsi/80 text-sm font-[500] pl-5 transition-all hover:text-idcsi h-fit',
-                isActive && ('bg-secondary')
+                isActive && ('bg-secondary/75')
             )}>
             <div className='flex items-center gap-x-2 py-3.5'>
                 <Icon size={22} />

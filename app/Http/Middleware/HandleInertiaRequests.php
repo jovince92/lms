@@ -52,6 +52,7 @@ class HandleInertiaRequests extends Middleware
             'base_url'=>URL::current(),
             'categories'=>Category::orderBy('category','asc')->get(),
             'my_progress'=>Auth::check()?Progress::with(['chapter'])->where('user_id',$request->user()->id)->get():[],
+            'my_favorites'=>Auth::check()?User::where('id',$request->user()->id)->first()->favorites:[],
             'languages'=>Language::all()
         ]);
     }

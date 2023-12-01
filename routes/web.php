@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\HRMSController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StudentCourseController;
@@ -45,6 +48,25 @@ Route::middleware('guest')->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
+
+    Route::middleware(['is_admin'])->name('categories.')->prefix('categories')->group(function(){
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+    });
+
+
+    Route::name('profile.')->prefix('profile')->group(function(){
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::post('/update', [ProfileController::class, 'update'])->name('update');
+        Route::post('/password', [ProfileController::class, 'password'])->name('password');
+    });
+
+    Route::name('favorites.')->prefix('favorites')->group(function(){
+        
+        Route::get('/', [FavoritesController::class, 'index'])->name('index');
+        Route::post('/store', [FavoritesController::class, 'store'])->name('store');
+        Route::post('/destroy', [FavoritesController::class, 'destroy'])->name('destroy');
+    });
+
     Route::name('dashboard.')->group(function(){
         Route::get('/', [DashboardController::class, 'index'])->name('index');
     });

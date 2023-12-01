@@ -22,6 +22,14 @@ const UserButton = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
+                        <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium leading-none capitalize">Role:</p>
+                            <p className="text-xs leading-none text-muted-foreground uppercase">
+                                {user.role}
+                            </p>
+                        </div>
+                    </DropdownMenuLabel>
+                <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none capitalize">{`${user.first_name} ${user.last_name}`}</p>
                         <p className="text-xs leading-none text-muted-foreground uppercase">

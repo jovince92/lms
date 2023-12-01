@@ -13,8 +13,12 @@ export interface User extends timestamps{
     first_name:string;    
     last_name:string;
     company_id:string;
+    email?:string;
     photo?:string;
     level: 0|1|2|3;
+    department:string;
+    position:string;
+    role:'Admin'|'Student'|'Instructor'
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
@@ -26,6 +30,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     categories:Category[];
     my_progress:Progress[];
     languages:Language[];
+    my_favorites:Course[];
 };
 
 export interface Attachment extends timestamps{
@@ -42,6 +47,7 @@ export interface Category  extends timestamps{
     category:string;
     icon_map_number:number;
     courses:Course[];
+    course_count:number;
 }
 
 export interface Language  extends timestamps{

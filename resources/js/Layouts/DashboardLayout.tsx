@@ -1,5 +1,6 @@
 import Navbar from '@/Components/DashboardComponents/Navbar';
 import Sidebar from '@/Components/DashboardComponents/Sidebar';
+import CategoryModal from '@/Components/Modals/CategoryModal';
 import { cn } from '@/lib/utils';
 import React, { FC, ReactNode } from 'react'
 
@@ -22,6 +23,7 @@ const DashboardLayout:FC<Props> = ({children,className}) => {
                     {children}
                 </main>
             </div>
+            <CategoryModal />
         </>
     )
 }

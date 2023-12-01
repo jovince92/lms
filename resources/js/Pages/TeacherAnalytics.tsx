@@ -20,7 +20,6 @@ interface AnalyticsProps{
 }
 
 const TeacherAnalytics:FC<AnalyticsProps> = ({progress}) => {
-    console.log(progress);
     return (
         <>
             <Head title='Analytics' />

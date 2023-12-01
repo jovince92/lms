@@ -16,9 +16,10 @@ const NavBarRoutes = () => {
     const isPlayerPage = route().current()?.includes('course.');
     const isSearchPage = base_url.includes('/search');
 
-    const backLabel = isTeacherPage?'Exit Teacher Mode':'Go Back';
+    const backLabel = isTeacherPage? user.level===0? 'Exit Admin Mode':'Exit Teacher Mode' :'Go Back';
+    const enterLabel = user.level===0?'Enter Admin Mode':'Enter Teacher Mode';
 
-    const enterTeacherModeLink = user.level===3?null:<Link  href={route('teacher.courses.index')} > <Button size='sm' variant='ddc'>Enter Teacher Mode</Button> </Link>;
+    const enterTeacherModeLink = user.level===3?null:<Link  href={route('teacher.courses.index')} > <Button size='sm' variant='ddc'>{enterLabel}</Button> </Link>;
 
     return (
         <>

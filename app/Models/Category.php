@@ -10,9 +10,13 @@ class Category extends Model
     use HasFactory;
 
     protected $guarded=[];
-
+    protected $appends = ['course_count'];
     public function courses(){
         return $this->hasMany(Course::class);
+    }
+
+    public function getCourseCountAttribute(){
+        return $this->courses->count();
     }
     
 }
