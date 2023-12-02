@@ -12,7 +12,7 @@ const NavBarRoutes = () => {
     const {base_url} = usePage<Page<PageProps>>().props;
     const {user} = usePage<Page<PageProps>>().props.auth;
     
-    const isTeacherPage = base_url.includes('/teacher');
+    const isTeacherPage = base_url.includes('/teacher')||base_url.includes('/admin');
     const isPlayerPage = route().current()?.includes('course.');
     const isSearchPage = base_url.includes('/search');
 
@@ -34,7 +34,7 @@ const NavBarRoutes = () => {
                     isTeacherPage || isPlayerPage ? <Button  size='sm' variant='ddc' onClick={()=>Inertia.get(route('dashboard.index'))}> <LogOut className='h-4 w-4 mr-2'/>{backLabel}</Button>: enterTeacherModeLink
                 }
                 <ModeToggle />
-                <UserButton />
+                <UserButton className='h-10 w-10' />
             </div>
         </>
     )

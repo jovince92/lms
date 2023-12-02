@@ -1,12 +1,12 @@
 import { Course, PageProps, Progress } from '@/types'
 import  { FC, useMemo } from 'react'
 import IconBadge from './IconBadge';
-import { BookOpen, Heart, HeartOff, MoreVerticalIcon } from 'lucide-react';
+import { BookOpen, Heart, HeartOff, MoreVerticalIcon, Search } from 'lucide-react';
 import { Link, usePage } from '@inertiajs/inertia-react';
 import { Inertia, Page } from '@inertiajs/inertia';
 import CourseProgressBar from '@/Pages/CourseProgressBar';
 import { Button } from './ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Popover, PopoverContent, PopoverTrigger,PopoverClose } from './ui/popover';
 import { toast } from 'sonner';
 
 interface Props{
@@ -16,7 +16,7 @@ interface Props{
 const CourseCard:FC<Props> = ({course}) => {
     
     const {my_progress} = usePage<Page<PageProps>>().props;
-    const {image,title,category,chapters,id}=course;
+    const {image,title,category,chapters,id,user_id}=course;
     const hasStartedCourse = useMemo(()=>my_progress.findIndex(progress=>progress.chapter.course_id===id)>-1,[id]);
     
     const {my_favorites} = usePage<Page<PageProps>>().props;
@@ -39,6 +39,8 @@ const CourseCard:FC<Props> = ({course}) => {
             onError:()=>toast.error('Something went wrong. Please try again')
         });
     }
+
+    const searchByUser = () => Inertia.get(route('search.index',{user_id}));
 
     
     return (
@@ -69,8 +71,9 @@ const CourseCard:FC<Props> = ({course}) => {
                                 <MoreVerticalIcon size={24} />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className='z-50 w-auto'>
-                            {!isFavorited?<Button onClick={addToFavorites} variant='secondary'><Heart className='h-4 w-4 mr-2' />Add to Favorites</Button>:<Button onClick={removeFromFavorites} variant='secondary'><HeartOff className='h-4 w-4 mr-2' />Remove From Favorites</Button>}
+                        <PopoverContent className='z-50 w-auto flex flex-col space-y-1 p-1'>
+                            {!isFavorited? <PopoverClose> <div className='w-full font-medium flex items-center justify-start p-1 text-sm hover:bg-secondary transition rounded-md' onClick={addToFavorites}><Heart className='h-4 w-4 mr-2' />Add to Favorites</div></PopoverClose>: <PopoverClose> <div className='w-full font-medium flex items-center justify-start p-1 text-sm hover:bg-secondary transition rounded-md' onClick={removeFromFavorites} ><HeartOff className='h-4 w-4 mr-2' />Remove From Favorites</div></PopoverClose>}
+                            <PopoverClose> <div className='w-full font-medium flex items-center justify-start p-1 text-sm hover:bg-secondary transition rounded-md' onClick={searchByUser}><Search className='h-4 w-4 mr-2' />Courses By This Instructor</div></PopoverClose>
                         </PopoverContent>
                     </Popover>
                 </div>

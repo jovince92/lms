@@ -63,7 +63,7 @@ const CategoryModal = () => {
                         Modify Existing Category or Add a New One
                     </DialogDescription>
                 </DialogHeader>
-                <div className='flex items-center space-x-1'>
+                <div className='flex flex-col space-y-1'>
                     <div className='flex flex-col space-y-1 flex-1'>
                         <Label>Category Name:</Label>
                         <Input value={data.category||""} onChange={({target})=>setData('category',target.value)} disabled={processing} />
@@ -72,20 +72,19 @@ const CategoryModal = () => {
                         <Label>Category Icon:</Label>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button disabled={processing} variant="outline"  role="combobox" className="w-32 justify-between">
+                                <Button disabled={processing} variant="outline"  role="combobox" className="w-32 h-32 justify-center">
                                     {data.icon_map_number!==0
-                                        ? <Icon size={20} />
+                                        ? <Icon size={120} />
                                         : <span>Select Icon...</span>
                                     }
-                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-52 p-0 grid grid-cols-3" side='bottom'>
+                            <PopoverContent className="w-52 p-1 grid grid-cols-3 gap-2.5" side='right'>
                                 
                                     
                                 {icons.map(icon => (
-                                    <PopoverClose asChild>
-                                        <Button variant='ghost' className='rounded-full' key={icon.iconNo} onClick={() => setData('icon_map_number',icon.iconNo)} >
+                                    <PopoverClose key={icon.iconNo} asChild>
+                                        <Button variant='secondary' className='rounded-full' key={icon.iconNo} onClick={() => setData('icon_map_number',icon.iconNo)} >
                                             {/* <Check className={cn("mr-2 h-4 w-4",
                                                 data.icon_map_number === icon.iconNo ? "opacity-100" : "opacity-0"
                                                 )}
@@ -113,4 +112,4 @@ const CategoryModal = () => {
 
 export default CategoryModal;
 
-const Item:FC<{I:IconType}> = ({I}) => <I size={20} />
+const Item:FC<{I:IconType}> = ({I}) => <I size={32} />

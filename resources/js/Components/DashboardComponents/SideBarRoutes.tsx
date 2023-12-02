@@ -57,7 +57,7 @@ const adminRoutes:SideBarRoute[]=[
     {
         icon:Users2,
         label:'All Users',
-        href:"#",
+        href:"users.index",
     }
 ];
 
@@ -65,18 +65,18 @@ const SideBarRoutes = () => {
     
     const {user} = usePage<Page<PageProps>>().props.auth;
     const {base_url} = usePage<Page<PageProps>>().props;
-
-    const routes = useMemo(()=>base_url.includes('teacher')?teacherRoutes:studentRoutes,[base_url]);
+    const isTeacherPage = base_url.includes('/teacher')||base_url.includes('/admin');
+    const routes = useMemo(()=>isTeacherPage?teacherRoutes:[...studentRoutes,...defaultRoutes],[base_url,isTeacherPage,studentRoutes,teacherRoutes,defaultRoutes]);
 
     return (
         <>
             <div className='flex flex-col w-full'>
                 {
-                    [...routes,...defaultRoutes].map(r=><SidebarItem key={r.label} item={r} />)
+                    routes.map(r=><SidebarItem key={r.label} item={r} />)
                 }
             </div>
             {
-                user.level===0&&(
+                (user.level===0&&isTeacherPage)&&(
                     <div className='flex flex-col w-full'>
                         <Separator />
                         <p className='font-bold tracking-tight text-lg px-3.5 text-idcsi my-2.5'> Site Settings </p>

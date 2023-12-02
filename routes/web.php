@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ProfileController;
@@ -49,11 +50,22 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::middleware(['is_admin'])->name('categories.')->prefix('categories')->group(function(){
-        Route::get('/', [CategoryController::class, 'index'])->name('index');
-        Route::post('/store', [CategoryController::class, 'store'])->name('store');
-        Route::post('/update', [CategoryController::class, 'update'])->name('update');
+
+    Route::middleware(['is_admin'])->prefix('/admin')->group(function(){
+        Route::name('categories.')->prefix('categories')->group(function(){
+            Route::get('/', [CategoryController::class, 'index'])->name('index');
+            Route::post('/store', [CategoryController::class, 'store'])->name('store');
+            Route::post('/update', [CategoryController::class, 'update'])->name('update');
+            Route::post('/destroy/{id}', [CategoryController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::name('users.')->prefix('u')->group(function(){
+            Route::get('/', [UserController::class, 'index'])->name('index');
+            Route::post('/role', [UserController::class, 'set_role'])->name('set_role');
+        });
     });
+
+    
 
 
     Route::name('profile.')->prefix('profile')->group(function(){
@@ -137,7 +149,7 @@ Route::middleware(['auth'])->group(function () {
                 }
             }
 
-           
+        
 
             return Inertia::render('TeacherAnalytics',[
                 'progress'=>$student_progress

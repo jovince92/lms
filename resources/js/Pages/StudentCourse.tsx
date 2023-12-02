@@ -11,6 +11,7 @@ import { Inertia, Page } from '@inertiajs/inertia';
 import { Button } from '@/Components/ui/button';
 import { Badge } from '@/Components/ui/badge';
 import CourseProgressBar from './CourseProgressBar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 
 interface Props{
     course:Course;
@@ -18,7 +19,7 @@ interface Props{
 
 const StudentCourse:FC<Props> = ({course}) => {
     const {my_progress} = usePage<Page<PageProps>>().props;
-    const {category,title,description,user : creator,created_at,language,chapters,attachments,id} = course;
+    const {category,title,description,user : creator,created_at,language,chapters,attachments,id,user_id,user} = course;
 
     const totalSecords = chapters.reduce((accumulator=0, currentValue)=>accumulator+convertTimeToSeconds(currentValue.duration),0);
     const Icon = IconMap[category.icon_map_number];
@@ -43,11 +44,22 @@ const StudentCourse:FC<Props> = ({course}) => {
                         </Link>
                         <div className='flex flex-col space-y-1'>
                             <h1 className='text-2xl font-bold tracking-wide text-primary'>{title}</h1>
-                            <p className='text-muted-foreground'>{description}</p>
+                            <p className='text-primary/80'>{description}</p>
                         </div>
-                        <p>
-                            Created By: <span className='capitalize'>{creator.first_name}&nbsp;{creator.last_name}</span>
-                        </p>
+                        <div className='tracking-tight flex items-center space-x-1'>
+                            <span>Created By:</span> 
+                            <Link href={route('search.index',{user_id})}>
+                                <Button variant='link' size='sm'>
+                                    <Avatar className="h-10 w-10 border border-idcsi mr-1">
+                                        <AvatarImage src={user.photo} alt="Photo" />
+                                        <AvatarFallback>{`${user.first_name.charAt(0)+user.last_name.charAt(0)}`}</AvatarFallback>
+                                    </Avatar>
+                                    <span className='text-lg capitalize font-semibold'>{creator.first_name}&nbsp;{creator.last_name}</span>
+                                </Button>
+                                
+
+                            </Link>
+                        </div>
                         <div className='text-muted-foreground flex flex-col space-y-1'>
                             <p className='flex items-center'><BadgeInfo className='h-4 w-4 mr-2' /> <span className='text-sm'>Last Updated On: {format(new Date(created_at),'Pp')}</span></p>
                             <p className='flex items-center'> <Globe className='h-4 w-4 mr-2'/> <span>{language?.name}</span> </p>

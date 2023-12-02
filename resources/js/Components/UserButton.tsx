@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { Button } from './ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
@@ -6,15 +6,16 @@ import { PageProps } from '@/types'
 import { Inertia, Page } from '@inertiajs/inertia'
 import { usePage } from '@inertiajs/inertia-react'
 import { LogOutIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
-const UserButton = () => {
+const UserButton:FC<{className?:string;}> = ({className}) => {
     
     const {user} = usePage<Page<PageProps>>().props.auth;
     return (
         <DropdownMenu >
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8 border border-idcsi">
+                <Avatar className={cn("h-8 w-8 border border-idcsi",className)}>
                     <AvatarImage src={user.photo} alt="Photo" />
                     <AvatarFallback>{`${user.first_name.charAt(0)+user.last_name.charAt(0)}`}</AvatarFallback>
                 </Avatar>

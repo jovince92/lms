@@ -2,7 +2,7 @@
 
 
 import { ColumnDef } from "@tanstack/react-table";
-import {  ChevronsLeftRight, MoreHorizontal, Pencil } from "lucide-react";
+import {  ChevronsLeftRight, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { format } from "date-fns";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
@@ -14,6 +14,8 @@ import { Category } from "@/types";
 import { useCategoryModal } from "@/Hooks/useCategoryModal";
 
 import React from 'react'
+import { toast } from "sonner";
+import { Inertia } from "@inertiajs/inertia";
 
 
 export const AdminCategoryColumns: ColumnDef<Category>[] = [
@@ -48,6 +50,15 @@ export const AdminCategoryColumns: ColumnDef<Category>[] = [
         id:'Actions',
         cell:({row})=> {
             const {onOpen} = useCategoryModal();
+
+            const onDelete = () =>{
+                if(row.original.course_count>0) return toast.error('You can only Delete Categories with Zero Courses');
+                Inertia.post(route('categories.destroy',{id:row.original.id}),{},{
+                    onSuccess:()=> toast.success('Course Deleted'),
+                    onError:()=>toast.error('SOmething Went Wrong. Please try again')
+                });
+            }
+
             return(
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -60,6 +71,9 @@ export const AdminCategoryColumns: ColumnDef<Category>[] = [
                         
                         <DropdownMenuItem onClick={()=>onOpen(row.original)}>
                             <Pencil className="h-4 w-4 mr-2" />Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={onDelete}>
+                            <Trash2 className="h-4 w-4 mr-2" />Delete
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
