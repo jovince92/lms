@@ -68,7 +68,7 @@ class TeacherCoursesController extends Controller
         $course=Course::findOrFail($id);
         if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
         return Inertia::render('TeacherCoursesShow',[
-            'course'=>$course->load(['category','attachments','chapters'])
+            'course'=>$course->load(['category','attachments','chapters','quiz'])
         ]);
     }
 

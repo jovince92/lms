@@ -31,6 +31,10 @@ class Course extends Model
         return $this->hasMany(Chapter::class);
     }
 
+    public function quiz(){
+        return $this->hasOne(Quiz::class);
+    }
+
     public function getImageAttribute($value){
         if($value && str_contains( strtolower($value),'http')){return $value;}
         if(!$value){return null;}

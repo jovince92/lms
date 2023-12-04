@@ -9,12 +9,13 @@ interface Props{
     readonly?:boolean;
     onChange?:(val:string)=>void;
     value:string;
+    id?:string;
 }
 
-const Editor:FC<Props> = ({onChange,value,readonly,placeholder}) => {
+const Editor:FC<Props> = ({onChange,value,readonly,placeholder,id}) => {
     const theme = readonly?'bubble':'snow';
     return (
-        <ReactQuill placeholder={placeholder} readOnly={readonly} theme={theme} value={value} onChange={onChange} />
+        <ReactQuill id={id} placeholder={placeholder} readOnly={readonly} theme={theme} value={value} onChange={onChange} />
     )
 }
 

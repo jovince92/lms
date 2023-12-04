@@ -70,6 +70,7 @@ export interface Course extends timestamps{
     language?:Language;
     category:Category;
     chapters:Chapter[];
+    quiz:Quiz;
 }
 
 export interface Chapter extends timestamps{
@@ -131,6 +132,40 @@ export interface Pagination{
         label:string;
         active:boolean;
     }[]
+}
+
+export interface Quiz extends timestamps{
+    id:number;
+    course_id:number;
+    course:Course;
+    quiz_questions:QuizQuestion[];
+    name:string;
+    max_score:number;    
+    is_published:1|0;
+}
+
+export interface QuizQuestion extends timestamps{
+    id:number;
+    quiz_id:number;
+    quiz:Quiz;
+    question:string;
+    type:1|2;
+    quiz_answer:QuizAnswer;
+    quiz_choices:QuizChoice[];
+}
+
+export interface QuizAnswer extends timestamps{
+    id:number;
+    quiz_question_id:number;
+    quiz_question:QuizQuestion;
+    answer:string;
+}
+
+interface QuizChoice{
+    id:number;
+    quiz_question_id:number;
+    quiz_question:QuizQuestion;
+    choice:string;
 }
 
 declare global {

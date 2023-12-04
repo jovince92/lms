@@ -9,6 +9,8 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\HRMSController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StudentCourseController;
 use App\Http\Controllers\TeacherCoursesController;
@@ -113,6 +115,19 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/{course_id}/destroy/{id}', [ChapterController::class, 'destroy'])->name('destroy');
                 Route::post('/{course_id}/reorder', [ChapterController::class, 'reorder'])->name('reorder');
             });
+
+            Route::prefix('quiz')->name('quiz.')->group(function(){        
+                Route::post('/{course_id}/store', [QuizController::class, 'store'])->name('store');
+                Route::get('/{course_id}/show/{id}', [QuizController::class, 'show'])->name('show');
+
+
+
+                Route::prefix('question')->name('question.')->group(function(){        
+                    Route::post('/quiz/{quiz_id}', [QuizQuestionController::class, 'store'])->name('store');
+                });
+            });
+
+            
         });
 
         Route::get('/analytics', function () {
