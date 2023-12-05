@@ -85,9 +85,10 @@ class QuizController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $course_id)
     {
-        //
+        // $course=Course::findOrFail($course_id);
+        // if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
     }
 
     /**
@@ -99,5 +100,29 @@ class QuizController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function publish_toggle(Request $request, $course_id,$id)
+    {
+        $course=Course::findOrFail($course_id);
+        if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
+
+        $quiz=Quiz::findOrFail($id);
+        $quiz->update([
+            'is_published'=>$request->is_published
+        ]);
+        return redirect()->back();
+    }
+
+    public function rename(Request $request, $course_id,$id)
+    {
+        $course=Course::findOrFail($course_id);
+        if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
+
+        $quiz=Quiz::findOrFail($id);
+        $quiz->update([
+            'name'=>$request->name
+        ]);
+        return redirect()->back();
     }
 }

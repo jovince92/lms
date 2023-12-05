@@ -29,17 +29,18 @@ const QuestionFormSheet:FC = () => {
         if (data.choices.length<3) return;
         setData(val=>({...val,choices:val.choices.filter((c,i)=>i!==val.choices.length-1)}));
     }
-    useEffect(()=>setData('answer',''),[data.type]);
+    
+    
     useEffect(()=>{
-        
-        reset();
         if(isOpen && !!questionData){
+            console.log(questionData.quiz_answer.answer);
             setData(val=>({
                 ...val,
                 question:questionData.question,
+                answer:questionData.quiz_answer.answer,
                 type:questionData.type.toString(),
-                choices: questionData.quiz_choices.map(q=>(q.choice))  ,
-                answer:questionData.quiz_answer.answer
+                choices: questionData.quiz_choices.length<2?["Choice 1","Choice 2"] : questionData.quiz_choices.map(q=>(q.choice))  ,
+                
             }));
         }else {
             reset();
@@ -48,8 +49,7 @@ const QuestionFormSheet:FC = () => {
     const onChange = (value:string,idx:number) => {
         setData(val=>({
             ...val,
-            choices:val.choices.map((c,i)=>i===idx?value:c),
-            answer:val.type==='1'?'':val.answer
+            choices:val.choices.map((c,i)=>i===idx?value:c)
         }));
     }
     if(!quiz_id) return null;
@@ -59,7 +59,8 @@ const QuestionFormSheet:FC = () => {
         if(data.type!=='1'&&data.type!=='2') return toast.error('Select a question type');
         if(data.question.length<15) return toast.error('Question is too short');
         if(data.answer===""||!data.answer) return toast.error('Input or Choose an answer');
-        post(route('teacher.courses.quiz.question.store',{quiz_id}),{
+        const href= !questionData?route('teacher.courses.quiz.question.store',{quiz_id}):route('teacher.courses.quiz.question.update',{quiz_id,id:questionData.id})
+        post(href,{
             onSuccess:onClose,
             onError:()=>toast.error('Something Went Wrong. Please try again.')
         });
@@ -90,7 +91,7 @@ const QuestionFormSheet:FC = () => {
                             </Select>
                         </div>
                         <Label>
-                            Answer: {data.answer===""?'No Answer':data.answer}
+                            Answer: {data.answer.length<1?'No Answer':data.answer}
                         </Label>
                     </div>
                     <div className='flex flex-col space-y-1 pb-24 md:pb-12'>
@@ -119,7 +120,7 @@ const QuestionFormSheet:FC = () => {
                                                 <Button disabled={processing} onClick={()=>setData('answer',c)} variant={c===data.answer?'ddc':'outline'} >
                                                     <CheckCircle />
                                                 </Button>
-                                                <Input disabled={processing} value={data.choices[_i]} onChange={({target})=>onChange(target.value,_i)} />
+                                                <Input onFocus={e=>e.target.setSelectionRange(0,e.target.value.length)} disabled={processing} value={data.choices[_i]} onChange={({target})=>onChange(target.value,_i)} />
                                             </div>
                                         ))
                                         

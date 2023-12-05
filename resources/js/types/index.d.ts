@@ -70,7 +70,7 @@ export interface Course extends timestamps{
     language?:Language;
     category:Category;
     chapters:Chapter[];
-    quiz:Quiz;
+    quiz?:Quiz;
 }
 
 export interface Chapter extends timestamps{
@@ -152,6 +152,7 @@ export interface QuizQuestion extends timestamps{
     type:1|2;
     quiz_answer:QuizAnswer;
     quiz_choices:QuizChoice[];
+    question_type:string;
 }
 
 export interface QuizAnswer extends timestamps{

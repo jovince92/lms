@@ -37,7 +37,7 @@ const QuizForm:FC<Props> = ({course}) => {
         });
     }
     
-    const onEdit = () => Inertia.get(route('teacher.courses.quiz.show',{course_id:id,id:quiz.id}));
+    const onEdit = () => Inertia.get(route('teacher.courses.quiz.show',{course_id:id,id:quiz!.id}));
 
     return (
         <div className='mt-5 border bg-secondary rounded-md p-3.5'>

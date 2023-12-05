@@ -13,6 +13,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StudentCourseController;
+use App\Http\Controllers\StudentQuizController;
 use App\Http\Controllers\TeacherCoursesController;
 use App\Models\Chapter;
 use App\Models\Course;
@@ -116,14 +117,18 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/{course_id}/reorder', [ChapterController::class, 'reorder'])->name('reorder');
             });
 
-            Route::prefix('quiz')->name('quiz.')->group(function(){        
+            Route::prefix('quiz')->name('quiz.')->group(function(){
                 Route::post('/{course_id}/store', [QuizController::class, 'store'])->name('store');
                 Route::get('/{course_id}/show/{id}', [QuizController::class, 'show'])->name('show');
+                Route::post('/{course_id}/publish_toggle/{id}', [QuizController::class, 'publish_toggle'])->name('publish_toggle');
+                Route::post('/{course_id}/rename/{id}', [QuizController::class, 'rename'])->name('rename');
 
 
 
-                Route::prefix('question')->name('question.')->group(function(){        
+                Route::prefix('question')->name('question.')->group(function(){
                     Route::post('/quiz/{quiz_id}', [QuizQuestionController::class, 'store'])->name('store');
+                    Route::post('/quiz/{quiz_id}/question/{id}', [QuizQuestionController::class, 'update'])->name('update');
+                    Route::post('/destroy/{id}', [QuizQuestionController::class, 'destroy'])->name('destroy');
                 });
             });
 
@@ -184,6 +189,12 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('course')->name('course.')->group(function(){
         Route::get('/{course_id}/chapter/{id}', [StudentCourseController::class, 'chapter'])->name('chapter');
         Route::post('/{course_id}/chapter/{id}/toggle-complete', [StudentCourseController::class, 'toggle'])->name('toggle');
+
+        Route::prefix('/{course_id}/quiz')->name('quiz.')->group(function(){
+            
+            Route::get('/', [StudentQuizController::class, 'index'])->name('index');
+        });
+
     });
     
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

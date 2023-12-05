@@ -33,6 +33,13 @@ export const CourseColumns: ColumnDef<Course>[] = [
         header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Category<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
         cell: ({row})=><span>{row.original.category?.category||""}</span>
     },
+    
+    {
+        accessorFn:row=>row.quiz?.is_published===1?'y':'n',
+        id:'Has Quiz?',
+        header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Has Quiz?<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
+        cell: ({row})=><p className="capitalize">{`${row.original.quiz?.is_published===1?'YES':'NO'}`}</p>
+    },
     {
         accessorKey: "is_published",
         header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Published?<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,

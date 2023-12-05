@@ -42,7 +42,7 @@ class SearchController extends Controller
     
 
         return Inertia::render('StudentCourse',[
-            'course'=>$course->load(['attachments','user','category'])
+            'course'=>$course->load(['attachments','user','category','quiz'=>fn($q)=>$q->where('is_published',1),'quiz.quiz_questions'])
         ]);
     }
 

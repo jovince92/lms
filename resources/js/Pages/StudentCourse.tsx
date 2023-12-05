@@ -4,7 +4,7 @@ import DashboardLayout from '@/Layouts/DashboardLayout';
 import { Chapter, Course, PageProps, Progress } from '@/types'
 import { Head, Link, usePage } from '@inertiajs/inertia-react';
 import { format } from 'date-fns';
-import { BadgeInfo, BookOpen, FileIcon, Globe, Timer } from 'lucide-react';
+import { BadgeInfo, BookOpen, FileIcon, Globe, ListChecks, Timer } from 'lucide-react';
 import React, { FC, ReactNode, useCallback, useMemo } from 'react'
 import Editor from './Editor';
 import { Inertia, Page } from '@inertiajs/inertia';
@@ -12,6 +12,7 @@ import { Button } from '@/Components/ui/button';
 import { Badge } from '@/Components/ui/badge';
 import CourseProgressBar from './CourseProgressBar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
+import { toast } from 'sonner';
 
 interface Props{
     course:Course;
@@ -19,7 +20,7 @@ interface Props{
 
 const StudentCourse:FC<Props> = ({course}) => {
     const {my_progress} = usePage<Page<PageProps>>().props;
-    const {category,title,description,user : creator,created_at,language,chapters,attachments,id,user_id,user} = course;
+    const {category,title,description,user : creator,created_at,language,chapters,attachments,id,user_id,user,quiz} = course;
 
     const totalSecords = chapters.reduce((accumulator=0, currentValue)=>accumulator+convertTimeToSeconds(currentValue.duration),0);
     const Icon = IconMap[category.icon_map_number];
@@ -32,6 +33,16 @@ const StudentCourse:FC<Props> = ({course}) => {
         Inertia.get(route('course.chapter',{course_id:id,id:nonCompletedIds[0]||chapters[0].id}));
 
     },[my_progress,chapters,id]);
+    const courseProgress = useMemo(()=>my_progress.filter(progress=>progress.chapter.course_id===id),[id,my_progress]);
+    const completedChapters = courseProgress.length>0?courseProgress.reduce((accumulator=0, currentValue)=>accumulator+(currentValue.is_completed===1?1:0),0):0;
+
+    const hasQuiz = useMemo(()=>quiz && quiz.quiz_questions.length>5,[quiz]);
+
+
+    const takeQuiz = () =>{
+        if(completedChapters<course.chapters.length) return toast.info('You Need To Finish The Course Before Take The Quiz');
+        Inertia.get(route('course.quiz.index',{course_id:id}));
+    }
 
     return (
         <>
@@ -74,12 +85,21 @@ const StudentCourse:FC<Props> = ({course}) => {
                                 {`${attachments.length.toString()} Attachment${attachments.length===1?'':'s'}`} 
                             </span>
                         </p>
+                        <p className='text-muted-foreground flex items-center'>
+                            <ListChecks className='h-4 w-4 mr-2' />
+                            <span>
+                                {!hasQuiz?'No Quiz for this Course': quiz!.quiz_questions.length.toString()+ ' Questions Short Quiz'} 
+                            </span>
+                        </p>
                         <div className='text-sm'>
-                            <p>Your Progress:</p>
+                            <p>Your Progress: {completedChapters}/{course.chapters.length}</p>
                             {hasStartedCourse?<CourseProgressBar className='h-3' course={course}  />:<p className='text-base md:text-sm font-medium text-muted-foreground'>Course not Started</p>}
                                 
                         </div>
                         <Button onClick={onStart} className=' absolute top-3 right-3 md:static md:mr-auto' variant='ddc'>{`${hasStartedCourse?'Continue Course':'Start this Course'}`}</Button>
+                        {
+                            hasQuiz && <Button onClick={takeQuiz} className=' absolute top-3 right-3 md:static md:mr-auto' variant='outline'>Take Short Quiz</Button>
+                        }
                     </div>
                     <div className='md:h-full w-full md:w-1/2 flex flex-col gap-y-3.5 p-3.5 md:overflow-y-auto'>
                         <h1 className='text-2xl font-bold tracking-wide text-primary'>Course Contents</h1>

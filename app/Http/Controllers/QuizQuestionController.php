@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Quiz;
 use App\Models\QuizAnswer;
 use App\Models\QuizChoice;
 use App\Models\QuizQuestion;
@@ -44,23 +45,26 @@ class QuizQuestionController extends Controller
         DB::transaction(function () use($quiz_id,$request) {
             $question = QuizQuestion::create([
                 'quiz_id'=>$quiz_id,
-                'question'=>$request->question,
+                'question'=>trim($request->question),
                 'type'=>$request->type,
             ]);
     
             QuizAnswer::create([
                 'quiz_question_id'=>$question->id,
-                'answer'=>$request->answer
+                'answer'=>trim($request->answer)
             ]);
 
             if(strval($request->type)=='1'){
                 foreach($request->choices as $choice){
                     QuizChoice::create([
                         'quiz_question_id'=>$question->id,
-                        'choice'=>$choice
+                        'choice'=>trim($choice)
                     ]);
                 }
             }
+
+            $quiz=Quiz::findOrFail($quiz_id);
+            $quiz->update(['is_published'=>0]);
 
             
         });
@@ -96,9 +100,39 @@ class QuizQuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$quiz_id, $id)
     {
-        //
+        DB::transaction(function () use($quiz_id,$request,$id) {
+            $question = QuizQuestion::findOrFail($id);
+            $question->update([
+                'quiz_id'=>$quiz_id,
+                'question'=>trim($request->question),
+                'type'=>$request->type,
+            ]);
+    
+            QuizAnswer::updateOrCreate([
+                'quiz_question_id'=>$id
+            ],[
+                'answer'=> trim( $request->answer)
+            ]);
+
+            $choices = QuizChoice::where('quiz_question_id',$id)->get();
+            $choices->each->delete();
+
+            if(strval($request->type)=='1'){
+                
+                foreach($request->choices as $choice){
+                    QuizChoice::create([
+                        'quiz_question_id'=>$question->id,
+                        'choice'=>trim($choice)
+                    ]);
+                }
+            }
+
+            $quiz=Quiz::findOrFail($quiz_id);
+            $quiz->update(['is_published'=>0]);
+        });
+        return redirect()->back();
     }
 
     /**
@@ -109,6 +143,8 @@ class QuizQuestionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $question = QuizQuestion::findOrFail($id);
+        $question->delete();
+        return redirect()->back();
     }
 }
