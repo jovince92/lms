@@ -193,6 +193,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('/{course_id}/quiz')->name('quiz.')->group(function(){
             
             Route::get('/', [StudentQuizController::class, 'index'])->name('index');
+            Route::post('/store', [StudentQuizController::class, 'store'])->name('store');
         });
 
     });
@@ -206,7 +207,7 @@ Route::get('/public', function () {
 })->name('public_route');
 
 Route::get('/test', function () {
-    return Inertia::render('Auth/SignUpPage');
+    return Inertia::render('TestPage');
 })->name('test');
 
 

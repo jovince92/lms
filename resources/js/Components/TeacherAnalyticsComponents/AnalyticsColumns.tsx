@@ -37,8 +37,13 @@ export const AnalyticsColumns: ColumnDef<AnalyticsData>[] = [
         cell: ({row})=><span>{row.original.completed_chapters}</span>
     },
     {
+        header:({column})=><span className="text-primary">Quiz Score</span>,
+        id:'Actions',
+        cell:({row})=> <p>No Result</p>
+    },
+    {
         accessorFn:row=>Math.floor((row.completed_chapters/row.chapter_count)*100),
-        id: "progress",
+        id: "quiz",
         header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Progress<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
         cell:({row})=> <span>{ `${Math.floor((row.original.completed_chapters/row.original.chapter_count)*100)}%` }</span>
     },

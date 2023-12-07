@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use App\Models\QuizAnswer;
+use App\Models\UserAnswer;
+use App\Models\UserResult;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class StudentQuizController extends Controller
@@ -15,8 +20,12 @@ class StudentQuizController extends Controller
      */
     public function index($course_id)
     {
+        $quiz=Quiz::with(['course','quiz_questions','quiz_questions.quiz_choices'])->where('course_id',$course_id)->firstOrFail();
+        $result = UserResult::where('user_id',Auth::id())->where('quiz_id',$quiz->id)->first();
         return Inertia::render('StudentQuiz',[
-            'quiz'=>Quiz::with(['course','quiz_questions','quiz_questions.quiz_choices'])->where('course_id',$course_id)->firstOrFail()
+            'quiz'=>$quiz,
+            'is_completed' => $result?1:0,
+            'score'=>$result->score
         ]);
     }
 
@@ -36,9 +45,34 @@ class StudentQuizController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,$course_id)
     {
-        //
+        
+        $user_answers = $request->question_answers;
+        $quiz_id = $request->id;
+        $correct_answers = QuizAnswer::whereIn('quiz_question_id', collect($user_answers)->pluck('quiz_question_id'))->get()->keyBy('quiz_question_id')->pluck('answer', 'quiz_question_id');
+
+        DB::transaction(function () use($user_answers,$correct_answers,$quiz_id) {
+            $score=0;
+            foreach($user_answers as $user_answer){
+                $correct_answer = $correct_answers[$user_answer['quiz_question_id']];
+                UserAnswer::create([
+                    'user_id'=>Auth::id(),
+                    'quiz_question_id'=>$user_answer['quiz_question_id'],
+                    'answer'=>$user_answer['answer'],
+                    'is_correct'=>$correct_answer==$user_answer['answer']?1:0
+                ]);
+                if($correct_answer==$user_answer['answer']) $score=$score+1;
+            }
+
+            UserResult::create([
+                'user_id'=>Auth::id(),
+                'quiz_id'=>$quiz_id,
+                'score'=>$score
+            ]);
+
+        });
+
     }
 
     /**

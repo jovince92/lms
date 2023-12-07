@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 
 const bannerVariants = cva(
-    'border text-center p-4 text-sm flex items-center w-full',{
+    'border text-center p-3.5 text-sm flex items-center w-full',{
         variants:{
             variant:{
                 warning:'bg-yellow-200/80 dark:bg-yellow-900/80 border-yellow-300 dark:border-yellow-800 text-primary',

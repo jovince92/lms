@@ -13,6 +13,7 @@ import { Head, Link, useForm } from '@inertiajs/inertia-react'
 import { ArrowLeft, Pencil, PencilLineIcon, PlusCircle } from 'lucide-react';
 import React, { FC, FormEventHandler, useState } from 'react'
 import { toast } from 'sonner';
+import { cn } from '../lib/utils';
 
 interface Props{
     quiz:Quiz;
@@ -107,7 +108,7 @@ const TeacherQuiz:FC<Props> = ({quiz}) => {
                             </div>
                         </div>
                         <Separator className='my-3.5' />
-                        <div className='flex flex-col space-y-3.5 flex-1 overflow-y-auto pb-4'>
+                        <div className={cn('flex flex-col space-y-3.5 flex-1 overflow-y-auto',quiz.is_published!==1&&' pb-4')}>
                             <p className='text-xl font-semibold tracking-tight my-2.5'>Questions:</p>
                             {
                                 quiz_questions.map((question,i)=> <QuestionItem key={question.id} question={question} number={i+1} /> )

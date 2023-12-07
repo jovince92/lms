@@ -9,7 +9,7 @@ class Course extends Model
 {
     use HasFactory;
     protected $guarded=[];
-    protected $with=['language'];
+    protected $with=['language','quiz'];
 
     public function user(){
         return $this->belongsTo(User::class);

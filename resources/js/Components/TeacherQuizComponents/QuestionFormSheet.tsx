@@ -104,7 +104,7 @@ const QuestionFormSheet:FC = () => {
                                 <div className='flex items-center justify-between'>
                                     <p className='text-xl font-medium tracking-tight'>Multiple Choice</p>
                                     <div className='flex items-center space-x-1.5'>
-                                        <Button disabled={processing} onClick={onRemove} variant='outline' size='icon' className='rounded-full'>
+                                        <Button disabled={processing || data.choices.length<=2} onClick={onRemove} variant='outline' size='icon' className='rounded-full'>
                                             <MinusCircle />
                                         </Button>
                                         <Button disabled={processing} onClick={onAdd} variant='outline' size='icon' className='rounded-full'>

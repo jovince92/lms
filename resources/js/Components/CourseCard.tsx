@@ -1,7 +1,7 @@
 import { Course, PageProps, Progress } from '@/types'
 import  { FC, useMemo } from 'react'
 import IconBadge from './IconBadge';
-import { BookOpen, Heart, HeartOff, MoreVerticalIcon, Search } from 'lucide-react';
+import { BookOpen, Heart, HeartOff, ListChecks, MoreVerticalIcon, Search } from 'lucide-react';
 import { Link, usePage } from '@inertiajs/inertia-react';
 import { Inertia, Page } from '@inertiajs/inertia';
 import CourseProgressBar from '@/Pages/CourseProgressBar';
@@ -16,7 +16,7 @@ interface Props{
 const CourseCard:FC<Props> = ({course}) => {
     
     const {my_progress} = usePage<Page<PageProps>>().props;
-    const {image,title,category,chapters,id,user_id}=course;
+    const {image,title,category,chapters,id,user_id,quiz}=course;
     const hasStartedCourse = useMemo(()=>my_progress.findIndex(progress=>progress.chapter.course_id===id)>-1,[id]);
     
     const {my_favorites} = usePage<Page<PageProps>>().props;
@@ -54,11 +54,16 @@ const CourseCard:FC<Props> = ({course}) => {
                         <div className='text-lg md:text-base font-medium group-hover:text-idcsi transition duration-300   line-clamp-1'>{title}</div>
                         <p className='text-sm text-muted-foreground'>{category.category}</p>
                         <p className='text-xs text-primary/80 font-medium'>{`By: ${course.user.first_name+' '+course.user.last_name}`}</p>
-                        <div  className='my-2.5 flex items-center gap-x-2 text-sm md:text-xs'>
+                        <div  className='my-2.5 flex flex-col gap-y-2 text-sm md:text-xs'>
                             <div className='flex items-center gap-x-1 text-primary/80'>
                                 <IconBadge size='sm' Icon={BookOpen} />
                                 <span>{`${chapters.length} ${chapters.length===1?'Chapter':'Chapters'}`}</span>
                             </div>
+                            <div className='flex items-center gap-x-1 text-primary/80'>
+                                <IconBadge size='sm' Icon={ListChecks} />
+                                <span>{(!!quiz && quiz?.is_published===1)?'Quiz After Finishing Course':'No Quiz'}</span>
+                            </div>
+                            
                         </div>
                         <div  className='mt-auto'>
                             {hasStartedCourse?<CourseProgressBar className='h-2'  course={course}  />:<p className='text-base md:text-sm font-medium text-muted-foreground'>Course not Started</p>}

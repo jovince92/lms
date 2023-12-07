@@ -78,4 +78,12 @@ class User extends Authenticatable
     public function favorites(){
         return $this->belongsToMany(Course::class,Favorite::class);
     }
+
+    public function results(){
+        return $this->hasMany(UserResult::class);
+    }
+
+    public function user_answers(){
+        return $this->hasMany(UserAnswer::class);
+    }
 }
