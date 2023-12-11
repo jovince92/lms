@@ -36,7 +36,7 @@ const ProfilePanel = () => {
             </div>
             <div className='flex flex-col space-y-1.5'>
                 <Label>Email</Label>
-                <Input type='email' id='email' value={data.email} onChange={onChange} disabled={processing} placeholder='Email (optional)' />
+                <Input type='email' id='email' value={data.email} onChange={onChange} disabled={processing} placeholder='Email address' />
                 {errors.email && <p className='text-destructive text-xs'>{errors.email}</p>}
             </div>
             <div className='flex flex-col space-y-1.5'>

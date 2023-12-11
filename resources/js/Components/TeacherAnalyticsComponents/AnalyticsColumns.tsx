@@ -17,7 +17,12 @@ export const AnalyticsColumns: ColumnDef<AnalyticsData>[] = [
         accessorKey: "user_id",
         id:'user',
         header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Student<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
-        cell: ({row})=><p className="capitalize">{`${row.original.user.first_name} ${row.original.user.last_name}`}</p>
+        cell: ({row})=>(
+            <div className="flex flex-col space-y-0.5">
+                <p className="capitalize whitespace-nowrap">{`${row.original.user.first_name} ${row.original.user.last_name}`}</p>
+                <p className="capitalize tracking-tight font-light text-muted-foreground">{row.original.user.company_id}</p>
+            </div>
+        )
     },
     {
         accessorFn:row=>row.course.title,
@@ -28,8 +33,8 @@ export const AnalyticsColumns: ColumnDef<AnalyticsData>[] = [
     
     {
         accessorKey: "chapter_count",
-        header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Course Lenght<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
-        cell: ({row})=><p className="capitalize">{row.original.chapter_count}</p>
+        header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Course Length<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
+        cell: ({row})=><p className="capitalize">{row.original.chapter_count} Chapters</p>
     },
     {
         accessorKey: "completed_chapters",
@@ -37,9 +42,9 @@ export const AnalyticsColumns: ColumnDef<AnalyticsData>[] = [
         cell: ({row})=><span>{row.original.completed_chapters}</span>
     },
     {
-        header:({column})=><span className="text-primary">Quiz Score</span>,
-        id:'Actions',
-        cell:({row})=> <p>No Result</p>
+        accessorKey: "score",
+        header: ({column})=><Button  className='text-primary px-0'  variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Quiz Score<ChevronsLeftRight className="ml-2 h-4 w-4 rotate-90" /></Button>,
+        cell:({row})=> <p>{row.original.score || 'No Result'}</p>
     },
     {
         accessorFn:row=>Math.floor((row.completed_chapters/row.chapter_count)*100),

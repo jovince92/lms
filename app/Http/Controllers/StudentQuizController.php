@@ -22,10 +22,11 @@ class StudentQuizController extends Controller
     {
         $quiz=Quiz::with(['course','quiz_questions','quiz_questions.quiz_choices'])->where('course_id',$course_id)->firstOrFail();
         $result = UserResult::where('user_id',Auth::id())->where('quiz_id',$quiz->id)->first();
+        ///dd($quiz);
         return Inertia::render('StudentQuiz',[
             'quiz'=>$quiz,
             'is_completed' => $result?1:0,
-            'score'=>$result->score
+            'score'=>$result->score??0
         ]);
     }
 
@@ -72,6 +73,8 @@ class StudentQuizController extends Controller
             ]);
 
         });
+
+        return redirect()->back();
 
     }
 

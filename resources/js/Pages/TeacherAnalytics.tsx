@@ -12,6 +12,7 @@ export type AnalyticsData = {
     course_id:number;
     user:User;
     user_id:number;
+    score?:string;
     date_started:string;
 }
 

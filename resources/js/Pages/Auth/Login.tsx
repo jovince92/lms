@@ -7,11 +7,24 @@ import { Label } from '@/Components/ui/label'
 import { Separator } from '@/Components/ui/separator'
 import { cn } from '@/lib/utils'
 import { useForm } from '@inertiajs/inertia-react'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Send } from 'lucide-react'
 import React, { FC, FormEventHandler, ReactNode, useState } from 'react'
+import HRMS from './HRMS'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/Components/ui/dialog'
+import { ModeToggle } from '@/Components/ModeToggle'
+
+
+export const removeHTMLTags = (str:string):string =>{
+    if(str==="") return str;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(str, "text/html");
+    const strippedString = doc.body.textContent || "";
+    return strippedString;
+}
 
 const Login:FC = () => {
     const [open,setOpen] = useState(false);
+    const [showForgotPassword,setShowForgotPassword] = useState(false);
     const {data,setData,processing,reset,post,errors} = useForm({company_id:"",password:""})
     const onSubmit:FormEventHandler<HTMLFormElement> = (e) =>{
         e.preventDefault();
@@ -22,8 +35,12 @@ const Login:FC = () => {
 
     return (
         <>
-            <form onSubmit={onSubmit} className='w-full h-full flex py-12 md:pt-0 md:items-center justify-center px-2.5'>
-                <Card className='w-full md:max-w-md h-fit'>
+            <form onSubmit={onSubmit} className='w-full h-full flex py-12 md:pt-0 md:items-center justify-center px-2.5  '>
+                
+                <Card className='w-full md:max-w-md h-fit relative shadow shadow-idcsi'>
+                    <div className='absolute top-2 right-2'>
+                        <ModeToggle />
+                    </div>
                     <CardHeader>
                         <div  className={cn(processing&&'animate-pulse')}><Logo /></div>
                         <CardTitle >
@@ -47,10 +64,13 @@ const Login:FC = () => {
                         
                     </CardContent>
                     <CardFooter className="flex flex-col gap-y-2">
-                        <Button variant='ddc' type='submit' className='w-full md:w-auto md:ml-auto'>
-                            {processing&&<Loader2 className='w-4 h-4 mr-2 animate-spin' />}
-                            Sign In
-                        </Button>
+                        <div className='flex items-center justify-between w-full'>
+                            <Button onClick={()=>setShowForgotPassword(true)} type='button' variant='link'>Forgot Password?</Button>
+                            <Button variant='ddc' type='submit' className='w-full md:w-auto md:ml-auto'>
+                                {processing&&<Loader2 className='w-4 h-4 mr-2 animate-spin' />}
+                                Sign In
+                            </Button>
+                        </div>
                         <div className='border-b  border-b-muted w-full' />
                         
                         <Button type='button' onClick={()=>setOpen(true)} variant='link' className='text-muted-foreground text-sm font-light tracking-tight'>
@@ -61,61 +81,41 @@ const Login:FC = () => {
                 </Card>
             </form>
             <HRMS isOpen={open} onClose={()=>setOpen(false)} />
+            <ForgotPassword isOpen={showForgotPassword} onClose={()=>setShowForgotPassword(false)} />
         </>
     )
 }
 
 export default Login;
 
-const removeHTMLTags = (str:string):string =>{
-    if(str==="") return str;
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(str, "text/html");
-    const strippedString = doc.body.textContent || "";
-    return strippedString;
-}
 
-interface HRMSProps{
-    onClose:()=>void;
+interface ForgotPasswordProps{
     isOpen?:boolean;
+    onClose:()=>void;
 }
 
-const HRMS:FC<HRMSProps> = ({onClose,isOpen}) => {
-    const {data,setData,processing,reset,post,errors} = useForm({company_id:"",password:""})
-    const onSubmit:FormEventHandler<HTMLFormElement> = (e) =>{
-        e.preventDefault();
-        post(route('signup'));
-    }
-
-    return (
-        <AlertDialog open={isOpen} onOpenChange={onClose}>
-            
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Sign Up To DDC LMS</AlertDialogTitle>
-                        <AlertDialogDescription>Enter your HRMS Credentials to Continue</AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <form className='flex flex-col space-y-3.5 pt-6' id='hrms' onSubmit={onSubmit}>
-                        <div className='flex flex-col space-y-1'>
-                            <Label htmlFor='id'>Company ID</Label>
-                            <Input required disabled={processing} value={data.company_id} onChange={({target})=>setData('company_id',target.value)} id="id" placeholder="Your Company ID" />
-                            {errors.company_id && <p className='text-destructive text-xs w-full text-right'>{removeHTMLTags(errors.company_id)}</p> }
-                        </div>
-                        <div className='flex flex-col space-y-1'>
-                            <Label htmlFor='password'>HRMS Password</Label>
-                            <Input required disabled={processing} value={data.password} onChange={({target})=>setData('password',target.value)} type='password' id="password" placeholder="Your HRMS Password" />
-                        </div>
-                    </form>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel type='button'>Cancel</AlertDialogCancel>
-                        <Button variant='ddc' form='hrms' type='submit'>
-                            {
-                                processing && <Loader2 className='h-4 w-4 mr-2 animate-spin' />
-                            }
-                            Continue
-                        </Button>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-        </AlertDialog>
-    )
+const ForgotPassword:FC<ForgotPasswordProps> = ({isOpen,onClose}) =>{
+    return(
+        <Dialog open={isOpen} onOpenChange={onClose}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Reset Password</DialogTitle>
+                    <DialogDescription>
+                        Enter your Company ID below. <br />
+                        We will send a temporary password to your email.
+                    </DialogDescription>
+                </DialogHeader>
+                <form className='flex flex-col gap-y-2.5'>
+                    <div className='flex flex-col space-y-1'>
+                        <Label>Company ID:</Label>
+                        <Input />
+                    </div>
+                    <Button variant='ddc' className='ml-auto'>
+                        <Send className='h-5 w-5 mr-2' />
+                        Send Email
+                    </Button>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
 }

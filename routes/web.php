@@ -18,7 +18,9 @@ use App\Http\Controllers\TeacherCoursesController;
 use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Progress;
+use App\Models\Quiz;
 use App\Models\User;
+use App\Models\UserResult;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -152,11 +154,14 @@ Route::middleware(['auth'])->group(function () {
                         $q->where('user_id',$user_id);
                     })
                     ->get();
-    
-    
+                    
                 foreach($started_courses as $course){
                     $len = count($course->chapters);
                     $sum = Progress::whereIn('chapter_id',$course->chapters->pluck(['id']))->sum('is_completed');
+
+                    $quiz=Quiz::with(['quiz_questions'])->where('course_id',$course->id)->first();
+                    $result = $quiz? UserResult::where('user_id',Auth::id())->where('quiz_id',$quiz->id)->first():null;
+
                     array_push($student_progress,[
                         'user'=>$student,
                         'user_id'=>$student->id,
@@ -164,6 +169,7 @@ Route::middleware(['auth'])->group(function () {
                         'course_id'=>$course->id,
                         'chapter_count'=>$len,
                         'completed_chapters'=>intval($sum),
+                        'score'=>$result?strval($result->score).'/'.strval(count($quiz->quiz_questions)):null,
                         'date_started'=>Progress::select(['created_at'])->whereIn('chapter_id',$course->chapters->pluck(['id']))->first()->created_at
                     ]);
                 }
@@ -206,8 +212,8 @@ Route::get('/public', function () {
     return null;
 })->name('public_route');
 
-Route::get('/test', function () {
-    return Inertia::render('TestPage');
-})->name('test');
+// Route::get('/test', function () {
+//     return Inertia::render('TestPage');
+// })->name('test');
 
 
