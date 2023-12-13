@@ -23,7 +23,9 @@
         }
 
         h2 {
-            color: #333333;
+            color: #ffffff;
+            background-color: #960000;
+            padding: 1.55rem 3.125rem
         }
 
         p {
@@ -43,9 +45,9 @@
 <body>
 
     <div class="container">
-        <h2>Temporary Password Email</h2>
+        <h2>DDC Learning Management System Temporary Password Email</h2>
         <p>Hello {{ $name }},</p>
-        <p>Your temporary password is: <strong>{{ $password }}</strong></p>
+        <p>Your temporary password is: <strong>{{ $temp_password }}</strong></p>
         <p>Please log in using this temporary password and change it as soon as possible.</p>
         <p>If you did not request this password change, please contact support immediately.</p>
         

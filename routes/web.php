@@ -15,6 +15,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StudentCourseController;
 use App\Http\Controllers\StudentQuizController;
 use App\Http\Controllers\TeacherCoursesController;
+use App\Http\Controllers\TemporaryPasswordController;
 use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Progress;
@@ -207,6 +208,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
+
+Route::post('temporary-password', [TemporaryPasswordController::class, 'send'])->name('send_temporary_password');
 
 Route::get('/public', function () {
     return null;

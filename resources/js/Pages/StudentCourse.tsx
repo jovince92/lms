@@ -40,7 +40,7 @@ const StudentCourse:FC<Props> = ({course}) => {
 
 
     const takeQuiz = () =>{
-        if(completedChapters<course.chapters.length) return toast.info('You Need To Finish The Course Before Take The Quiz');
+        if(completedChapters<course.chapters.length) return toast.info('You Need To Finish The Course Before Taking The Quiz');
         Inertia.get(route('course.quiz.index',{course_id:id}));
     }
 
