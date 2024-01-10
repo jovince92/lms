@@ -1,6 +1,6 @@
 import Logo from '@/Components/DashboardComponents/Logo'
 import {Button} from '@/Components/ui/button'
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from '@/Components/ui/card'
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/Components/ui/card'
 import {Input} from '@/Components/ui/input'
 import {Label} from '@/Components/ui/label'
 import {cn} from '@/lib/utils'
@@ -26,7 +26,7 @@ const Login:FC = () => {
     const {data,setData,processing,post,errors} = useForm({company_id:"",password:""})
     const onSubmit:FormEventHandler<HTMLFormElement> = (e) =>{
         e.preventDefault();
-        post(route('login.store'));
+        post(route('signup'));
     }
 
 
@@ -46,6 +46,9 @@ const Login:FC = () => {
                             {`${processing?'Signing In To LMS. Please wait...':'Sign In'}`}
 
                         </CardTitle>
+                        <CardDescription>
+                            Use your HRMS Credentials to Sign In
+                        </CardDescription>
                     </CardHeader>
                     <CardContent>
 
@@ -57,30 +60,30 @@ const Login:FC = () => {
                             </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="password">Password</Label>
-                                <Input required disabled={processing} value={data.password} onChange={({target})=>setData('password',target.value)} type='password' id="password" placeholder="Password" />
+                                <Input required disabled={processing} value={data.password} onChange={({target})=>setData('password',target.value)} type='password' id="password" placeholder="Your HRMS Password" />
                             </div>
                         </div>
 
                     </CardContent>
                     <CardFooter className="flex flex-col gap-y-2">
                         <div className='flex items-center justify-between w-full'>
-                            <Button onClick={()=>setShowForgotPassword(true)} type='button' variant='link'>Forgot Password?</Button>
+                            {/* <Button onClick={()=>setShowForgotPassword(true)} type='button' variant='link'>Forgot Password?</Button> */}
                             <Button variant='ddc' type='submit' className='w-full md:w-auto md:ml-auto'>
                                 {processing&&<Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                                 Sign In
                             </Button>
                         </div>
-                        <div className='border-b  border-b-muted w-full' />
+                        {/*<div className='border-b  border-b-muted w-full' />
 
                         <Button type='button' onClick={()=>setOpen(true)} variant='link' className='text-muted-foreground text-sm font-light tracking-tight'>
                             New Student? Click here to Sign Up using your HRMS Credentials
-                        </Button>
+                        </Button> */}
 
                     </CardFooter>
                 </Card>
             </form>
-            <HRMS isOpen={open} onClose={()=>setOpen(false)} />
-            <ForgotPassword isOpen={showForgotPassword} onClose={()=>setShowForgotPassword(false)} />
+            {/* <HRMS isOpen={open} onClose={()=>setOpen(false)} />
+            <ForgotPassword isOpen={showForgotPassword} onClose={()=>setShowForgotPassword(false)} /> */}
         </>
     )
 }

@@ -15,11 +15,11 @@ class HRMSController extends Controller
 {
     public function signup(Request $request){
 
-        $request->validate([
-            'company_id' => ['required','unique:users']
-        ],[
-            'company_id.unique'=>'This ID# is already registered to LMS. Proceed to Log In Page'
-        ]);
+        // $request->validate([
+        //     'company_id' => ['required','unique:users']
+        // ],[
+        //     'company_id.unique'=>'This ID# is already registered to LMS. Proceed to Log In Page'
+        // ]);
 
         $company_id=$request->company_id;
         $password=$request->password;
@@ -45,33 +45,33 @@ class HRMSController extends Controller
             'apitoken' => 'IUQ0PAI7AI3D162IOKJH'
         ]);
 
-        return Inertia::render('Auth/SignUpPage',['hrms_response'=>$hrms_response['message']]);
+        
+        
+        $message= $hrms_response['message'];
+        $imageContent = file_get_contents($message['picture_location']);
+        $location='uploads/photos/user_'.$company_id.'/';
+        $path=public_path($location);
+        if (!file_exists($path)) {
+            File::makeDirectory($path,0777,true);
+        }
+        
+        File::put(str_replace('/','\\',$path).$company_id,$imageContent,true);
+        $user=User::firstOrCreate(
+        ['company_id'=>$company_id],
+        [
+            'first_name'=>$message['first_name'],
+            'last_name'=>$message['last_name'],
+            'photo'=>$location.$company_id,
+            'password'=>bcrypt('password'),
+            'position'=>$message['job_job_title'],
+            'department'=>$message['project'],
+        ]);
         
 
-        // $message= $response['message'];
-        // $imageContent = file_get_contents($message['picture_location']);
-        // $location='uploads/photos/user_'.$company_id.'/';
-        // $path=public_path($location);
-        // if (!file_exists($path)) {
-        //     File::makeDirectory($path,0777,true);
-        // }
-        
-        // File::put(str_replace('/','\\',$path).$company_id,$imageContent,true);
-        // $user=User::create([
-        //     'first_name'=>$message['first_name'],
-        //     'last_name'=>$message['last_name'],
-        //     'company_id'=>$company_id,
-        //     'photo'=>$location.$company_id,
-        //     'password'=>bcrypt('password')
-        // ]);
-        
+        Auth::login($user);
+        $request->session()->regenerate();
 
-        // Auth::login($user);
-        // $request->session()->regenerate();
-
-        // return redirect()->intended(RouteServiceProvider::HOME);
-
-
+        return redirect()->intended(RouteServiceProvider::HOME);
 
     }
 

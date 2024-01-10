@@ -8,11 +8,12 @@ import DescriptionForm from '@/Components/TeacherCoursesComponents/DescriptionFo
 import ImageForm from '@/Components/TeacherCoursesComponents/ImageForm'
 import LanguageForm from '@/Components/TeacherCoursesComponents/LanguageForm'
 import QuizForm from '@/Components/TeacherCoursesComponents/QuizForm'
+import RestrictionForm from '@/Components/TeacherCoursesComponents/RestrictionForm'
 import TitleForm from '@/Components/TeacherCoursesComponents/TitleForm'
 import DashboardLayout from '@/Layouts/DashboardLayout'
 import { Course } from '@/types'
 import { Head } from '@inertiajs/inertia-react'
-import { FileIcon, GraduationCap, LayoutDashboard, ListChecks } from 'lucide-react'
+import { FileIcon, GraduationCap, LayoutDashboard, ListChecks, XOctagon } from 'lucide-react'
 import {FC, useMemo} from 'react'
 
 interface Props{
@@ -87,6 +88,13 @@ const TeacherCoursesShow:FC<Props> = ({course}) => {
                                     <h2 className='text-xl'>Course Quiz</h2>
                                 </div>
                                 <QuizForm course={course} />
+                            </div>
+                            <div>
+                                <div className='flex items-center gap-x-2'>
+                                    <IconBadge Icon={XOctagon} />
+                                    <h2 className='text-xl'>Course Restrictions</h2>
+                                </div>
+                                <RestrictionForm course={course} />
                             </div>
                         </div>
                     </div>

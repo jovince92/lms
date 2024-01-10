@@ -9,7 +9,7 @@ class Course extends Model
 {
     use HasFactory;
     protected $guarded=[];
-    protected $with=['language','quiz'];
+    protected $with=['language','quiz','department_restrictions','position_restrictions'];
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -39,5 +39,14 @@ class Course extends Model
         if($value && str_contains( strtolower($value),'http')){return $value;}
         if(!$value){return null;}
         return url('/').'/public/'. $value;
+    }
+
+    public function department_restrictions(){
+        return $this->hasMany(CourseDepartmentRestriction::class);
+    }
+
+
+    public function position_restrictions(){
+        return $this->hasMany(CoursePositionRestriction::class);
     }
 }

@@ -32,7 +32,7 @@ const Profile:FC = () => {
                     <div className='flex-1 w-full relative pl-40 overflow-y-hidden'>
                         <div className='h-full w-40 absolute left-0  z-50 flex flex-col space-y-2'>
                             <Button onClick={()=>setActivePanel('profile')} className='justify-start' variant={activePanel==='profile'?'secondary':'ghost'}>Profile</Button>
-                            <Button onClick={()=>setActivePanel('password')} className='justify-start' variant={activePanel==='password'?'secondary':'ghost'}>Password</Button>
+                            {/* <Button onClick={()=>setActivePanel('password')} className='justify-start' variant={activePanel==='password'?'secondary':'ghost'}>Password</Button> */}
                             <Button onClick={()=>setActivePanel('photo')} className='justify-start' variant={activePanel==='photo'?'secondary':'ghost'}>Photo</Button>
                         </div>
                         <div className=' h-full px-3.5 flex flex-col space-y-2 overflow-y-hidden'>

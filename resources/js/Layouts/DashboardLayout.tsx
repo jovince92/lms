@@ -3,6 +3,7 @@ import Sidebar from '@/Components/DashboardComponents/Sidebar';
 import CategoryModal from '@/Components/Modals/CategoryModal';
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/Components/ui/alert-dialog';
 import { Button } from '@/Components/ui/button';
+import { useDeptsAndPositions } from '@/Hooks/useDeptsAndPositions';
 import { cn } from '@/lib/utils';
 import { PageProps } from '@/types';
 import { Inertia, Page } from '@inertiajs/inertia';
@@ -16,11 +17,12 @@ interface Props{
 }
 
 const DashboardLayout:FC<Props> = ({children,className}) => {
+    // const [showEmailReminder,setShowEmailReminder] = useState(false);
+    // useEffect(()=>{
+    //     if((!user.email || user.email.length<5)&& !route().current('profile.index')) setShowEmailReminder(true);
+    // },[]);
     const {user} = usePage<Page<PageProps>>().props.auth;
-    const [showEmailReminder,setShowEmailReminder] = useState(false);
-    useEffect(()=>{
-        if((!user.email || user.email.length<5)&& !route().current('profile.index')) setShowEmailReminder(true);
-    },[]);
+   
 
     return (
         <>
@@ -36,50 +38,50 @@ const DashboardLayout:FC<Props> = ({children,className}) => {
                 </main>
             </div>
             <CategoryModal />
-            <EmailReminder isOpen={showEmailReminder} onClose={()=>setShowEmailReminder(false)} />
+            {/* <EmailReminder isOpen={showEmailReminder} onClose={()=>setShowEmailReminder(false)} /> */}
         </>
     )
 }
 
 export default DashboardLayout;
 
-interface EmailReminderProps{
-    isOpen?:boolean;
-    onClose:()=>void;
-}
+// interface EmailReminderProps{
+//     isOpen?:boolean;
+//     onClose:()=>void;
+// }
 
-const EmailReminder:FC<EmailReminderProps> = ({isOpen,onClose}) =>{
-    const [loading,setLoading] = useState(false);
-    const navigate = () =>{
-        Inertia.get(route('profile.index'),{},{
-            onStart:()=>setLoading(true),
-            onFinish:()=>setLoading(false)
-        });
-    }
-    return(
+// const EmailReminder:FC<EmailReminderProps> = ({isOpen,onClose}) =>{
+//     const [loading,setLoading] = useState(false);
+//     const navigate = () =>{
+//         Inertia.get(route('profile.index'),{},{
+//             onStart:()=>setLoading(true),
+//             onFinish:()=>setLoading(false)
+//         });
+//     }
+//     return(
 
-        <AlertDialog open={isOpen}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Email Address Not Set</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        You have not set an Email Address for your account. <br />
-                        Please go to your profile settings and set an email. <br />
-                        A valid Email Address is needed in case you forgot your password.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                <Button disabled={loading} size='sm' variant='secondary' onClick={onClose}>
-                    <XCircle className='h-5 w-5 mr-2'/>
-                    Close
-                </Button>
-                <Button disabled={loading} variant='outline' size='sm' onClick={navigate}>
-                    {loading? <Loader2 className='h-5 w-5 mr-2 animate-spin'/> :<ExternalLink className='h-5 w-5 mr-2' />}
-                    Go To Profile Settings
-                </Button>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+//         <AlertDialog open={isOpen}>
+//             <AlertDialogContent>
+//                 <AlertDialogHeader>
+//                     <AlertDialogTitle>Email Address Not Set</AlertDialogTitle>
+//                     <AlertDialogDescription>
+//                         You have not set an Email Address for your account. <br />
+//                         Please go to your profile settings and set an email. <br />
+//                         A valid Email Address is needed in case you forgot your password.
+//                     </AlertDialogDescription>
+//                 </AlertDialogHeader>
+//                 <AlertDialogFooter>
+//                 <Button disabled={loading} size='sm' variant='secondary' onClick={onClose}>
+//                     <XCircle className='h-5 w-5 mr-2'/>
+//                     Close
+//                 </Button>
+//                 <Button disabled={loading} variant='outline' size='sm' onClick={navigate}>
+//                     {loading? <Loader2 className='h-5 w-5 mr-2 animate-spin'/> :<ExternalLink className='h-5 w-5 mr-2' />}
+//                     Go To Profile Settings
+//                 </Button>
+//                 </AlertDialogFooter>
+//             </AlertDialogContent>
+//         </AlertDialog>
 
-    );
-}
+//     );
+// }

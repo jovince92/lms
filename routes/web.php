@@ -7,8 +7,10 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartmentRestrictionController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\HRMSController;
+use App\Http\Controllers\PositionRestrictionController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\SearchController;
@@ -132,6 +134,18 @@ Route::middleware(['auth'])->group(function () {
                     Route::post('/quiz/{quiz_id}', [QuizQuestionController::class, 'store'])->name('store');
                     Route::post('/quiz/{quiz_id}/question/{id}', [QuizQuestionController::class, 'update'])->name('update');
                     Route::post('/destroy/{id}', [QuizQuestionController::class, 'destroy'])->name('destroy');
+                });
+            });
+
+            Route::prefix('restrictions')->name('restrictions.')->group(function(){        
+                Route::prefix('departments')->name('departments.')->group(function(){        
+                    Route::post('/{course_id}/store', [DepartmentRestrictionController::class, 'store'])->name('store');
+                    Route::post('/{course_id}/destroy/{id}', [DepartmentRestrictionController::class, 'destroy'])->name('destroy');
+                });
+
+                Route::prefix('positions')->name('positions.')->group(function(){        
+                    Route::post('/{course_id}/store', [PositionRestrictionController::class, 'store'])->name('store');
+                    Route::post('/{course_id}/destroy/{id}', [PositionRestrictionController::class, 'destroy'])->name('destroy');
                 });
             });
 

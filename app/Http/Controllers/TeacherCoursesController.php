@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 
@@ -65,6 +66,7 @@ class TeacherCoursesController extends Controller
      */
     public function show($id)
     {
+
         $course=Course::findOrFail($id);
         if($course->user_id!=Auth::id() && Auth::user()->level!=0) abort(403);
         return Inertia::render('TeacherCoursesShow',[

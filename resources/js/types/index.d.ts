@@ -71,6 +71,8 @@ export interface Course extends timestamps{
     category:Category;
     chapters:Chapter[];
     quiz?:Quiz;
+    department_restrictions:{id:number;department:string}[];
+    position_restrictions:{id:number;position:string}[];
 }
 
 export interface Chapter extends timestamps{
@@ -167,6 +169,15 @@ interface QuizChoice{
     quiz_question_id:number;
     quiz_question:QuizQuestion;
     choice:string;
+}
+
+interface Position{
+    department: string;
+    designation: string;
+    divisions: string;
+    id: string;
+    other_parents: string;
+    parent_id: string;
 }
 
 declare global {
