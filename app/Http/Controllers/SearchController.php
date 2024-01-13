@@ -36,10 +36,21 @@ class SearchController extends Controller
     }
 
     public function course($id){
+        $user = Auth::user();
         $course =Course::with(['chapters'])->where('id',$id)->firstOrFail();
         if($course->user_id==Auth::id()) abort(403,'You own this course');
 
-    
+        if(count($course->department_restrictions)>0){
+            if(!$course->department_restrictions->contains('department',$user->department)){
+                abort(403,'You are not allowed to view this course');
+            }
+        }
+
+        if(count($course->position_restrictions)>0){
+            if(!$course->position_restrictions->contains('position',$user->position)){
+                abort(403,'You are not allowed to view this course');
+            }
+        }
 
         return Inertia::render('StudentCourse',[
             'course'=>$course->load(['attachments','user','category','quiz'=>fn($q)=>$q->where('is_published',1),'quiz.quiz_questions'])

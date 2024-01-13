@@ -1,6 +1,8 @@
 import Navbar from '@/Components/DashboardComponents/Navbar';
 import Sidebar from '@/Components/DashboardComponents/Sidebar';
 import CategoryModal from '@/Components/Modals/CategoryModal';
+import RatingModal from '@/Components/Modals/RatingModal';
+import UserFeedBackModal from '@/Components/Modals/UserFeedBackModal';
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/Components/ui/alert-dialog';
 import { Button } from '@/Components/ui/button';
 import { useDeptsAndPositions } from '@/Hooks/useDeptsAndPositions';
@@ -22,7 +24,7 @@ const DashboardLayout:FC<Props> = ({children,className}) => {
     //     if((!user.email || user.email.length<5)&& !route().current('profile.index')) setShowEmailReminder(true);
     // },[]);
     const {user} = usePage<Page<PageProps>>().props.auth;
-   
+
 
     return (
         <>
@@ -38,6 +40,8 @@ const DashboardLayout:FC<Props> = ({children,className}) => {
                 </main>
             </div>
             <CategoryModal />
+            <RatingModal />
+            <UserFeedBackModal />
             {/* <EmailReminder isOpen={showEmailReminder} onClose={()=>setShowEmailReminder(false)} /> */}
         </>
     )

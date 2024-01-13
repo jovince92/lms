@@ -16,6 +16,20 @@ class StudentCourseController extends Controller
     
 
     public function chapter($course_id,$id){
+        $course=Course::findOrFail($course_id);
+        $user=Auth::user();
+        if(count($course->department_restrictions)>0){
+            if(!$course->department_restrictions->contains('department',$user->department)){
+                abort(403,'You are not allowed to view this course');
+            }
+        }
+
+        if(count($course->position_restrictions)>0){
+            if(!$course->position_restrictions->contains('position',$user->position)){
+                abort(403,'You are not allowed to view this course');
+            }
+        }
+        
         Progress::firstOrCreate([
             'user_id'=>Auth::id(),
             'chapter_id'=>$id

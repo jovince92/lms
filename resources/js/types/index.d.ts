@@ -73,6 +73,7 @@ export interface Course extends timestamps{
     quiz?:Quiz;
     department_restrictions:{id:number;department:string}[];
     position_restrictions:{id:number;position:string}[];
+    course_ratings:CourseRating[];
 }
 
 export interface Chapter extends timestamps{
@@ -178,6 +179,16 @@ interface Position{
     id: string;
     other_parents: string;
     parent_id: string;
+}
+
+interface CourseRating extends timestamps{
+    id:number;
+    user_id:number;
+    course_id:number;
+    rating:1|2|3|4|5;
+    feedback:string|null;
+    user:User;
+    course:Course;
 }
 
 declare global {

@@ -14,8 +14,8 @@ export const useDeptsAndPositions = create<Store>(set=>({
         try{
             const {data}=(await axios.get(route('api.positions'))) as {data:Position[]};
             set({
-                departments:([...new Set(data.map(p=>p.department))]).sort(),
-                positions:([...new Set(data.map(p=>p.designation))]).sort(),
+                departments:([...new Set(data.map(p=>p.department.trim()))]).sort(),
+                positions:([...new Set(data.map(p=>p.designation.trim()))]).sort(),
             });
         }catch(e){
             console.error(e);

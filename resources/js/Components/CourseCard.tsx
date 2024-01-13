@@ -8,7 +8,7 @@ import CourseProgressBar from '@/Pages/CourseProgressBar';
 import { Button } from './ui/button';
 import { Popover, PopoverContent, PopoverTrigger,PopoverClose } from './ui/popover';
 import { toast } from 'sonner';
-
+import StarRatings from 'react-star-ratings';
 interface Props{
     course:Course;
 }
@@ -42,6 +42,12 @@ const CourseCard:FC<Props> = ({course}) => {
 
     const searchByUser = () => Inertia.get(route('search.index',{user_id}));
 
+    const averageRating = useMemo(()=>{
+        if(!course.course_ratings) return 0;
+        if(course.course_ratings.length===0) return 0;
+        const totalRating = course.course_ratings.reduce((acc,rating)=>acc+rating.rating,0);
+        return totalRating/course.course_ratings.length;
+    },[course]);
     
     return (
         <div className='h-fit' >
@@ -81,6 +87,20 @@ const CourseCard:FC<Props> = ({course}) => {
                             <PopoverClose> <div className='w-full font-medium flex items-center justify-start p-1 text-sm hover:bg-secondary transition rounded-md' onClick={searchByUser}><Search className='h-4 w-4 mr-2' />Courses By This Instructor</div></PopoverClose>
                         </PopoverContent>
                     </Popover>
+                </div>
+                <div className='flex flex-col space-y-1'>
+                    <p className='text-xs text-muted-foreground'>Averate Rating:</p>
+                    <div className='flex items-center justify-between'>
+                        <StarRatings
+                            rating={averageRating}
+                            starRatedColor="yellow"
+                            numberOfStars={5}
+                            name='rating'
+                            starDimension='15px'
+                            starSpacing='1px'
+                            />
+                        <p>{averageRating.toFixed(1)}</p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@ interface Props{
 const UserItem:FC<Props> = ({user}) => {
     const {first_name,last_name,company_id,photo,department,role,position} = user
     return (
-        <TableRow>
+        <TableRow className='text-xs'>
             <TableCell>
                 <div className='flex items-center justify-center'>
                     <Avatar className="h-8 w-8 border border-idcsi">
@@ -20,14 +20,14 @@ const UserItem:FC<Props> = ({user}) => {
                     </Avatar>
                 </div>
             </TableCell>
-            <TableCell><span className='px-4 line-clamp-1'>{company_id}</span></TableCell>
-            <TableCell><span className='px-4 line-clamp-1'>{first_name}</span></TableCell>
-            <TableCell><span className='px-4 line-clamp-1'>{last_name}</span></TableCell>
-            <TableCell><span className='px-4 line-clamp-1'>{role}</span></TableCell>
+            <TableCell><span className='px-4 text-right'>{company_id}</span></TableCell>
+            <TableCell><span className='px-4 text-right'>{first_name}</span></TableCell>
+            <TableCell><span className='px-4 text-right'>{last_name}</span></TableCell>
+            <TableCell><span className='px-4 text-right'>{role}</span></TableCell>
             
-            <TableCell><span className='px-4 line-clamp-1'>{position}</span></TableCell>
+            <TableCell><span className='px-4 text-right'>{position}</span></TableCell>
             
-            <TableCell><span className='px-4 line-clamp-1'>{department}</span></TableCell>
+            <TableCell><span className='px-4 text-right'>{department}</span></TableCell>
             <TableCell className="text-right">
                 <UserActions user={user}/>
                 

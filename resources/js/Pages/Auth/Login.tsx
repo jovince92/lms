@@ -68,7 +68,7 @@ const Login:FC = () => {
                     <CardFooter className="flex flex-col gap-y-2">
                         <div className='flex items-center justify-between w-full'>
                             {/* <Button onClick={()=>setShowForgotPassword(true)} type='button' variant='link'>Forgot Password?</Button> */}
-                            <Button variant='ddc' type='submit' className='w-full md:w-auto md:ml-auto'>
+                            <Button disabled={processing} variant='ddc' type='submit' className='w-full md:w-auto md:ml-auto'>
                                 {processing&&<Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                                 Sign In
                             </Button>

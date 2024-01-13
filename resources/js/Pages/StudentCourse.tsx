@@ -4,7 +4,7 @@ import DashboardLayout from '@/Layouts/DashboardLayout';
 import { Chapter, Course, PageProps, Progress } from '@/types'
 import { Head, Link, usePage } from '@inertiajs/inertia-react';
 import { format } from 'date-fns';
-import { BadgeInfo, BookOpen, FileIcon, Globe, ListChecks, Timer } from 'lucide-react';
+import { BadgeInfo, BookOpen, FileIcon, Globe, ListChecks, MessageSquare, SmilePlus, StarsIcon, Timer } from 'lucide-react';
 import React, { FC, ReactNode, useCallback, useMemo } from 'react'
 import Editor from './Editor';
 import { Inertia, Page } from '@inertiajs/inertia';
@@ -14,6 +14,11 @@ import CourseProgressBar from './CourseProgressBar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar';
 import { toast } from 'sonner';
 
+import StarRatings from 'react-star-ratings';
+import { useRatingModal } from '@/Hooks/useRatingModal';
+import { useUserFeedBackModal } from '@/Hooks/useUserFeedBackModal';
+import { Separator } from '@/Components/ui/separator';
+
 interface Props{
     course:Course;
 }
@@ -21,7 +26,8 @@ interface Props{
 const StudentCourse:FC<Props> = ({course}) => {
     const {my_progress} = usePage<Page<PageProps>>().props;
     const {category,title,description,user : creator,created_at,language,chapters,attachments,id,user_id,user,quiz} = course;
-
+    const {onOpen} = useRatingModal();
+    const {onOpen : OpenFeedback} = useUserFeedBackModal();
     const totalSecords = chapters.reduce((accumulator=0, currentValue)=>accumulator+convertTimeToSeconds(currentValue.duration),0);
     const Icon = IconMap[category.icon_map_number];
 
@@ -44,12 +50,22 @@ const StudentCourse:FC<Props> = ({course}) => {
         Inertia.get(route('course.quiz.index',{course_id:id}));
     }
 
+
+    const averageRating = useMemo(()=>{
+        if(!course.course_ratings) return 0;
+        if(course.course_ratings.length===0) return 0;
+        const totalRating = course.course_ratings.reduce((acc,rating)=>acc+rating.rating,0);
+        return totalRating/course.course_ratings.length;
+    },[course]);
+
+    
+
     return (
         <>
             <Head title={course.title} />
             <DashboardLayout >
                 <div className='h-full w-full flex flex-col space-y-2 overflow-y-auto md:flex-row md:space-y-0 md:space-x-2 md:overflow-y-hidden relative'>                
-                    <div className='md:h-full w-full md:w-1/2 flex flex-col gap-y-3.5 p-3.5'>
+                    <div className='md:h-full w-full md:w-1/2 flex flex-col gap-y-3.5 p-3.5 md:overflow-y-auto'>
                         <Link href={route('search.index',{catIds:category.id})}>
                             <p className='font-semibold text-primary/90 flex items-center space-x-1.5'> <Icon  size={20} /> <span>{category.category}</span></p>
                         </Link>
@@ -91,6 +107,33 @@ const StudentCourse:FC<Props> = ({course}) => {
                                 {!hasQuiz?'No Quiz for this Course': quiz!.quiz_questions.length.toString()+ ' Questions Short Quiz'} 
                             </span>
                         </p>
+                        <Separator />
+                        <div className='text-muted-foreground flex items-center space-x-2'>
+                            <StarsIcon className='h-4 w-4 ' />
+                            <p>Average Rating:</p>
+                            
+                            <StarRatings
+                                
+                                rating={averageRating}
+                                starRatedColor="yellow"
+                                numberOfStars={5}
+                                name='rating'
+                                starDimension='15px'
+                                starSpacing='1px'
+                                />
+                        </div>
+                        <div className='text-muted-foreground flex items-center space-x-2'>
+                            <MessageSquare className='h-4 w-4' />
+                            <button onClick={()=>onOpen(course)} className='hover:underline hover:opacity-75 transition duration-300' >
+                                <p>Click here to Give Rating and Feedback</p>
+                            </button>
+                        </div>
+                        <div className='text-muted-foreground flex items-center space-x-2'>
+                            <SmilePlus className='h-4 w-4' />
+                            <button onClick={()=>OpenFeedback(course)} className='hover:underline hover:opacity-75 transition duration-300' >
+                                <p>Click here to View Course Feedbacks by Students</p>
+                            </button>
+                        </div>
                         <div className='text-sm'>
                             <p>Your Progress: {completedChapters}/{course.chapters.length}</p>
                             {hasStartedCourse?<CourseProgressBar className='h-3' course={course}  />:<p className='text-base md:text-sm font-medium text-muted-foreground'>Course not Started</p>}

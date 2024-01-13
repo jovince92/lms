@@ -22,6 +22,7 @@ const RestrictionForm:FC<Props> = ({course}) => {
     useEffect(()=>{
         const fetchData = async () => await getData();
         if(!positions|| !departments) fetchData();
+        console.log([JSON.stringify(positions),JSON.stringify(departments)]);
     },[positions,departments,getData]);
     return (
         <>
@@ -172,7 +173,7 @@ const DepartmentRestrictionModal:FC<DepartmentRestrictionModalProps> = ({departm
                 </Popover>
                 <div className='flex flex-wrap gap-1.5'>
                     {
-                        combined.map(dept=> <Button size='sm'>{dept}</Button>)
+                        combined.map(dept=> <Button key={dept} size='sm'>{dept}</Button>)
                     }
                 </div>
                 <DialogFooter>
@@ -267,7 +268,7 @@ const PositionRestrictionModal:FC<PositionRestrictionModalProps> = ({positions,a
                 </Popover>
                 <div className='flex flex-wrap gap-1.5'>
                     {
-                        combined.map(dept=> <Button size='sm'>{dept}</Button>)
+                        combined.map(dept=> <Button key={dept} size='sm'>{dept}</Button>)
                     }
                 </div>
                 <DialogFooter>

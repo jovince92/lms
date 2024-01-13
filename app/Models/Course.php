@@ -9,7 +9,18 @@ class Course extends Model
 {
     use HasFactory;
     protected $guarded=[];
-    protected $with=['language','quiz','department_restrictions','position_restrictions'];
+    protected $with=['language','quiz','department_restrictions','position_restrictions','course_ratings'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('courseRatingsOrder', function ($builder) {
+            $builder->with(['course_ratings' => function ($query) {
+                $query->orderBy('id', 'desc'); 
+            }]);
+        });
+    }
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -48,5 +59,9 @@ class Course extends Model
 
     public function position_restrictions(){
         return $this->hasMany(CoursePositionRestriction::class);
+    }
+
+    public function course_ratings(){
+        return $this->hasMany(CourseRating::class);
     }
 }
